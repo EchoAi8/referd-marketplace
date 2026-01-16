@@ -259,18 +259,6 @@ const Logo = () => (
   </motion.div>
 );
 
-const fadeSlideUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (delay: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 1,
-      delay,
-      ease: [0.4, 0, 0.2, 1] as const,
-    },
-  }),
-};
 
 const HeroSection = () => {
   return (
@@ -293,10 +281,9 @@ const HeroSection = () => {
             lineHeight: 1.05,
             letterSpacing: "-0.03em",
           }}
-          variants={fadeSlideUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.3}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.4, 0, 0.2, 1] as const }}
         >
           Gather Your Herd,
           <br />
@@ -311,10 +298,9 @@ const HeroSection = () => {
             lineHeight: 1.6,
             color: "#A3A3A3",
           }}
-          variants={fadeSlideUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.6}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.6, ease: [0.4, 0, 0.2, 1] as const }}
         >
           The marketplace disrupting recruitment.
           <br />
@@ -324,10 +310,9 @@ const HeroSection = () => {
         {/* CTA Container */}
         <motion.div
           className="flex flex-col md:flex-row gap-4 justify-center flex-wrap w-full md:w-auto"
-          variants={fadeSlideUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.9}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.9, ease: [0.4, 0, 0.2, 1] as const }}
         >
           {/* Primary Button */}
           <motion.button
