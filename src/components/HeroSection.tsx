@@ -1,765 +1,787 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-// Scene timing configuration (in seconds)
-const SCENE_TIMINGS = {
-  pain: 5,
-  agitation: 3,
-  aspiration: 7,
-  solution: 3,
-  proof: 5,
-  mechanism: 5,
-  fomo: 4,
-  close: 999, // stays on close indefinitely
-};
-
-const TOTAL_DURATION = Object.values(SCENE_TIMINGS).slice(0, -1).reduce((a, b) => a + b, 0);
-
-type SceneType = keyof typeof SCENE_TIMINGS;
+import { Button } from "@/components/ui/button";
 
 const HeroSection = () => {
-  const [currentScene, setCurrentScene] = useState<SceneType>("pain");
-  const [painPhase, setPainPhase] = useState(0);
-  const [counter, setCounter] = useState(0);
-  const [liveCounter, setLiveCounter] = useState(2847);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [showStaticHero, setShowStaticHero] = useState(false);
+  const [ctaIdleTime, setCtaIdleTime] = useState(0);
 
-  // Scene progression
+  // Timer logic - runs every 100ms for smooth timing
   useEffect(() => {
-    const sceneOrder: SceneType[] = ["pain", "agitation", "aspiration", "solution", "proof", "mechanism", "fomo", "close"];
-    let currentIndex = 0;
+    if (!isPlaying || showStaticHero) return;
     
-    const advanceScene = () => {
-      currentIndex++;
-      if (currentIndex < sceneOrder.length) {
-        setCurrentScene(sceneOrder[currentIndex]);
-      }
-    };
-
-    const timers: NodeJS.Timeout[] = [];
-    let accumulatedTime = 0;
-
-    sceneOrder.forEach((scene, index) => {
-      if (index > 0) {
-        accumulatedTime += SCENE_TIMINGS[sceneOrder[index - 1]] * 1000;
-        const timer = setTimeout(() => {
-          setCurrentScene(scene);
-        }, accumulatedTime);
-        timers.push(timer);
-      }
-    });
-
-    return () => timers.forEach(t => clearTimeout(t));
-  }, []);
-
-  // Pain phase progression
-  useEffect(() => {
-    if (currentScene === "pain") {
-      const interval = setInterval(() => {
-        setPainPhase(p => (p < 2 ? p + 1 : p));
-      }, 1600);
-      return () => clearInterval(interval);
-    }
-  }, [currentScene]);
-
-  // Counter animation for agitation
-  useEffect(() => {
-    if (currentScene === "agitation") {
-      setCounter(0);
-      const target = 25000;
-      const duration = 1500;
-      const steps = 60;
-      const increment = target / steps;
-      let current = 0;
-      
-      const interval = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-          setCounter(target);
-          clearInterval(interval);
-        } else {
-          setCounter(Math.floor(current));
+    const interval = setInterval(() => {
+      setCurrentTime((prev) => {
+        if (prev >= 20) {
+          return 20;
         }
-      }, duration / steps);
-      
-      return () => clearInterval(interval);
-    }
-  }, [currentScene]);
+        return prev + 0.1;
+      });
+    }, 100);
 
-  // Live counter for fomo
+    return () => clearInterval(interval);
+  }, [isPlaying, showStaticHero]);
+
+  // CTA idle detection - after 5s of inactivity at end, show static hero
   useEffect(() => {
-    if (currentScene === "fomo") {
-      const interval = setInterval(() => {
-        setLiveCounter(c => c + Math.floor(Math.random() * 3) + 1);
-      }, 800);
-      return () => clearInterval(interval);
+    if (currentTime >= 18) {
+      const idleTimer = setInterval(() => {
+        setCtaIdleTime((prev) => {
+          if (prev >= 5) {
+            setShowStaticHero(true);
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+      return () => clearInterval(idleTimer);
     }
-  }, [currentScene]);
+  }, [currentTime]);
 
-  return (
-    <section className="relative min-h-screen bg-white overflow-hidden">
-      <AnimatePresence mode="wait">
-        {/* SCENE 1: THE PAIN */}
-        {currentScene === "pain" && (
-          <PainScene phase={painPhase} key="pain" />
-        )}
+  const shouldPulse = currentTime >= 20 && ctaIdleTime >= 2;
 
-        {/* SCENE 2: THE AGITATION */}
-        {currentScene === "agitation" && (
-          <AgitationScene counter={counter} key="agitation" />
-        )}
+  // Animated counter component
+  const AnimatedCounter = ({ value, duration = 1 }: { value: number; duration?: number }) => {
+    const [count, setCount] = useState(0);
+    
+    useEffect(() => {
+      const steps = 30;
+      const increment = value / steps;
+      let current = 0;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= value) {
+          setCount(value);
+          clearInterval(timer);
+        } else {
+          setCount(Math.floor(current));
+        }
+      }, (duration * 1000) / steps);
+      return () => clearInterval(timer);
+    }, [value, duration]);
+    
+    return <>{count.toLocaleString()}</>;
+  };
 
-        {/* SCENE 3: THE ASPIRATION */}
-        {currentScene === "aspiration" && (
-          <AspirationScene key="aspiration" />
-        )}
-
-        {/* SCENE 4: THE SOLUTION */}
-        {currentScene === "solution" && (
-          <SolutionScene key="solution" />
-        )}
-
-        {/* SCENE 5: THE PROOF */}
-        {currentScene === "proof" && (
-          <ProofScene key="proof" />
-        )}
-
-        {/* SCENE 6: THE MECHANISM */}
-        {currentScene === "mechanism" && (
-          <MechanismScene key="mechanism" />
-        )}
-
-        {/* SCENE 7: THE FOMO */}
-        {currentScene === "fomo" && (
-          <FomoScene liveCounter={liveCounter} key="fomo" />
-        )}
-
-        {/* SCENE 8: THE CLOSE */}
-        {currentScene === "close" && (
-          <CloseScene key="close" />
-        )}
-      </AnimatePresence>
-    </section>
+  // iPhone Mockup Component
+  const IPhoneMockup = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+    <div className={`relative ${className}`}>
+      <div className="relative bg-gray-900 rounded-[3rem] p-2 shadow-2xl">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-6 bg-black rounded-full z-10" />
+        <div className="bg-white rounded-[2.5rem] overflow-hidden w-[280px] h-[580px]">
+          {children}
+        </div>
+      </div>
+    </div>
   );
-};
 
-// ============ SCENE COMPONENTS ============
-
-const PainScene = ({ phase }: { phase: number }) => {
-  const painTexts = [
-    { line1: "Ever uploaded a CV", line2: "nobody reads?" },
-    { line1: "Ever paid an agency 20%", line2: "to do... what exactly?" },
-    { line1: "Ever referred someone", line2: "and got nothing?" },
-  ];
-
-  return (
-    <motion.div
-      className="absolute inset-0 flex flex-col items-center justify-center bg-white px-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      {/* iPhone Mockup */}
-      <motion.div
-        className="relative mb-8"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="w-[200px] md:w-[280px] h-[400px] md:h-[560px] bg-gray-100 rounded-[40px] border-8 border-gray-900 relative overflow-hidden shadow-2xl">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-gray-900 rounded-b-2xl" />
-          <div className="w-full h-full bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-6">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={phase}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                className="text-center"
-              >
-                {phase === 0 && (
-                  <div className="space-y-2">
-                    <div className="w-full h-4 bg-blue-100 rounded mb-2" />
-                    <div className="w-3/4 h-4 bg-blue-100 rounded" />
-                    <div className="w-1/2 h-4 bg-blue-100 rounded" />
-                    <p className="text-xs text-gray-400 mt-4">LinkedIn Jobs</p>
-                  </div>
-                )}
-                {phase === 1 && (
-                  <div className="text-left space-y-2">
-                    <p className="text-red-500 text-xs font-bold">REJECTED</p>
-                    <p className="text-gray-600 text-xs">We regret to inform you...</p>
-                    <div className="w-full h-2 bg-gray-200 rounded mt-4" />
-                  </div>
-                )}
-                {phase === 2 && (
-                  <div className="text-center">
-                    <p className="text-gray-400 text-lg">👻</p>
-                    <p className="text-gray-500 text-xs mt-2">No response</p>
-                    <p className="text-gray-300 text-[10px] mt-1">Last seen: 3 weeks ago</p>
-                  </div>
-                )}
-              </motion.div>
-            </AnimatePresence>
+  // MacBook Mockup Component
+  const MacBookMockup = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+    <div className={`relative ${className}`}>
+      <div className="bg-gray-800 rounded-t-xl p-1 shadow-2xl">
+        <div className="bg-gray-900 rounded-t-lg p-2">
+          <div className="flex gap-1.5 mb-2">
+            <div className="w-3 h-3 rounded-full bg-red-500" />
+            <div className="w-3 h-3 rounded-full bg-yellow-500" />
+            <div className="w-3 h-3 rounded-full bg-green-500" />
+          </div>
+          <div className="bg-white rounded-md overflow-hidden w-[400px] h-[250px]">
+            {children}
           </div>
         </div>
-      </motion.div>
-
-      {/* Pain Text */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={phase}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.4 }}
-          className="text-center max-w-xl"
-        >
-          <h2 className="font-heading font-extrabold text-3xl md:text-5xl text-gray-900 leading-tight">
-            {painTexts[phase].line1}
-            <br />
-            {painTexts[phase].line2}
-          </h2>
-        </motion.div>
-      </AnimatePresence>
-    </motion.div>
+      </div>
+      <div className="bg-gray-700 h-4 rounded-b-lg w-[440px] mx-auto" />
+      <div className="bg-gray-600 h-2 rounded-b-xl w-[480px] mx-auto" />
+    </div>
   );
-};
 
-const AgitationScene = ({ counter }: { counter: number }) => {
-  return (
-    <motion.div
-      className="absolute inset-0 flex flex-col items-center justify-center bg-white px-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <motion.div
-        className="text-center"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        {/* Counter */}
-        <motion.p className="font-heading font-extrabold text-5xl md:text-7xl text-gray-900 mb-4">
-          £{counter.toLocaleString()}
-        </motion.p>
-        <p className="text-gray-500 text-lg mb-8">Average agency fee</p>
-
-        {/* Split */}
-        <motion.div
-          className="flex flex-col md:flex-row gap-4 md:gap-8 justify-center mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.5 }}
-        >
-          <div className="text-center">
-            <p className="font-heading font-bold text-2xl text-gray-400">£22,500</p>
-            <p className="text-sm text-gray-400">→ Agency</p>
+  // Screen content components
+  const LinkedInScreen = () => (
+    <div className="h-full bg-white p-4">
+      <div className="bg-blue-600 text-white text-xs p-2 rounded mb-3">LinkedIn Jobs</div>
+      <div className="space-y-2">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="border rounded p-2">
+            <div className="h-2 bg-gray-300 rounded w-3/4 mb-1" />
+            <div className="h-2 bg-gray-200 rounded w-1/2" />
           </div>
-          <div className="text-center">
-            <p className="font-heading font-bold text-2xl text-gray-400">£2,500</p>
-            <p className="text-sm text-gray-400">→ Consultant</p>
-          </div>
-          <div className="text-center">
-            <p className="font-heading font-bold text-2xl text-gray-900">£0</p>
-            <p className="text-sm text-gray-900 font-bold">→ You</p>
-          </div>
-        </motion.div>
-
-        {/* Red Alert */}
-        <motion.p
-          className="text-red-500 font-heading font-bold text-xl md:text-2xl"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 0.5 }}
-        >
-          90% goes to middlemen
-        </motion.p>
-      </motion.div>
-    </motion.div>
-  );
-};
-
-const AspirationScene = () => {
-  const [aspirationPhase, setAspirationPhase] = useState(0);
-  const aspirationTexts = [
-    "Imagine...",
-    "...your network\nbecoming your income",
-    "...getting paid\njust for knowing someone",
-    "...hiring someone great\nand keeping 70%",
-    "...knowing exactly\nwhat you're worth",
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setAspirationPhase(p => (p < aspirationTexts.length - 1 ? p + 1 : p));
-    }, 1400);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <motion.div
-      className="absolute inset-0 flex flex-col items-center justify-center bg-white px-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      {/* Network Sphere Visual */}
-      <motion.div
-        className="relative w-64 h-64 md:w-80 md:h-80 mb-8"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-      >
-        {/* Nodes */}
-        {[...Array(12)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-3 h-3 md:w-4 md:h-4 rounded-full"
-            style={{
-              top: `${50 + 40 * Math.sin((i * Math.PI * 2) / 12)}%`,
-              left: `${50 + 40 * Math.cos((i * Math.PI * 2) / 12)}%`,
-              transform: "translate(-50%, -50%)",
-            }}
-            initial={{ backgroundColor: "#e5e7eb", scale: 0 }}
-            animate={{
-              backgroundColor: aspirationPhase >= Math.floor(i / 3) ? "#C5EA86" : "#e5e7eb",
-              scale: 1,
-              boxShadow: aspirationPhase >= Math.floor(i / 3) ? "0 0 20px rgba(197, 234, 134, 0.6)" : "none",
-            }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-          />
         ))}
-        {/* Center */}
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-sage"
-          animate={{
-            scale: [1, 1.2, 1],
-            boxShadow: [
-              "0 0 0 rgba(197, 234, 134, 0.4)",
-              "0 0 40px rgba(197, 234, 134, 0.8)",
-              "0 0 0 rgba(197, 234, 134, 0.4)",
-            ],
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
-      </motion.div>
-
-      {/* Aspiration Text */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={aspirationPhase}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-xl"
-        >
-          <h2 className="font-heading font-light text-2xl md:text-4xl text-gray-900 leading-relaxed whitespace-pre-line">
-            {aspirationTexts[aspirationPhase]}
-          </h2>
-        </motion.div>
-      </AnimatePresence>
-    </motion.div>
+      </div>
+    </div>
   );
-};
 
-const SolutionScene = () => {
-  const [revealed, setRevealed] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setRevealed(true), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
-    <motion.div
-      className="absolute inset-0 flex flex-col items-center justify-center bg-black px-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <AnimatePresence mode="wait">
-        {!revealed ? (
-          <motion.h2
-            key="dream"
-            className="font-heading font-extrabold text-3xl md:text-5xl text-white text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-          >
-            This isn't a dream.
-          </motion.h2>
-        ) : (
-          <motion.div
-            key="reveal"
-            className="text-center"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-          >
-            <motion.div
-              className="mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            >
-              <span className="text-sage font-heading font-bold text-4xl md:text-6xl tracking-tight">
-                REFERD
-              </span>
-            </motion.div>
-            <motion.h2
-              className="font-heading font-extrabold text-3xl md:text-5xl text-white"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-            >
-              It's Referd.
-            </motion.h2>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+  const RejectionScreen = () => (
+    <div className="h-full bg-white p-4">
+      <div className="text-xs font-bold mb-3">Inbox</div>
+      <div className="space-y-2">
+        {["Unfortunately...", "We regret to...", "After review..."].map((text, i) => (
+          <div key={i} className="border border-red-200 bg-red-50 rounded p-2">
+            <div className="text-[10px] text-red-600">{text}</div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
-};
 
-const ProofScene = () => {
-  const [stats, setStats] = useState({ paidOut: 0, people: 0, hires: 0 });
+  const AgencyScreen = () => (
+    <div className="h-full bg-gradient-to-b from-gray-100 to-white p-4 flex flex-col items-center justify-center">
+      <div className="text-2xl font-bold text-gray-800 mb-2">Agency Fee</div>
+      <div className="text-4xl font-black text-red-600">20-25%</div>
+      <div className="text-xs text-gray-500 mt-2">of annual salary</div>
+    </div>
+  );
 
-  useEffect(() => {
-    const targets = { paidOut: 427000, people: 4293, hires: 856 };
-    const duration = 2000;
-    const steps = 60;
-    let step = 0;
-
-    const interval = setInterval(() => {
-      step++;
-      const progress = Math.min(step / steps, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      
-      setStats({
-        paidOut: Math.floor(targets.paidOut * eased),
-        people: Math.floor(targets.people * eased),
-        hires: Math.floor(targets.hires * eased),
-      });
-
-      if (step >= steps) clearInterval(interval);
-    }, duration / steps);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <motion.div
-      className="absolute inset-0 flex flex-col items-center justify-center bg-white px-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      {/* MacBook Mockup */}
-      <motion.div
-        className="relative mb-8"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="w-[300px] md:w-[500px] h-[200px] md:h-[320px] bg-gray-100 rounded-t-xl border-4 border-gray-800 relative overflow-hidden">
-          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-600 rounded-full" />
-          <div className="w-full h-full p-4 md:p-6 bg-gradient-to-br from-gray-50 to-gray-100">
-            {/* Stats Grid */}
-            <div className="grid grid-cols-3 gap-2 md:gap-4 h-full">
-              <div className="bg-white rounded-lg p-2 md:p-4 shadow-sm flex flex-col justify-center">
-                <p className="font-heading font-bold text-sm md:text-xl text-sage">£{stats.paidOut.toLocaleString()}</p>
-                <p className="text-[8px] md:text-xs text-gray-500">paid out</p>
-              </div>
-              <div className="bg-white rounded-lg p-2 md:p-4 shadow-sm flex flex-col justify-center">
-                <p className="font-heading font-bold text-sm md:text-xl text-mustard">{stats.people.toLocaleString()}</p>
-                <p className="text-[8px] md:text-xs text-gray-500">people earning</p>
-              </div>
-              <div className="bg-white rounded-lg p-2 md:p-4 shadow-sm flex flex-col justify-center">
-                <p className="font-heading font-bold text-sm md:text-xl text-rose">{stats.hires.toLocaleString()}</p>
-                <p className="text-[8px] md:text-xs text-gray-500">hires made</p>
-              </div>
+  const DeadJobsScreen = () => (
+    <div className="h-full bg-white p-4">
+      <div className="text-xs font-bold mb-3 text-gray-400">Job Board</div>
+      <div className="space-y-2 opacity-50">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="border border-gray-300 rounded p-2">
+            <div className="flex justify-between">
+              <div className="h-2 bg-gray-300 rounded w-1/2" />
+              <span className="text-[8px] text-red-500">Expired</span>
             </div>
           </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const SalaryReportScreen = () => (
+    <div className="h-full bg-gradient-to-b from-sage/20 to-white p-4 flex flex-col items-center justify-center">
+      <div className="text-xs text-gray-600 mb-2">Your Market Value</div>
+      <div className="text-4xl font-black text-forest">£95K</div>
+      <div className="mt-4 w-full bg-sage/30 rounded-full h-2">
+        <div className="bg-sage h-2 rounded-full w-3/4" />
+      </div>
+      <div className="text-[10px] text-gray-500 mt-2">Top 25% in your field</div>
+    </div>
+  );
+
+  const ReferralScreen = () => (
+    <div className="h-full bg-white p-4 flex flex-col items-center justify-center">
+      <div className="w-16 h-16 rounded-full bg-sage/20 flex items-center justify-center mb-3">
+        <span className="text-2xl">✓</span>
+      </div>
+      <div className="text-sm font-bold">You referred Sarah</div>
+      <div className="text-xs text-gray-500 mt-1">Potential earnings</div>
+      <div className="text-2xl font-black text-sage mt-1">£3,500</div>
+    </div>
+  );
+
+  const EarningsScreen = () => (
+    <div className="h-full bg-gradient-to-b from-mustard/20 to-white p-4 flex flex-col items-center justify-center">
+      <div className="text-xs text-gray-600 mb-2">Total Earned</div>
+      <div className="text-4xl font-black text-forest">£12,400</div>
+      <div className="mt-4 flex gap-2">
+        <div className="bg-sage/20 rounded px-2 py-1 text-[10px]">4 referrals</div>
+        <div className="bg-mustard/20 rounded px-2 py-1 text-[10px]">2 pending</div>
+      </div>
+    </div>
+  );
+
+  const BrandDashboard = () => (
+    <div className="h-full bg-white p-3">
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-8 h-8 rounded bg-sage flex items-center justify-center text-white text-xs font-bold">R</div>
+        <span className="text-sm font-bold">Referd Dashboard</span>
+      </div>
+      <div className="grid grid-cols-3 gap-2 mb-3">
+        <div className="bg-sage/10 rounded p-2 text-center">
+          <div className="text-lg font-bold">12</div>
+          <div className="text-[8px]">Active Roles</div>
         </div>
-        <div className="w-[340px] md:w-[560px] h-3 md:h-4 bg-gray-300 rounded-b-lg mx-auto" />
-      </motion.div>
-
-      {/* Proof Text */}
-      <motion.div
-        className="text-center"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.5 }}
-      >
-        <h2 className="font-heading font-extrabold text-2xl md:text-4xl text-gray-900">
-          Real people.
-          <br />
-          Real money.
-          <br />
-          Right now.
-        </h2>
-      </motion.div>
-    </motion.div>
-  );
-};
-
-const MechanismScene = () => {
-  return (
-    <motion.div
-      className="absolute inset-0 flex flex-col items-center justify-center bg-white px-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="grid md:grid-cols-2 gap-8 md:gap-16 max-w-4xl w-full">
-        {/* Left: How it works */}
-        <motion.div
-          className="text-center md:text-left"
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <h3 className="font-heading font-bold text-xl md:text-2xl text-gray-900 mb-6">How it works</h3>
-          <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
-            <motion.div
-              className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-sage/20 flex items-center justify-center text-2xl"
-              whileHover={{ scale: 1.1 }}
-            >
-              🎯
-            </motion.div>
-            <span className="text-gray-400">→</span>
-            <motion.div
-              className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-mustard/20 flex items-center justify-center text-2xl"
-              whileHover={{ scale: 1.1 }}
-            >
-              💼
-            </motion.div>
-            <span className="text-gray-400">→</span>
-            <motion.div
-              className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-rose/20 flex items-center justify-center text-2xl"
-              whileHover={{ scale: 1.1 }}
-            >
-              🏢
-            </motion.div>
-          </div>
-          <div className="flex justify-center md:justify-start gap-4 text-sm font-heading font-bold">
-            <span className="text-sage">35%</span>
-            <span className="text-gray-300">|</span>
-            <span className="text-mustard">35%</span>
-            <span className="text-gray-300">|</span>
-            <span className="text-rose">30%</span>
-          </div>
-          <p className="text-gray-500 mt-2 text-sm">Everyone wins</p>
-        </motion.div>
-
-        {/* Right: Why it works */}
-        <motion.div
-          className="text-center md:text-left"
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <h3 className="font-heading font-bold text-xl md:text-2xl text-gray-900 mb-6">Why it works</h3>
-          <div className="space-y-3">
-            {[
-              { icon: "🤖", text: "AI matching" },
-              { icon: "📊", text: "ML optimization" },
-              { icon: "🔗", text: "Network effects" },
-              { icon: "✅", text: "Self-regulating" },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                className="flex items-center gap-3 justify-center md:justify-start"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 + i * 0.1, duration: 0.4 }}
-              >
-                <span className="text-xl">{item.icon}</span>
-                <span className="text-gray-700">{item.text}</span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+        <div className="bg-mustard/10 rounded p-2 text-center">
+          <div className="text-lg font-bold">47</div>
+          <div className="text-[8px]">Candidates</div>
+        </div>
+        <div className="bg-rose/10 rounded p-2 text-center">
+          <div className="text-lg font-bold">£8K</div>
+          <div className="text-[8px]">Saved</div>
+        </div>
       </div>
-
-      {/* Comparison */}
-      <motion.div
-        className="mt-8 md:mt-12 text-center"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.5 }}
-      >
-        <p className="font-heading font-light text-lg md:text-xl text-gray-600">
-          Uber to travel. Airbnb to hospitality.
-          <br />
-          <span className="font-bold text-gray-900">Referd to recruitment.</span>
-        </p>
-      </motion.div>
-    </motion.div>
+    </div>
   );
-};
 
-const FomoScene = ({ liveCounter }: { liveCounter: number }) => {
-  return (
-    <motion.div
-      className="absolute inset-0 flex flex-col items-center justify-center px-8"
-      style={{
-        background: "linear-gradient(135deg, #fafafa 0%, #f0f0f0 50%, #fafafa 100%)",
-      }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      {/* Animated Background Pulse */}
-      <motion.div
-        className="absolute inset-0"
-        animate={{
-          background: [
-            "linear-gradient(135deg, #fafafa 0%, #f0f0f0 50%, #fafafa 100%)",
-            "linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 50%, #f5f5f5 100%)",
-            "linear-gradient(135deg, #fafafa 0%, #f0f0f0 50%, #fafafa 100%)",
-          ],
-        }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-      />
+  const JobPostingScreen = () => (
+    <div className="h-full bg-white p-3">
+      <div className="text-sm font-bold mb-3">Post a Role</div>
+      <div className="space-y-2">
+        <div className="border rounded p-2">
+          <div className="text-[10px] text-gray-500">Role Title</div>
+          <div className="text-xs">Senior Developer</div>
+        </div>
+        <div className="border rounded p-2">
+          <div className="text-[10px] text-gray-500">Referral Fee</div>
+          <div className="text-xs text-sage font-bold">£5,000 (save 60%)</div>
+        </div>
+        <div className="grid grid-cols-2 gap-2 text-center">
+          <div className="bg-sage/10 rounded p-1">
+            <div className="text-lg font-bold">23</div>
+            <div className="text-[8px]">Applicants</div>
+          </div>
+          <div className="bg-mustard/10 rounded p-1">
+            <div className="text-lg font-bold">5</div>
+            <div className="text-[8px]">Shortlisted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
-      <div className="relative z-10 text-center">
-        {/* Live Counter */}
-        <motion.div
-          className="mb-8"
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          <motion.p
-            className="font-heading font-extrabold text-4xl md:text-6xl text-gray-900"
-            key={liveCounter}
+  // Determine current scene based on time
+  const getScene = () => {
+    if (currentTime < 1) return "intro";
+    if (currentTime < 2) return "deviceIntro";
+    if (currentTime < 3) return "pain1";
+    if (currentTime < 4) return "pain2";
+    if (currentTime < 5) return "pain3";
+    if (currentTime < 6) return "shift";
+    if (currentTime < 7) return "solution1";
+    if (currentTime < 8) return "solution2";
+    if (currentTime < 9) return "solution3";
+    if (currentTime < 11) return "transition";
+    if (currentTime < 13) return "desktopFeature";
+    if (currentTime < 15) return "model";
+    if (currentTime < 16) return "proof";
+    if (currentTime < 17) return "positioning";
+    if (currentTime < 18) return "brand";
+    return "cta";
+  };
+
+  const scene = getScene();
+
+  // Static hero fallback
+  if (showStaticHero) {
+    return (
+      <section className="min-h-screen bg-white flex items-center justify-center p-8">
+        <div className="text-center max-w-md">
+          <div className="text-6xl font-black text-forest mb-6" style={{ fontFamily: 'Syne, sans-serif' }}>
+            Referd
+          </div>
+          <p className="text-xl text-gray-600 mb-8">People-powered recruitment</p>
+          <div className="flex flex-col gap-4">
+            <Button variant="mustard" size="cta" className="w-full">
+              Check My Worth
+            </Button>
+            <Button variant="outline" size="cta" className="w-full border-2 border-forest text-forest hover:bg-forest hover:text-white">
+              Start Earning
+            </Button>
+          </div>
+          <p className="text-sm text-gray-500 mt-6">Join 4,293 people building the future</p>
+          <button 
+            onClick={() => {
+              setShowStaticHero(false);
+              setCurrentTime(0);
+              setCtaIdleTime(0);
+            }}
+            className="text-xs text-sage mt-4 underline"
           >
-            {liveCounter.toLocaleString()}
-          </motion.p>
-          <p className="text-gray-500 text-lg">reports generated today</p>
-        </motion.div>
-
-        {/* Urgency Text */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-        >
-          <h2 className="font-heading font-bold text-2xl md:text-4xl text-gray-900 mb-4">
-            The future of work
-            <br />
-            is being built now
-          </h2>
-        </motion.div>
-
-        <motion.p
-          className="font-heading font-light text-xl md:text-2xl text-gray-500"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.5 }}
-        >
-          With or without you
-        </motion.p>
-      </div>
-    </motion.div>
-  );
-};
-
-const CloseScene = () => {
-  const [showButtons, setShowButtons] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowButtons(true), 800);
-    return () => clearTimeout(timer);
-  }, []);
+            Replay video
+          </button>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <motion.div
-      className="absolute inset-0 flex flex-col items-center justify-center bg-white px-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <motion.div
-        className="text-center max-w-2xl"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        {/* Headline */}
-        <h1 className="font-heading font-extrabold text-4xl md:text-6xl text-gray-900 leading-tight mb-8">
-          Gather Your Herd.
-          <br />
-          Get Paid with Referd.
-        </h1>
-
-        {/* CTA Buttons */}
-        <AnimatePresence>
-          {showButtons && (
+    <section className="min-h-screen bg-white flex items-center justify-center overflow-hidden">
+      {/* 9:16 Aspect Ratio Container */}
+      <div className="relative w-full max-w-md mx-auto aspect-[9/16] bg-white flex items-center justify-center">
+        
+        <AnimatePresence mode="wait">
+          
+          {/* [0:00-0:01] INTRO */}
+          {scene === "intro" && (
             <motion.div
-              className="flex flex-col md:flex-row gap-4 justify-center mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              key="intro"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="text-center px-8"
             >
-              <motion.button
-                className="inline-flex items-center justify-center gap-2 font-heading font-semibold text-lg cursor-pointer px-8 py-4 rounded-full"
-                style={{
-                  background: "#C5EA86",
-                  color: "#000000",
-                  boxShadow: "0 4px 20px rgba(197, 234, 134, 0.4)",
-                }}
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: "0 8px 30px rgba(197, 234, 134, 0.5)",
-                }}
-                whileTap={{ scale: 0.98 }}
+              <h1 
+                className="text-2xl md:text-3xl font-semibold text-black leading-tight"
+                style={{ fontFamily: 'Syne, sans-serif' }}
               >
-                Discover Your Worth
-              </motion.button>
-
-              <motion.button
-                className="inline-flex items-center justify-center gap-2 font-heading font-semibold text-lg cursor-pointer px-8 py-4 rounded-full border-2 border-gray-900"
-                style={{
-                  background: "transparent",
-                  color: "#000000",
-                }}
-                whileHover={{
-                  scale: 1.05,
-                  background: "#000000",
-                  color: "#ffffff",
-                }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Start Earning
-              </motion.button>
+                Ever feel like<br />recruitment is broken?
+              </h1>
             </motion.div>
           )}
+
+          {/* [0:01-0:02] DEVICE INTRO */}
+          {scene === "deviceIntro" && (
+            <motion.div
+              key="deviceIntro"
+              initial={{ x: 300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="flex flex-col items-center"
+            >
+              <IPhoneMockup>
+                <LinkedInScreen />
+              </IPhoneMockup>
+            </motion.div>
+          )}
+
+          {/* [0:02-0:03] PAIN POINT 1 */}
+          {scene === "pain1" && (
+            <motion.div
+              key="pain1"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col items-center"
+            >
+              <IPhoneMockup>
+                <RejectionScreen />
+              </IPhoneMockup>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-6 text-xl font-semibold text-black"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                CVs no one reads
+              </motion.p>
+            </motion.div>
+          )}
+
+          {/* [0:03-0:04] PAIN POINT 2 */}
+          {scene === "pain2" && (
+            <motion.div
+              key="pain2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col items-center"
+            >
+              <IPhoneMockup>
+                <AgencyScreen />
+              </IPhoneMockup>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-6 text-xl font-semibold text-black"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                Agencies taking 30%
+              </motion.p>
+            </motion.div>
+          )}
+
+          {/* [0:04-0:05] PAIN POINT 3 */}
+          {scene === "pain3" && (
+            <motion.div
+              key="pain3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col items-center"
+            >
+              <IPhoneMockup>
+                <DeadJobsScreen />
+              </IPhoneMockup>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-6 text-xl font-semibold text-black"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                Dead-end job boards
+              </motion.p>
+            </motion.div>
+          )}
+
+          {/* [0:05-0:06] THE SHIFT */}
+          {scene === "shift" && (
+            <motion.div
+              key="shift"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="text-center px-8"
+            >
+              <h2 
+                className="text-3xl md:text-4xl font-semibold text-black"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                There's a better way
+              </h2>
+            </motion.div>
+          )}
+
+          {/* [0:06-0:07] SOLUTION 1 */}
+          {scene === "solution1" && (
+            <motion.div
+              key="solution1"
+              initial={{ x: -300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="flex flex-col items-center"
+            >
+              <IPhoneMockup>
+                <SalaryReportScreen />
+              </IPhoneMockup>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="mt-6 text-xl font-semibold text-black"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                Know your worth
+              </motion.p>
+            </motion.div>
+          )}
+
+          {/* [0:07-0:08] SOLUTION 2 */}
+          {scene === "solution2" && (
+            <motion.div
+              key="solution2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col items-center"
+            >
+              <IPhoneMockup>
+                <ReferralScreen />
+              </IPhoneMockup>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-6 text-xl font-semibold text-black"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                Get paid for referrals
+              </motion.p>
+            </motion.div>
+          )}
+
+          {/* [0:08-0:09] SOLUTION 3 */}
+          {scene === "solution3" && (
+            <motion.div
+              key="solution3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col items-center"
+            >
+              <IPhoneMockup>
+                <EarningsScreen />
+              </IPhoneMockup>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-6 text-xl font-semibold text-black"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                Turn networks into income
+              </motion.p>
+            </motion.div>
+          )}
+
+          {/* [0:09-0:11] TRANSITION TO DESKTOP */}
+          {scene === "transition" && (
+            <motion.div
+              key="transition"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col items-center gap-4"
+            >
+              <div className="flex items-center gap-4 scale-75">
+                <motion.div
+                  initial={{ x: 0 }}
+                  animate={{ x: -20, scale: 0.7 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <IPhoneMockup>
+                    <EarningsScreen />
+                  </IPhoneMockup>
+                </motion.div>
+                <motion.div
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <MacBookMockup>
+                    <BrandDashboard />
+                  </MacBookMockup>
+                </motion.div>
+              </div>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="text-xl font-semibold text-black"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                Works everywhere
+              </motion.p>
+            </motion.div>
+          )}
+
+          {/* [0:11-0:13] DESKTOP FEATURE */}
+          {scene === "desktopFeature" && (
+            <motion.div
+              key="desktopFeature"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col items-center"
+            >
+              <div className="scale-90">
+                <MacBookMockup>
+                  <JobPostingScreen />
+                </MacBookMockup>
+              </div>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-6 text-xl font-semibold text-black"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                Brands save 60%
+              </motion.p>
+            </motion.div>
+          )}
+
+          {/* [0:13-0:15] THE MODEL */}
+          {scene === "model" && (
+            <motion.div
+              key="model"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center px-8"
+            >
+              <div 
+                className="text-2xl font-bold text-black space-y-2"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="text-sage"
+                >
+                  35% Referrer
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-mustard"
+                >
+                  35% Talent
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="text-forest"
+                >
+                  30% Platform
+                </motion.div>
+              </div>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8 }}
+                className="mt-6 text-lg text-gray-600"
+              >
+                Everyone wins
+              </motion.p>
+            </motion.div>
+          )}
+
+          {/* [0:15-0:16] SOCIAL PROOF */}
+          {scene === "proof" && (
+            <motion.div
+              key="proof"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center px-8 space-y-4"
+            >
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="text-2xl font-extrabold text-black"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                £<AnimatedCounter value={427000} /> paid out
+              </motion.div>
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="text-2xl font-extrabold text-black"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                <AnimatedCounter value={4293} /> people earning
+              </motion.div>
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="text-2xl font-extrabold text-black"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                <AnimatedCounter value={856} /> hires made
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* [0:16-0:17] POSITIONING */}
+          {scene === "positioning" && (
+            <motion.div
+              key="positioning"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center px-8 space-y-3"
+              style={{ fontFamily: 'Syne, sans-serif' }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-xl font-semibold text-gray-400"
+              >
+                Uber → Travel
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-xl font-semibold text-gray-400"
+              >
+                Airbnb → Hospitality
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="text-xl font-semibold text-black"
+              >
+                Referd → Recruitment
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* [0:17-0:18] BRAND MOMENT */}
+          {scene === "brand" && (
+            <motion.div
+              key="brand"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center"
+            >
+              <motion.div
+                className="text-6xl font-black text-sage mb-4"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                Referd
+              </motion.div>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="text-lg text-gray-600"
+              >
+                People-powered recruitment
+              </motion.p>
+            </motion.div>
+          )}
+
+          {/* [0:18-0:20] CTA */}
+          {scene === "cta" && (
+            <motion.div
+              key="cta"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center px-8"
+            >
+              <motion.div
+                initial={{ scale: 1.2 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.3 }}
+                className="text-5xl font-black text-forest mb-8"
+                style={{ fontFamily: 'Syne, sans-serif' }}
+              >
+                Referd
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="flex flex-col gap-4 mb-6"
+              >
+                <Button 
+                  variant="mustard" 
+                  size="cta"
+                  className={`w-full ${shouldPulse ? 'animate-pulse' : ''}`}
+                >
+                  Check My Worth
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="cta"
+                  className={`w-full border-2 border-forest text-forest hover:bg-forest hover:text-white ${shouldPulse ? 'animate-pulse' : ''}`}
+                >
+                  Start Earning
+                </Button>
+              </motion.div>
+              
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="text-sm text-gray-500"
+              >
+                Join 4,293 people building the future
+              </motion.p>
+            </motion.div>
+          )}
+
         </AnimatePresence>
 
-        {/* Social Proof */}
-        <motion.p
-          className="text-gray-400 text-sm"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.5 }}
-        >
-          Join 4,293 people building the future
-        </motion.p>
-      </motion.div>
-    </motion.div>
+        {/* Progress indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-32 h-1 bg-gray-200 rounded-full overflow-hidden">
+          <motion.div 
+            className="h-full bg-sage rounded-full"
+            style={{ width: `${(currentTime / 20) * 100}%` }}
+          />
+        </div>
+
+        {/* Replay button (appears at end) */}
+        {currentTime >= 20 && (
+          <button
+            onClick={() => {
+              setCurrentTime(0);
+              setCtaIdleTime(0);
+            }}
+            className="absolute bottom-16 left-1/2 -translate-x-1/2 text-xs text-sage underline"
+          >
+            Replay
+          </button>
+        )}
+      </div>
+    </section>
   );
 };
 
