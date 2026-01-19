@@ -6,23 +6,26 @@ const projects = [
   {
     id: 1,
     title: "Tech Talent Network",
+    subtitle: "Connecting engineers with innovative startups",
     category: "Software Engineering",
-    description: "Connected 500+ engineers with top startups",
-    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&auto=format&fit=crop",
+    year: "2024",
+    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1600&auto=format&fit=crop&q=90",
   },
   {
     id: 2,
-    title: "Executive Placements",
+    title: "Executive Search",
+    subtitle: "C-suite placements for Fortune 500",
     category: "Leadership",
-    description: "C-suite placements across Fortune 500 companies",
-    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&auto=format&fit=crop",
+    year: "2024",
+    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1600&auto=format&fit=crop&q=90",
   },
   {
     id: 3,
     title: "Creative Collective",
+    subtitle: "Building design teams worldwide",
     category: "Design & Marketing",
-    description: "Building creative teams for agencies worldwide",
-    image: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1200&auto=format&fit=crop",
+    year: "2023",
+    image: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1600&auto=format&fit=crop&q=90",
   },
 ];
 
@@ -33,62 +36,83 @@ const ProjectsSection = () => {
   return (
     <section ref={ref} className="py-32 md:py-48 bg-background">
       <div className="container mx-auto px-6">
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="flex justify-between items-end mb-16"
+          className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16"
         >
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground mb-4">
-              Success Stories
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-4">
+              Selected Work
             </p>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-medium text-foreground">
-              Featured Projects
+            <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-semibold text-foreground">
+              Success Stories
             </h2>
           </div>
-          <button className="hidden md:block px-6 py-3 border border-border rounded-full text-sm hover:bg-muted transition-colors">
-            View All Projects
-          </button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+            className="self-start md:self-auto btn-secondary text-base py-3"
+          >
+            View All Cases
+          </motion.button>
         </motion.div>
 
-        <div className="space-y-24">
+        {/* Projects Grid */}
+        <div className="space-y-32">
           {projects.map((project, index) => (
             <motion.article
               key={project.id}
-              initial={{ opacity: 0, y: 60 }}
+              initial={{ opacity: 0, y: 80 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: index * 0.2, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
               className="group cursor-pointer"
             >
-              <div className="relative aspect-[16/9] md:aspect-[21/9] overflow-hidden rounded-2xl mb-8">
+              {/* Image Container */}
+              <div className="relative aspect-[16/10] md:aspect-[21/10] overflow-hidden rounded-xl mb-8">
                 <ParallaxImage
                   src={project.image}
                   alt={project.title}
-                  intensity={15}
+                  intensity={20}
                   className="w-full h-full"
                 />
-                <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors duration-500" />
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors duration-500" />
+                
+                {/* View Project Button */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileHover={{ opacity: 1, scale: 1 }}
+                  className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                >
+                  <span className="bg-background text-foreground px-6 py-3 rounded-full text-sm font-medium shadow-lg">
+                    View Project
+                  </span>
+                </motion.div>
               </div>
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+              {/* Project Info */}
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 <div>
-                  <p className="text-sm text-muted-foreground mb-2">{project.category}</p>
-                  <h3 className="text-2xl md:text-3xl font-heading font-medium text-foreground group-hover:text-primary transition-colors">
+                  <div className="flex items-center gap-4 mb-2">
+                    <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
+                      {project.category}
+                    </span>
+                    <span className="w-1 h-1 rounded-full bg-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">{project.year}</span>
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-heading font-semibold text-foreground group-hover:text-sage transition-colors duration-300">
                     {project.title}
                   </h3>
                 </div>
-                <p className="text-muted-foreground max-w-md">
-                  {project.description}
+                <p className="text-muted-foreground md:max-w-sm md:text-right">
+                  {project.subtitle}
                 </p>
               </div>
             </motion.article>
           ))}
-        </div>
-
-        <div className="md:hidden mt-12 text-center">
-          <button className="px-6 py-3 border border-border rounded-full text-sm hover:bg-muted transition-colors">
-            View All Projects
-          </button>
         </div>
       </div>
     </section>
