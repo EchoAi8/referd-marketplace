@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "@/hooks/use-theme";
+import CursorFollower from "@/components/animations/CursorFollower";
+import ScrollProgress from "@/components/animations/ScrollProgress";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -28,6 +30,8 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <TooltipProvider>
+        <CursorFollower />
+        <ScrollProgress />
         <Toaster />
         <Sonner />
         <BrowserRouter>
