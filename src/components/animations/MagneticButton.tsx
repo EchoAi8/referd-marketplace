@@ -7,13 +7,17 @@ interface MagneticButtonProps {
   className?: string;
   onClick?: () => void;
   strength?: number;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 }
 
 const MagneticButton = ({ 
   children, 
   className, 
   onClick,
-  strength = 0.3 
+  strength = 0.3,
+  type = "button",
+  disabled = false,
 }: MagneticButtonProps) => {
   const ref = useRef<HTMLButtonElement>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -52,6 +56,8 @@ const MagneticButton = ({
   return (
     <motion.button
       ref={ref}
+      type={type}
+      disabled={disabled}
       style={{ x: xSpring, y: ySpring }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
