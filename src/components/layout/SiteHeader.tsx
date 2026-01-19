@@ -4,8 +4,8 @@ import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
-  { label: "Articles", href: "#articles" },
+  { label: "Work", href: "#projects" },
+  { label: "Insights", href: "#articles" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -46,37 +46,42 @@ const SiteHeader = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled
-            ? "bg-background/80 backdrop-blur-lg border-b border-border"
-            : "bg-transparent"
+            ? "bg-background/90 backdrop-blur-md py-4"
+            : "bg-transparent py-6"
         }`}
       >
         <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href="/" className="text-2xl font-heading font-bold text-foreground">
-              REFERD
+            <a href="/" className="text-xl font-heading font-bold text-foreground tracking-tight">
+              Referd
             </a>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-8">
+            <nav className="hidden md:flex items-center gap-10">
               {navLinks.map((link) => (
                 <button
                   key={link.label}
                   onClick={() => scrollToSection(link.href)}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  className="relative text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 group"
                 >
                   {link.label}
+                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-foreground group-hover:w-full transition-all duration-300" />
                 </button>
               ))}
             </nav>
 
             {/* CTA Button */}
             <div className="hidden md:block">
-              <button className="px-6 py-2.5 bg-foreground text-background rounded-full text-sm font-medium hover:bg-foreground/90 transition-colors">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                className="px-5 py-2.5 bg-foreground text-background rounded-full text-sm font-medium hover:bg-foreground/90 transition-colors"
+              >
                 Get Started
-              </button>
+              </motion.button>
             </div>
 
             {/* Mobile Menu Toggle */}
@@ -100,7 +105,7 @@ const SiteHeader = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-foreground/50 backdrop-blur-sm z-40"
+              className="fixed inset-0 bg-foreground/60 backdrop-blur-sm z-40"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <motion.div
@@ -108,22 +113,41 @@ const SiteHeader = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed top-0 right-0 bottom-0 w-80 bg-background z-50 p-8 pt-24"
+              className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-background z-50 flex flex-col"
             >
-              <nav className="flex flex-col gap-6">
-                {navLinks.map((link) => (
-                  <button
+              {/* Close Button */}
+              <div className="flex justify-end p-6">
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 text-foreground"
+                  aria-label="Close menu"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Nav Links */}
+              <nav className="flex flex-col gap-2 px-8 flex-1">
+                {navLinks.map((link, index) => (
+                  <motion.button
                     key={link.label}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
                     onClick={() => scrollToSection(link.href)}
-                    className="text-2xl font-heading text-foreground hover:text-primary transition-colors text-left"
+                    className="text-3xl font-heading font-semibold text-foreground hover:text-sage transition-colors text-left py-3"
                   >
                     {link.label}
-                  </button>
+                  </motion.button>
                 ))}
-                <button className="mt-8 px-6 py-3 bg-foreground text-background rounded-full text-lg font-medium hover:bg-foreground/90 transition-colors">
+              </nav>
+
+              {/* CTA */}
+              <div className="p-8">
+                <button className="w-full btn-primary text-lg">
                   Get Started
                 </button>
-              </nav>
+              </div>
             </motion.div>
           </>
         )}

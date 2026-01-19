@@ -3,34 +3,35 @@ import { useRef, useEffect, useState } from "react";
 
 interface AnimatedNumberProps {
   value: number;
-  suffix?: string;
   prefix?: string;
+  suffix?: string;
   duration?: number;
 }
 
-const AnimatedNumber = ({ value, suffix = "", prefix = "", duration = 2 }: AnimatedNumberProps) => {
+const AnimatedNumber = ({ value, prefix = "", suffix = "", duration = 2 }: AnimatedNumberProps) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   useEffect(() => {
     if (!isInView) return;
 
-    let startTime: number;
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / (duration * 1000), 1);
-      
-      // Easing function for smooth deceleration
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      setCount(Math.floor(easeOutQuart * value));
+    let start = 0;
+    const end = value;
+    const incrementTime = (duration * 1000) / end;
+    const step = Math.max(1, Math.floor(end / 100));
 
-      if (progress < 1) {
-        requestAnimationFrame(animate);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= end) {
+        setCount(end);
+        clearInterval(timer);
+      } else {
+        setCount(start);
       }
-    };
+    }, incrementTime * step);
 
-    requestAnimationFrame(animate);
+    return () => clearInterval(timer);
   }, [isInView, value, duration]);
 
   return (
@@ -41,10 +42,10 @@ const AnimatedNumber = ({ value, suffix = "", prefix = "", duration = 2 }: Anima
 };
 
 const stats = [
-  { value: 2500000, prefix: "$", suffix: "+", label: "Paid out to referrers" },
-  { value: 15000, suffix: "+", label: "People earning on Referd" },
-  { value: 3500, suffix: "+", label: "Successful hires made" },
-  { value: 98, suffix: "%", label: "Client satisfaction rate" },
+  { value: 427000, prefix: "£", suffix: "+", label: "Paid to referrers" },
+  { value: 4293, prefix: "", suffix: "+", label: "People earning" },
+  { value: 892, prefix: "", suffix: "+", label: "Companies hiring" },
+  { value: 35, prefix: "", suffix: "%", label: "Referrer's share" },
 ];
 
 const StatsSection = () => {
@@ -52,45 +53,55 @@ const StatsSection = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section ref={ref} className="py-32 md:py-48 bg-muted">
-      <div className="container mx-auto px-6">
+    <section ref={ref} className="py-24 bg-foreground text-background overflow-hidden">
+      {/* Ticker Row */}
+      <div className="relative">
+        <motion.div
+          initial={{ x: 0 }}
+          animate={{ x: "-50%" }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="flex whitespace-nowrap"
+        >
+          {[...stats, ...stats, ...stats, ...stats].map((stat, index) => (
+            <div key={index} className="flex items-center px-12 md:px-16">
+              <span className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold">
+                {stat.prefix}{stat.value.toLocaleString()}{stat.suffix}
+              </span>
+              <span className="ml-4 text-sm uppercase tracking-[0.15em] text-background/60">
+                {stat.label}
+              </span>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Static Stats Grid */}
+      <div className="container mx-auto px-6 mt-24">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-20"
+          className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12"
         >
-          <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground mb-4">
-            By the Numbers
-          </p>
-          <h2 className="text-4xl md:text-5xl font-heading font-medium text-foreground">
-            Results that speak for themselves
-          </h2>
-        </motion.div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
           {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-center"
-            >
-              <p className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-3">
+            <div key={index} className="text-center">
+              <p className="text-fluid-3xl md:text-fluid-4xl font-heading font-bold text-background">
                 <AnimatedNumber 
                   value={stat.value} 
                   prefix={stat.prefix} 
                   suffix={stat.suffix}
-                  duration={2.5}
                 />
               </p>
-              <p className="text-sm md:text-base text-muted-foreground">
+              <p className="mt-2 text-sm uppercase tracking-[0.15em] text-background/60">
                 {stat.label}
               </p>
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
