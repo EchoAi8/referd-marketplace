@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import FloatingOrbs from "@/components/animations/FloatingOrbs";
 
 const HeroSection = () => {
   return (
-    <section className="min-h-screen bg-white flex items-center justify-center px-6 py-20">
-      <div className="max-w-4xl mx-auto text-center">
+    <section className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center px-6 py-20">
+      {/* Floating gradient orbs */}
+      <FloatingOrbs />
+      <div className="max-w-4xl mx-auto text-center relative z-10">
         {/* Logo */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

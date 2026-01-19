@@ -17,7 +17,8 @@ const SiteHeader = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      // Trigger glassmorphic state after scrolling past hero (roughly 100vh)
+      setIsScrolled(window.scrollY > 100);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -48,9 +49,9 @@ const SiteHeader = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
           isScrolled
-            ? "bg-background/90 backdrop-blur-md py-4"
+            ? "bg-background/70 backdrop-blur-xl shadow-lg shadow-foreground/5 py-3 border-b border-foreground/5"
             : "bg-transparent py-6"
         }`}
       >
