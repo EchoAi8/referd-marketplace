@@ -2,6 +2,7 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
+import StickyHowItWorks from "@/components/sections/StickyHowItWorks";
 import StatsSection from "@/components/sections/StatsSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import PricingSection from "@/components/sections/PricingSection";
@@ -18,6 +19,7 @@ const Index = () => {
         <section id="about">
           <AboutSection />
         </section>
+        <StickyHowItWorks />
         <StatsSection />
         <section id="projects">
           <ProjectsSection />
