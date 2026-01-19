@@ -1,6 +1,15 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import TextScramble from "@/components/animations/TextScramble";
+import AnimatedCounter from "@/components/animations/AnimatedCounter";
+
+const stats = [
+  { value: 2500000, prefix: "£", suffix: "+", label: "Paid Out" },
+  { value: 15000, suffix: "+", label: "Successful Referrals" },
+  { value: 4500, suffix: "+", label: "Active Users" },
+  { value: 98, suffix: "%", label: "Satisfaction Rate" },
+];
+
 const logos = [
   "TechCrunch", "Forbes", "Wired", "Bloomberg", "The Guardian", "Fast Company",
   "TechCrunch", "Forbes", "Wired", "Bloomberg", "The Guardian", "Fast Company",
@@ -39,6 +48,34 @@ const StatsSection = () => {
               </span>
             ))}
           </motion.div>
+        </div>
+      </div>
+
+      {/* Animated Stats Grid */}
+      <div className="container mx-auto px-6 mb-24">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 40 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="text-center"
+            >
+              <div className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-2">
+                <AnimatedCounter
+                  value={stat.value}
+                  prefix={stat.prefix}
+                  suffix={stat.suffix}
+                  duration={2.5}
+                  delay={0.3 + index * 0.15}
+                />
+              </div>
+              <p className="text-sm md:text-base text-muted-foreground uppercase tracking-[0.15em]">
+                {stat.label}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
 

@@ -1,7 +1,8 @@
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import TiltCard from "@/components/animations/TiltCard";
 import ImageReveal from "@/components/animations/ImageReveal";
+import PixelatedImageReveal from "@/components/animations/PixelatedImageReveal";
 
 const projects = [
   {
@@ -71,11 +72,12 @@ const ProjectsSection = () => {
               <TiltCard intensity={10} glare={true} className="rounded-2xl mb-6">
                 {/* Vertical Image Container with Reveal */}
                 <div className="relative aspect-[3/4] overflow-hidden rounded-2xl">
-                  <ImageReveal
+                  <PixelatedImageReveal
                     src={project.image}
                     alt={project.title}
                     className="w-full h-full"
-                    direction={index % 2 === 0 ? "left" : "right"}
+                    gridSize={8}
+                    staggerDuration={0.02}
                     delay={index * 0.2}
                   />
                   
