@@ -1,26 +1,32 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import MagneticButton from "@/components/animations/MagneticButton";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
 
-const navLinks = [
-  { label: "About (Page)", href: "/about" },
-  { label: "About", href: "#about" },
-  { label: "Work", href: "#projects" },
-  { label: "Insights", href: "#articles" },
-  { label: "Contact", href: "#contact" },
+interface NavLink {
+  label: string;
+  /** Route path (e.g. "/work") OR anchor (e.g. "#about") OR route + anchor (e.g. "/#about") */
+  href: string;
+}
+
+const navLinks: NavLink[] = [
+  { label: "About", href: "/about" },
+  { label: "Work", href: "/work" },
+  { label: "Insights", href: "/#articles" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 const SiteHeader = () => {
   const { navigateWithTransition } = useGridNavigation();
+  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Trigger glassmorphic state after scrolling past hero (roughly 100vh)
       setIsScrolled(window.scrollY > 100);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -38,22 +44,60 @@ const SiteHeader = () => {
     };
   }, [isMobileMenuOpen]);
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-    setIsMobileMenuOpen(false);
-  };
-
+  /**
+   * Smart navigation logic:
+   * - Pure route (/work, /about) => grid transition navigate
+   * - Pure anchor (#contact) => scroll on current page or if we're not on home, navigate home first
+   * - Composite (/#contact) => if already on that route, scroll; else navigate with transition
+   */
   const handleNav = (href: string) => {
-    if (href.startsWith("/")) {
-      setIsMobileMenuOpen(false);
-      navigateWithTransition(href);
+    setIsMobileMenuOpen(false);
+
+    const isAbsolute = href.startsWith("/");
+    const hasAnchor = href.includes("#");
+
+    if (isAbsolute && hasAnchor) {
+      // e.g. "/#contact"
+      const [route, anchor] = href.split("#");
+      const targetRoute = route || "/";
+      if (location.pathname === targetRoute) {
+        // same page, just scroll
+        scrollToAnchor(`#${anchor}`);
+      } else {
+        // navigate with grid transition, then scroll after load
+        navigateWithTransition(targetRoute);
+        setTimeout(() => scrollToAnchor(`#${anchor}`), 800);
+      }
       return;
     }
 
-    scrollToSection(href);
+    if (isAbsolute) {
+      // pure route
+      if (location.pathname !== href) {
+        navigateWithTransition(href);
+      }
+      return;
+    }
+
+    if (hasAnchor) {
+      // pure anchor on current page (fallback)
+      scrollToAnchor(href);
+    }
+  };
+
+  const scrollToAnchor = (anchor: string) => {
+    const el = document.querySelector(anchor);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleLogoClick = () => {
+    if (location.pathname === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      navigateWithTransition("/");
+    }
   };
 
   return (
@@ -71,7 +115,8 @@ const SiteHeader = () => {
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <MagneticButton 
+            <MagneticButton
+              onClick={handleLogoClick}
               className="text-xl font-heading font-bold text-foreground tracking-tight bg-transparent border-none"
               strength={0.2}
             >
@@ -167,9 +212,7 @@ const SiteHeader = () => {
 
               {/* CTA */}
               <div className="p-8">
-                <button className="w-full btn-primary text-lg">
-                  Get Started
-                </button>
+                <button className="w-full btn-primary text-lg">Get Started</button>
               </div>
             </motion.div>
           </>
