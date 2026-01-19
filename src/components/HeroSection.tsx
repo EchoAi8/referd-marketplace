@@ -6,13 +6,12 @@ import { ParallaxLayer } from "@/components/animations/ParallaxLayers";
 const HeroSection = () => {
   return (
     <section className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center px-6 py-20">
-      {/* Floating gradient orbs - subtle parallax */}
-      <ParallaxLayer speed={30} className="absolute inset-0">
+      <ParallaxLayer intensity={18} className="absolute inset-0">
         <FloatingOrbs />
       </ParallaxLayer>
 
       {/* Decorative background shapes */}
-      <ParallaxLayer speed={20} className="absolute inset-0 pointer-events-none">
+      <ParallaxLayer intensity={10} className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 left-10 w-32 h-32 rounded-full bg-sage/10 blur-2xl" />
         <div className="absolute bottom-40 right-20 w-48 h-48 rounded-full bg-mustard/10 blur-2xl" />
       </ParallaxLayer>
@@ -20,7 +19,7 @@ const HeroSection = () => {
       {/* Main content */}
       <div className="max-w-4xl mx-auto text-center relative z-10">
         {/* Logo */}
-        <ParallaxLayer speed={-10}>
+        <ParallaxLayer intensity={-6}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -94,7 +93,7 @@ const HeroSection = () => {
         </motion.div>
 
         {/* Model Split Card */}
-        <ParallaxLayer speed={10}>
+        <ParallaxLayer intensity={6}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

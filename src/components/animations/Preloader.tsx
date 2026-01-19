@@ -1,7 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 
-const Preloader = () => {
+interface PreloaderProps {
+  onComplete?: () => void;
+}
+
+const Preloader = ({ onComplete }: PreloaderProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
 
@@ -11,7 +15,10 @@ const Preloader = () => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          setTimeout(() => setIsLoading(false), 500);
+          setTimeout(() => {
+            setIsLoading(false);
+            onComplete?.();
+          }, 500);
           return 100;
         }
         return prev + Math.random() * 15;

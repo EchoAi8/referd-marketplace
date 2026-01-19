@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
 
-// Color palette for layered effect
+// Color palette for layered effect (design-system tokens)
 const blockColors = [
   "hsl(var(--foreground))",
-  "hsl(var(--sage))",
   "hsl(var(--muted))",
-  "hsl(var(--foreground))",
-  "hsl(var(--sage))",
+  "hsl(var(--color-sage))",
+  "hsl(var(--color-mustard))",
+  "hsl(var(--color-rose))",
 ];
 
 const getRandomColor = () => blockColors[Math.floor(Math.random() * blockColors.length)];
