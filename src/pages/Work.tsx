@@ -4,7 +4,6 @@ import PageTransition from "@/components/layout/PageTransition";
 import { GridOverlay } from "@/components/animations/GridTransition";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import HorizontalGallery from "@/components/sections/HorizontalGallery";
-import DockNavigation from "@/components/navigation/DockNavigation";
 
 const Work = () => {
   return (
@@ -20,7 +19,6 @@ const Work = () => {
             <HorizontalGallery />
           </main>
           <SiteFooter />
-          <DockNavigation />
         </div>
       </PageTransition>
     </>

@@ -12,6 +12,10 @@ import Index from "./pages/Index";
 import About from "./pages/About";
 import Work from "./pages/Work";
 import Contact from "./pages/Contact";
+import HowItWorks from "./pages/HowItWorks";
+import Brands from "./pages/Brands";
+import Opportunities from "./pages/Opportunities";
+import SalaryIntelligence from "./pages/SalaryIntelligence";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +30,10 @@ const AnimatedRoutes = () => {
         <Route path="/about" element={<About />} />
         <Route path="/work" element={<Work />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
+        <Route path="/brands" element={<Brands />} />
+        <Route path="/opportunities" element={<Opportunities />} />
+        <Route path="/salary-intelligence" element={<SalaryIntelligence />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
