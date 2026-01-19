@@ -1,6 +1,8 @@
 import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import PageTransition from "@/components/layout/PageTransition";
+import CursorFollower from "@/components/animations/CursorFollower";
+import Preloader from "@/components/animations/Preloader";
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 import StickyHowItWorks from "@/components/sections/StickyHowItWorks";
@@ -13,35 +15,39 @@ import ContactSection from "@/components/sections/ContactSection";
 
 const Index = () => {
   return (
-    <PageTransition>
-      <div className="min-h-screen bg-background">
-        <SiteHeader />
-        
-        <main>
-          <HeroSection />
-          <section id="about">
-            <AboutSection />
-          </section>
-          <StickyHowItWorks />
-          <StatsSection />
-          <section id="projects">
-            <ProjectsSection />
-          </section>
-          <HorizontalGallery />
-          <section id="pricing">
-            <PricingSection />
-          </section>
-          <section id="articles">
-            <ArticlesSection />
-          </section>
-          <section id="contact">
-            <ContactSection />
-          </section>
-        </main>
+    <>
+      <Preloader />
+      <CursorFollower />
+      <PageTransition>
+        <div className="min-h-screen bg-background">
+          <SiteHeader />
+          
+          <main>
+            <HeroSection />
+            <section id="about">
+              <AboutSection />
+            </section>
+            <StickyHowItWorks />
+            <StatsSection />
+            <section id="projects">
+              <ProjectsSection />
+            </section>
+            <HorizontalGallery />
+            <section id="pricing">
+              <PricingSection />
+            </section>
+            <section id="articles">
+              <ArticlesSection />
+            </section>
+            <section id="contact">
+              <ContactSection />
+            </section>
+          </main>
 
-        <SiteFooter />
-      </div>
-    </PageTransition>
+          <SiteFooter />
+        </div>
+      </PageTransition>
+    </>
   );
 };
 
