@@ -147,10 +147,12 @@
 @layer base {
   * {
     @apply border-border box-border;
+    cursor: none;
   }
 
   html {
     scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
   }
 
   body {
@@ -158,6 +160,18 @@
     font-family: 'Syne', sans-serif;
     margin: 0;
     padding: 0;
+    cursor: none;
+  }
+
+  /* Scroll snap for major sections */
+  section {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+
+  /* Reset cursor for inputs and textareas */
+  input, textarea, select {
+    cursor: auto;
   }
 }
 
