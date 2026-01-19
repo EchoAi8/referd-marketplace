@@ -1,6 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-
+import TextScramble from "@/components/animations/TextScramble";
 const logos = [
   "TechCrunch", "Forbes", "Wired", "Bloomberg", "The Guardian", "Fast Company",
   "TechCrunch", "Forbes", "Wired", "Bloomberg", "The Guardian", "Fast Company",
@@ -51,7 +51,7 @@ const StatsSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold text-foreground">
-            Trusted by thousands
+            <TextScramble text="Trusted by thousands" className="font-heading" />
           </h2>
         </motion.div>
 
