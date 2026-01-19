@@ -10,6 +10,7 @@ import StatsSection from "@/components/sections/StatsSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import HorizontalGallery from "@/components/sections/HorizontalGallery";
 import FAQSection from "@/components/sections/FAQSection";
+import NewsletterSection from "@/components/sections/NewsletterSection";
 import PricingSection from "@/components/sections/PricingSection";
 import ArticlesSection from "@/components/sections/ArticlesSection";
 import ContactSection from "@/components/sections/ContactSection";
@@ -37,6 +38,7 @@ const Index = () => {
             <section id="faq">
               <FAQSection />
             </section>
+            <NewsletterSection />
             <section id="pricing">
               <PricingSection />
             </section>
