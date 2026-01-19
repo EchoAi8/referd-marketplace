@@ -15,12 +15,15 @@ import NewsletterSection from "@/components/sections/NewsletterSection";
 import PricingSection from "@/components/sections/PricingSection";
 import ArticlesSection from "@/components/sections/ArticlesSection";
 import ContactSection from "@/components/sections/ContactSection";
+import { useState } from "react";
 
 const Index = () => {
+  const [showGrid, setShowGrid] = useState(false);
+
   return (
     <>
-      <Preloader />
-      <GridOverlay />
+      <Preloader onComplete={() => setShowGrid(true)} />
+      {showGrid && <GridOverlay key="home-grid" />}
       <CursorFollower />
       <PageTransition>
         <div className="min-h-screen bg-background">

@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import MagneticButton from "@/components/animations/MagneticButton";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import { useGridNavigation } from "@/hooks/use-grid-navigation";
 
 const navLinks = [
+  { label: "About (Page)", href: "/about" },
   { label: "About", href: "#about" },
   { label: "Work", href: "#projects" },
   { label: "Insights", href: "#articles" },
@@ -12,6 +14,7 @@ const navLinks = [
 ];
 
 const SiteHeader = () => {
+  const { navigateWithTransition } = useGridNavigation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -43,6 +46,16 @@ const SiteHeader = () => {
     setIsMobileMenuOpen(false);
   };
 
+  const handleNav = (href: string) => {
+    if (href.startsWith("/")) {
+      setIsMobileMenuOpen(false);
+      navigateWithTransition(href);
+      return;
+    }
+
+    scrollToSection(href);
+  };
+
   return (
     <>
       <motion.header
@@ -70,7 +83,7 @@ const SiteHeader = () => {
               {navLinks.map((link) => (
                 <MagneticButton
                   key={link.label}
-                  onClick={() => scrollToSection(link.href)}
+                  onClick={() => handleNav(link.href)}
                   className="relative text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 group bg-transparent border-none"
                   strength={0.4}
                 >
@@ -144,7 +157,7 @@ const SiteHeader = () => {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    onClick={() => scrollToSection(link.href)}
+                    onClick={() => handleNav(link.href)}
                     className="text-3xl font-heading font-semibold text-foreground hover:text-sage transition-colors text-left py-3"
                   >
                     {link.label}
