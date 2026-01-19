@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 
 interface Node {
   id: number;
@@ -228,6 +228,24 @@ interface NetworkNodeProps {
 }
 
 const NetworkNode = ({ node, mouseX, mouseY }: NetworkNodeProps) => {
+  const [isPulsing, setIsPulsing] = useState(false);
+
+  // Random pulse animation for active referral connections
+  useEffect(() => {
+    const startPulse = () => {
+      const delay = Math.random() * 8000 + 2000; // Random delay 2-10s
+      const timer = setTimeout(() => {
+        setIsPulsing(true);
+        setTimeout(() => setIsPulsing(false), 1500);
+        startPulse();
+      }, delay);
+      return timer;
+    };
+    
+    const timer = startPulse();
+    return () => clearTimeout(timer);
+  }, []);
+
   const nodeX = useTransform(mouseX, (mx: number) => {
     const dist = Math.sqrt(
       Math.pow(mx - node.baseX, 2) + Math.pow(mouseY.get() - node.baseY, 2)
@@ -262,13 +280,45 @@ const NetworkNode = ({ node, mouseX, mouseY }: NetworkNodeProps) => {
         ease: [0.16, 1, 0.3, 1]
       }}
     >
+      {/* Pulse ring animation */}
+      <AnimatePresence>
+        {isPulsing && (
+          <motion.circle
+            cx={node.baseX}
+            cy={node.baseY}
+            r={node.size / 2}
+            fill="none"
+            stroke={node.color}
+            strokeWidth="2"
+            initial={{ scale: 1, opacity: 0.8 }}
+            animate={{ scale: 3, opacity: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Active connection highlight */}
+      {isPulsing && (
+        <motion.circle
+          cx={node.baseX}
+          cy={node.baseY}
+          r={node.size * 2}
+          fill={node.color}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 0.3, 0] }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+          filter="url(#glow)"
+        />
+      )}
+
       {/* Glow effect */}
       <motion.circle
         cx={nodeX}
         cy={nodeY}
         r={node.size * 1.5}
         fill={node.color}
-        opacity={0.15}
+        opacity={isPulsing ? 0.4 : 0.15}
         style={{ scale }}
         filter="url(#glow)"
       />
@@ -281,6 +331,8 @@ const NetworkNode = ({ node, mouseX, mouseY }: NetworkNodeProps) => {
         fill={node.color}
         style={{ scale }}
         className="cursor-pointer"
+        animate={isPulsing ? { scale: [1, 1.2, 1] } : {}}
+        transition={{ duration: 0.5 }}
       />
 
       {/* Label */}
