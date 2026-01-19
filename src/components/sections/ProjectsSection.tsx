@@ -1,7 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import ParallaxImage from "@/components/ParallaxImage";
 import TiltCard from "@/components/animations/TiltCard";
+import ImageReveal from "@/components/animations/ImageReveal";
 
 const projects = [
   {
@@ -58,7 +58,7 @@ const ProjectsSection = () => {
           </motion.button>
         </motion.div>
 
-        {/* Projects - Large Vertical Images */}
+        {/* Projects - Large Vertical Images with Reveal */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
             <motion.article
@@ -69,23 +69,27 @@ const ProjectsSection = () => {
               className="group cursor-pointer"
             >
               <TiltCard intensity={10} glare={true} className="rounded-2xl mb-6">
-                {/* Vertical Image Container */}
+                {/* Vertical Image Container with Reveal */}
                 <div className="relative aspect-[3/4] overflow-hidden rounded-2xl">
-                  <ParallaxImage
+                  <ImageReveal
                     src={project.image}
                     alt={project.title}
-                    intensity={25}
                     className="w-full h-full"
+                    direction={index % 2 === 0 ? "left" : "right"}
+                    delay={index * 0.2}
                   />
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors duration-500" />
                   
                   {/* Category Badge */}
-                  <div className="absolute top-6 left-6 z-10">
+                  <motion.div 
+                    className="absolute top-6 left-6 z-10"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: 0.8 + index * 0.2, duration: 0.5 }}
+                  >
                     <span className="px-4 py-2 bg-background/90 backdrop-blur-sm rounded-full text-xs uppercase tracking-[0.1em] font-medium">
                       {project.category}
                     </span>
-                  </div>
+                  </motion.div>
                 </div>
               </TiltCard>
 
