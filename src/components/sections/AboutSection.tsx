@@ -1,6 +1,7 @@
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import WordReveal from "@/components/animations/WordReveal";
+import TiltCard from "@/components/animations/TiltCard";
 
 const AboutSection = () => {
   const containerRef = useRef(null);
@@ -48,8 +49,9 @@ const AboutSection = () => {
             initial={{ opacity: 0, y: 80, scale: 0.95 }}
             animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
             transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="md:col-span-2 bg-foreground text-background p-10 rounded-3xl"
+            className="md:col-span-2"
           >
+            <TiltCard intensity={8} glare={true} className="bg-foreground text-background p-10 rounded-3xl h-full">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
               <div>
                 <motion.p 
@@ -88,6 +90,7 @@ const AboutSection = () => {
                 </motion.div>
               </div>
             </div>
+            </TiltCard>
           </motion.div>
 
           {/* Time Card */}
@@ -95,13 +98,14 @@ const AboutSection = () => {
             initial={{ opacity: 0, y: 80, scale: 0.95 }}
             animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-sage/20 p-8 rounded-3xl flex flex-col justify-between min-h-[200px]"
           >
-            <p className="text-xs uppercase tracking-[0.2em] text-foreground/50">Average Time</p>
-            <div>
-              <p className="text-fluid-4xl font-heading font-bold text-foreground">24-48h</p>
-              <p className="text-sm text-muted-foreground">First candidate review</p>
-            </div>
+            <TiltCard intensity={10} glare={true} className="bg-sage/20 p-8 rounded-3xl flex flex-col justify-between min-h-[200px] h-full">
+              <p className="text-xs uppercase tracking-[0.2em] text-foreground/50">Average Time</p>
+              <div>
+                <p className="text-fluid-4xl font-heading font-bold text-foreground">24-48h</p>
+                <p className="text-sm text-muted-foreground">First candidate review</p>
+              </div>
+            </TiltCard>
           </motion.div>
 
           {/* Process Cards with staggered animation */}
@@ -119,28 +123,29 @@ const AboutSection = () => {
                 delay: 0.3 + (index * 0.1), 
                 ease: [0.16, 1, 0.3, 1] 
               }}
-              whileHover={{ 
-                y: -8, 
-                transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } 
-              }}
-              className="group bg-gray-50 hover:bg-sage/10 p-8 rounded-3xl transition-colors duration-500 cursor-pointer"
             >
-              <div className="flex items-start justify-between mb-16">
-                <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{card.num}</span>
-                <motion.div 
-                  className="w-12 h-12 rounded-full bg-sage flex items-center justify-center"
-                  whileHover={{ scale: 1.15, rotate: 90 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <span className="text-xl text-foreground">→</span>
-                </motion.div>
-              </div>
-              <h3 className="text-2xl font-heading font-semibold text-foreground mb-3 group-hover:text-sage-dark transition-colors duration-300">
-                {card.title}
-              </h3>
-              <p className="text-muted-foreground">
-                {card.desc}
-              </p>
+              <TiltCard 
+                intensity={12} 
+                glare={true} 
+                className="group bg-gray-50 hover:bg-sage/10 p-8 rounded-3xl transition-colors duration-500 cursor-pointer h-full"
+              >
+                <div className="flex items-start justify-between mb-16">
+                  <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{card.num}</span>
+                  <motion.div 
+                    className="w-12 h-12 rounded-full bg-sage flex items-center justify-center"
+                    whileHover={{ scale: 1.15, rotate: 90 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <span className="text-xl text-foreground">→</span>
+                  </motion.div>
+                </div>
+                <h3 className="text-2xl font-heading font-semibold text-foreground mb-3 group-hover:text-sage-dark transition-colors duration-300">
+                  {card.title}
+                </h3>
+                <p className="text-muted-foreground">
+                  {card.desc}
+                </p>
+              </TiltCard>
             </motion.div>
           ))}
         </div>
