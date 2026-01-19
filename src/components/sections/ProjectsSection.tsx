@@ -1,6 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import ParallaxImage from "@/components/ParallaxImage";
+import TiltCard from "@/components/animations/TiltCard";
 
 const projects = [
   {
@@ -67,24 +68,26 @@ const ProjectsSection = () => {
               transition={{ duration: 0.8, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
               className="group cursor-pointer"
             >
-              {/* Vertical Image Container */}
-              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl mb-6">
-                <ParallaxImage
-                  src={project.image}
-                  alt={project.title}
-                  intensity={25}
-                  className="w-full h-full"
-                />
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors duration-500" />
-                
-                {/* Category Badge */}
-                <div className="absolute top-6 left-6">
-                  <span className="px-4 py-2 bg-background/90 backdrop-blur-sm rounded-full text-xs uppercase tracking-[0.1em] font-medium">
-                    {project.category}
-                  </span>
+              <TiltCard intensity={10} glare={true} className="rounded-2xl mb-6">
+                {/* Vertical Image Container */}
+                <div className="relative aspect-[3/4] overflow-hidden rounded-2xl">
+                  <ParallaxImage
+                    src={project.image}
+                    alt={project.title}
+                    intensity={25}
+                    className="w-full h-full"
+                  />
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors duration-500" />
+                  
+                  {/* Category Badge */}
+                  <div className="absolute top-6 left-6 z-10">
+                    <span className="px-4 py-2 bg-background/90 backdrop-blur-sm rounded-full text-xs uppercase tracking-[0.1em] font-medium">
+                      {project.category}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </TiltCard>
 
               {/* Project Info */}
               <div>
