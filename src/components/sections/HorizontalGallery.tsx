@@ -1,5 +1,6 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { useSmoothScroll } from "@/hooks/useSmoothScroll";
 
 const galleryImages = [
   {
@@ -36,13 +37,15 @@ const galleryImages = [
 
 const HorizontalGallery = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  const { scrollYProgress } = useScroll({
+
+  const { smoothProgress } = useSmoothScroll({
     target: containerRef,
     offset: ["start end", "end start"],
+    stiffness: 100,
+    damping: 32,
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], ["5%", "-45%"]);
+  const x = useTransform(smoothProgress, [0, 1], ["5%", "-45%"]);
 
   return (
     <section ref={containerRef} className="py-32 bg-foreground overflow-hidden">
@@ -81,10 +84,10 @@ const HorizontalGallery = () => {
                 whileHover={{ scale: 1.08 }}
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               />
-              
+
               {/* Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
+
               {/* Title */}
               <motion.div
                 className="absolute bottom-0 left-0 right-0 p-6"

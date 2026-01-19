@@ -1,28 +1,29 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { useSmoothScroll } from "@/hooks/useSmoothScroll";
 import ParallaxImage from "@/components/ParallaxImage";
 import MagneticButton from "@/components/animations/MagneticButton";
+
 const HeroSection = () => {
-  const containerRef = useRef(null);
-  
-  const { scrollYProgress } = useScroll({
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { smoothProgress } = useSmoothScroll({
     target: containerRef,
-    offset: ["start start", "end start"]
+    offset: ["start start", "end start"],
+    stiffness: 90,
+    damping: 28,
   });
-  
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
-  const textY = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
-  const cardY = useTransform(scrollYProgress, [0, 0.5], [0, -50]);
-  const cardRotate = useTransform(scrollYProgress, [0, 0.5], [3, -5]);
+
+  const heroOpacity = useTransform(smoothProgress, [0, 0.55], [1, 0]);
+  const heroScale = useTransform(smoothProgress, [0, 0.55], [1, 0.96]);
+  const textY = useTransform(smoothProgress, [0, 0.55], [0, 90]);
+  const cardY = useTransform(smoothProgress, [0, 0.55], [0, -45]);
+  const cardRotate = useTransform(smoothProgress, [0, 0.55], [3, -4]);
 
   return (
     <section ref={containerRef} className="relative min-h-screen bg-foreground overflow-hidden">
       {/* Full-bleed Hero Image with Parallax */}
-      <motion.div 
-        style={{ opacity: heroOpacity, scale: heroScale }}
-        className="absolute inset-0"
-      >
+      <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="absolute inset-0">
         <motion.div
           initial={{ scale: 1.2, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -42,11 +43,8 @@ const HeroSection = () => {
       {/* Large Logo Overlay */}
       <div className="relative z-10 h-screen flex flex-col justify-between p-6 md:p-12">
         {/* Top - Logo with character animation */}
-        <motion.div
-          style={{ y: textY }}
-          className="overflow-hidden"
-        >
-          <motion.h1 
+        <motion.div style={{ y: textY }} className="overflow-hidden">
+          <motion.h1
             initial={{ y: 120 }}
             animate={{ y: 0 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
@@ -57,17 +55,17 @@ const HeroSection = () => {
                 key={i}
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ 
-                  duration: 0.8, 
-                  delay: 0.1 + (i * 0.05), 
-                  ease: [0.16, 1, 0.3, 1] 
+                transition={{
+                  duration: 0.8,
+                  delay: 0.1 + i * 0.05,
+                  ease: [0.16, 1, 0.3, 1],
                 }}
                 className="inline-block"
               >
                 {char}
               </motion.span>
             ))}
-            <motion.span 
+            <motion.span
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -87,7 +85,7 @@ const HeroSection = () => {
             transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-xl"
           >
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -95,7 +93,7 @@ const HeroSection = () => {
             >
               Great hires begin here.
             </motion.p>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -103,17 +101,14 @@ const HeroSection = () => {
             >
               Turn your network into income. Get paid for every successful referral.
             </motion.p>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col sm:flex-row gap-4 mt-8"
             >
-              <MagneticButton
-                className="btn-primary"
-                strength={0.4}
-              >
+              <MagneticButton className="btn-primary" strength={0.4}>
                 Start Earning
               </MagneticButton>
               <MagneticButton
@@ -143,7 +138,9 @@ const HeroSection = () => {
               />
             </div>
             <div className="p-5">
-              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-1">Latest Success</p>
+              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-1">
+                Latest Success
+              </p>
               <p className="font-heading font-semibold text-foreground">Tech Talent Network</p>
               <p className="text-sm text-muted-foreground mt-1">£15,000 paid out this month</p>
             </div>
@@ -164,7 +161,7 @@ const HeroSection = () => {
           className="flex flex-col items-center gap-2"
         >
           <span className="text-xs uppercase tracking-[0.2em] text-background/40">Scroll</span>
-          <motion.div 
+          <motion.div
             className="w-px h-10 bg-gradient-to-b from-background/50 to-transparent"
             animate={{ scaleY: [1, 0.6, 1] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
