@@ -1,8 +1,8 @@
 import { motion, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useSmoothScroll } from "@/hooks/useSmoothScroll";
-import ParallaxImage from "@/components/ParallaxImage";
 import MagneticButton from "@/components/animations/MagneticButton";
+import NetworkDiagram from "@/components/animations/NetworkDiagram";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -22,22 +22,20 @@ const HeroSection = () => {
 
   return (
     <section ref={containerRef} className="relative min-h-screen bg-foreground overflow-hidden">
-      {/* Full-bleed Hero Image with Parallax */}
-      <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="absolute inset-0">
+      {/* Interactive Network Diagram Background */}
+      <motion.div 
+        style={{ opacity: heroOpacity, scale: heroScale }} 
+        className="absolute inset-0"
+      >
         <motion.div
-          initial={{ scale: 1.2, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           className="w-full h-full"
         >
-          <ParallaxImage
-            src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&auto=format&fit=crop&q=90"
-            alt="Modern workspace"
-            intensity={30}
-            className="w-full h-full opacity-50"
-          />
+          <NetworkDiagram />
         </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-b from-foreground/30 via-foreground/10 to-foreground" />
+        <div className="absolute inset-0 bg-gradient-to-b from-foreground/20 via-transparent to-foreground/80 pointer-events-none" />
       </motion.div>
 
       {/* Large Logo Overlay */}
@@ -120,29 +118,37 @@ const HeroSection = () => {
             </motion.div>
           </motion.div>
 
-          {/* Right - Floating Project Card */}
+          {/* Right - Stats Card */}
           <motion.div
             style={{ y: cardY, rotate: cardRotate }}
             initial={{ opacity: 0, y: 100, rotate: 5 }}
             animate={{ opacity: 1, y: 0, rotate: 3 }}
             transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ scale: 1.03, rotate: 0 }}
-            className="hidden lg:block w-80 bg-background rounded-2xl overflow-hidden shadow-2xl cursor-pointer"
+            className="hidden lg:block w-72 bg-background/95 backdrop-blur-sm rounded-2xl overflow-hidden shadow-2xl cursor-pointer border border-foreground/5"
           >
-            <div className="aspect-[4/3] overflow-hidden">
-              <ParallaxImage
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&auto=format&fit=crop&q=90"
-                alt="Team collaboration"
-                intensity={15}
-                className="w-full h-full"
-              />
-            </div>
-            <div className="p-5">
-              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-1">
-                Latest Success
+            <div className="p-6">
+              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-4">
+                Network Stats
               </p>
-              <p className="font-heading font-semibold text-foreground">Tech Talent Network</p>
-              <p className="text-sm text-muted-foreground mt-1">£15,000 paid out this month</p>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Connections</span>
+                  <span className="font-heading font-bold text-sage">2,847</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Referrals</span>
+                  <span className="font-heading font-bold text-mustard">156</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Earnings</span>
+                  <span className="font-heading font-bold text-rose">£15,420</span>
+                </div>
+                <div className="h-px bg-foreground/10 my-2" />
+                <p className="text-xs text-muted-foreground">
+                  Your network is growing. Keep referring!
+                </p>
+              </div>
             </div>
           </motion.div>
         </div>
