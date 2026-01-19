@@ -2,6 +2,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ScrambleHeading from "@/components/animations/ScrambleHeading";
 
 const faqs = [
   {
@@ -117,9 +118,13 @@ const FAQSection = () => {
           <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-4">
             FAQ
           </p>
-          <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold text-foreground mb-6">
+          <ScrambleHeading 
+            as="h2" 
+            className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold text-foreground mb-6"
+            delay={0.2}
+          >
             Common Questions
-          </h2>
+          </ScrambleHeading>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Everything you need to know about earning through referrals
           </p>

@@ -1,7 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import TextScramble from "@/components/animations/TextScramble";
 import AnimatedCounter from "@/components/animations/AnimatedCounter";
+import ScrambleHeading from "@/components/animations/ScrambleHeading";
 
 const stats = [
   { value: 2500000, prefix: "£", suffix: "+", label: "Paid Out" },
@@ -81,16 +81,14 @@ const StatsSection = () => {
 
       {/* Social Proof Section */}
       <div className="container mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold text-foreground">
-            <TextScramble text="Trusted by thousands" className="font-heading" />
-          </h2>
-        </motion.div>
+        <div className="text-center mb-16">
+          <ScrambleHeading 
+            as="h2" 
+            className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold text-foreground"
+          >
+            Trusted by thousands
+          </ScrambleHeading>
+        </div>
 
         {/* Testimonial Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

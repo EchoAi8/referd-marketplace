@@ -1,16 +1,16 @@
 import { useRef, ReactNode } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 interface ParallaxLayerProps {
   children: ReactNode;
-  layer?: 1 | 2 | 3 | 4;
+  speed?: number; // -50 to 50, negative = move up on scroll, positive = move down
   className?: string;
 }
 
-// Individual layer component
+// Individual layer component with smooth parallax
 export const ParallaxLayer = ({ 
   children, 
-  layer = 1, 
+  speed = 0, 
   className = "" 
 }: ParallaxLayerProps) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -20,25 +20,17 @@ export const ParallaxLayer = ({
     offset: ["start end", "end start"],
   });
 
-  // Different speeds for different layers (matching GSAP values)
-  const layerSpeeds: Record<number, number> = {
-    1: 70,
-    2: 55,
-    3: 40,
-    4: 10,
-  };
-
-  const yPercent = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [0, layerSpeeds[layer] || 0]
-  );
+  // Smooth spring for buttery animation
+  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
+  
+  const y = useTransform(scrollYProgress, [0, 1], [-speed, speed]);
+  const smoothY = useSpring(y, springConfig);
 
   return (
     <motion.div
       ref={ref}
       className={className}
-      style={{ y: useTransform(yPercent, (v) => `${v}%`) }}
+      style={{ y: smoothY }}
     >
       {children}
     </motion.div>
@@ -53,7 +45,7 @@ interface ParallaxContainerProps {
 // Container that groups layers together
 const ParallaxLayers = ({ children, className = "" }: ParallaxContainerProps) => {
   return (
-    <div className={`relative overflow-hidden ${className}`}>
+    <div className={`relative ${className}`}>
       {children}
     </div>
   );

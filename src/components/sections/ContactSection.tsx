@@ -1,5 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
+import ScrambleHeading from "@/components/animations/ScrambleHeading";
 
 const ContactSection = () => {
   const ref = useRef(null);
@@ -26,9 +27,13 @@ const ContactSection = () => {
             <p className="text-xs uppercase tracking-[0.3em] text-background/60 mb-8">
               Get Started
             </p>
-            <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-semibold leading-[1.1] text-background mb-8">
+            <ScrambleHeading 
+              as="h2" 
+              className="text-fluid-4xl md:text-fluid-5xl font-heading font-semibold leading-[1.1] text-background mb-8"
+              delay={0.1}
+            >
               Ready to turn your network into income?
-            </h2>
+            </ScrambleHeading>
             <p className="text-lg text-background/70 mb-12 max-w-lg">
               Join thousands of people already earning through referrals. 
               It only takes a minute to get started.
