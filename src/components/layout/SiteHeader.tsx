@@ -8,15 +8,13 @@ import { useGridNavigation } from "@/hooks/use-grid-navigation";
 
 interface NavLink {
   label: string;
-  /** Route path (e.g. "/work") OR anchor (e.g. "#about") OR route + anchor (e.g. "/#about") */
   href: string;
 }
 
 const navLinks: NavLink[] = [
   { label: "About", href: "/about" },
   { label: "Work", href: "/work" },
-  { label: "Insights", href: "/#articles" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const SiteHeader = () => {
@@ -44,12 +42,6 @@ const SiteHeader = () => {
     };
   }, [isMobileMenuOpen]);
 
-  /**
-   * Smart navigation logic:
-   * - Pure route (/work, /about) => grid transition navigate
-   * - Pure anchor (#contact) => scroll on current page or if we're not on home, navigate home first
-   * - Composite (/#contact) => if already on that route, scroll; else navigate with transition
-   */
   const handleNav = (href: string) => {
     setIsMobileMenuOpen(false);
 
@@ -57,22 +49,18 @@ const SiteHeader = () => {
     const hasAnchor = href.includes("#");
 
     if (isAbsolute && hasAnchor) {
-      // e.g. "/#contact"
       const [route, anchor] = href.split("#");
       const targetRoute = route || "/";
       if (location.pathname === targetRoute) {
-        // same page, just scroll
         scrollToAnchor(`#${anchor}`);
       } else {
-        // navigate with grid transition, then scroll after load
         navigateWithTransition(targetRoute);
-        setTimeout(() => scrollToAnchor(`#${anchor}`), 800);
+        setTimeout(() => scrollToAnchor(`#${anchor}`), 900);
       }
       return;
     }
 
     if (isAbsolute) {
-      // pure route
       if (location.pathname !== href) {
         navigateWithTransition(href);
       }
@@ -80,7 +68,6 @@ const SiteHeader = () => {
     }
 
     if (hasAnchor) {
-      // pure anchor on current page (fallback)
       scrollToAnchor(href);
     }
   };
@@ -129,11 +116,19 @@ const SiteHeader = () => {
                 <MagneticButton
                   key={link.label}
                   onClick={() => handleNav(link.href)}
-                  className="relative text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 group bg-transparent border-none"
+                  className={`relative text-sm transition-colors duration-200 group bg-transparent border-none ${
+                    location.pathname === link.href
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
                   strength={0.4}
                 >
                   {link.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-foreground group-hover:w-full transition-all duration-300" />
+                  <span
+                    className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${
+                      location.pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                  />
                 </MagneticButton>
               ))}
             </nav>
@@ -203,7 +198,11 @@ const SiteHeader = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
                     onClick={() => handleNav(link.href)}
-                    className="text-3xl font-heading font-semibold text-foreground hover:text-sage transition-colors text-left py-3"
+                    className={`text-3xl font-heading font-semibold transition-colors text-left py-3 ${
+                      location.pathname === link.href
+                        ? "text-sage"
+                        : "text-foreground hover:text-sage"
+                    }`}
                   >
                     {link.label}
                   </motion.button>
