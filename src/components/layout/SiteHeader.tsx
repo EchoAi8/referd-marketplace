@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import MagneticButton from "@/components/animations/MagneticButton";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -55,43 +57,50 @@ const SiteHeader = () => {
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href="/" className="text-xl font-heading font-bold text-foreground tracking-tight">
+            <MagneticButton 
+              className="text-xl font-heading font-bold text-foreground tracking-tight bg-transparent border-none"
+              strength={0.2}
+            >
               Referd
-            </a>
+            </MagneticButton>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-10">
               {navLinks.map((link) => (
-                <button
+                <MagneticButton
                   key={link.label}
                   onClick={() => scrollToSection(link.href)}
-                  className="relative text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 group"
+                  className="relative text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 group bg-transparent border-none"
+                  strength={0.4}
                 >
                   {link.label}
                   <span className="absolute -bottom-1 left-0 w-0 h-px bg-foreground group-hover:w-full transition-all duration-300" />
-                </button>
+                </MagneticButton>
               ))}
             </nav>
 
-            {/* CTA Button */}
-            <div className="hidden md:block">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
+            {/* Right Side Actions */}
+            <div className="hidden md:flex items-center gap-4">
+              <ThemeToggle />
+              <MagneticButton
                 className="px-5 py-2.5 bg-foreground text-background rounded-full text-sm font-medium hover:bg-foreground/90 transition-colors"
+                strength={0.3}
               >
                 Get Started
-              </motion.button>
+              </MagneticButton>
             </div>
 
             {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-foreground"
-              aria-label="Toggle menu"
-            >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            <div className="md:hidden flex items-center gap-3">
+              <ThemeToggle />
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 text-foreground"
+                aria-label="Toggle menu"
+              >
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
         </div>
       </motion.header>

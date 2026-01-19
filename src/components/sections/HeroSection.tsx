@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import ParallaxImage from "@/components/ParallaxImage";
-
+import MagneticButton from "@/components/animations/MagneticButton";
 const HeroSection = () => {
   const containerRef = useRef(null);
   
@@ -110,22 +110,18 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col sm:flex-row gap-4 mt-8"
             >
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ duration: 0.2 }}
+              <MagneticButton
                 className="btn-primary"
+                strength={0.4}
               >
                 Start Earning
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2, backgroundColor: "rgba(255,255,255,0.1)" }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ duration: 0.2 }}
-                className="px-8 py-4 border border-background/30 text-background rounded-full font-semibold transition-colors"
+              </MagneticButton>
+              <MagneticButton
+                className="px-8 py-4 border border-background/30 text-background rounded-full font-semibold hover:bg-white/10 transition-colors"
+                strength={0.4}
               >
                 See How It Works
-              </motion.button>
+              </MagneticButton>
             </motion.div>
           </motion.div>
 
