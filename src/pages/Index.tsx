@@ -1,26 +1,36 @@
-import { useState } from "react";
-import HeroSection from "@/components/HeroSection";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import VideoIntro from "@/components/VideoIntro";
+import SiteHeader from "@/components/layout/SiteHeader";
+import SiteFooter from "@/components/layout/SiteFooter";
+import HeroSection from "@/components/sections/HeroSection";
+import AboutSection from "@/components/sections/AboutSection";
+import StatsSection from "@/components/sections/StatsSection";
+import ProjectsSection from "@/components/sections/ProjectsSection";
+import ArticlesSection from "@/components/sections/ArticlesSection";
+import ContactSection from "@/components/sections/ContactSection";
 
 const Index = () => {
-  const [showIntro, setShowIntro] = useState(true);
-
   return (
-    <>
-      {/* Video Intro Overlay */}
-      {showIntro && (
-        <VideoIntro onComplete={() => setShowIntro(false)} />
-      )}
-
-      {/* Main Site Content */}
-      <div className="min-h-screen bg-white">
-        <Navigation />
+    <div className="min-h-screen bg-background">
+      <SiteHeader />
+      
+      <main>
         <HeroSection />
-        <Footer />
-      </div>
-    </>
+        <section id="about">
+          <AboutSection />
+        </section>
+        <StatsSection />
+        <section id="projects">
+          <ProjectsSection />
+        </section>
+        <section id="articles">
+          <ArticlesSection />
+        </section>
+        <section id="contact">
+          <ContactSection />
+        </section>
+      </main>
+
+      <SiteFooter />
+    </div>
   );
 };
 
