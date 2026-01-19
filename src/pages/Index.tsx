@@ -3,6 +3,7 @@ import SiteFooter from "@/components/layout/SiteFooter";
 import PageTransition from "@/components/layout/PageTransition";
 import CursorFollower from "@/components/animations/CursorFollower";
 import Preloader from "@/components/animations/Preloader";
+import { GridOverlay } from "@/components/animations/GridTransition";
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 import StickyHowItWorks from "@/components/sections/StickyHowItWorks";
@@ -19,6 +20,7 @@ const Index = () => {
   return (
     <>
       <Preloader />
+      <GridOverlay />
       <CursorFollower />
       <PageTransition>
         <div className="min-h-screen bg-background">
