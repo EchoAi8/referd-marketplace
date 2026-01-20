@@ -137,6 +137,170 @@ const typeIcons = {
   growth: TrendingUp,
 };
 
+// Holographic skeleton for loading state
+const ProfileCardSkeleton = () => {
+  return (
+    <div className="relative w-[340px] h-[460px] rounded-2xl overflow-hidden bg-background border border-border/30">
+      {/* Image area skeleton */}
+      <div className="relative h-[60%] overflow-hidden bg-muted/10">
+        {/* Scan lines */}
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              0deg,
+              transparent,
+              transparent 3px,
+              hsl(var(--foreground) / 0.02) 3px,
+              hsl(var(--foreground) / 0.02) 6px
+            )`,
+          }}
+        />
+
+        {/* Holographic sweep */}
+        <motion.div
+          className="absolute inset-0"
+          animate={{ 
+            backgroundPosition: ["200% 0%", "-200% 0%"],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          style={{
+            background: `linear-gradient(
+              90deg,
+              transparent 0%,
+              hsl(var(--sage) / 0.15) 25%,
+              hsl(var(--sage) / 0.3) 50%,
+              hsl(var(--sage) / 0.15) 75%,
+              transparent 100%
+            )`,
+            backgroundSize: "200% 100%",
+          }}
+        />
+
+        {/* Data streams */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-px bg-gradient-to-b from-transparent via-sage/30 to-transparent"
+            style={{
+              left: `${15 + i * 14}%`,
+              height: "40%",
+            }}
+            animate={{ 
+              y: ["-40%", "140%"],
+              opacity: [0, 1, 1, 0],
+            }}
+            transition={{
+              duration: 1.8,
+              repeat: Infinity,
+              delay: i * 0.2,
+              ease: "linear",
+            }}
+          />
+        ))}
+
+        {/* Corner brackets */}
+        <div className="absolute top-3 left-3 w-5 h-5 border-l-2 border-t-2 border-sage/40" />
+        <div className="absolute top-3 right-3 w-5 h-5 border-r-2 border-t-2 border-sage/40" />
+        <div className="absolute bottom-3 left-3 w-5 h-5 border-l-2 border-b-2 border-sage/40" />
+        <div className="absolute bottom-3 right-3 w-5 h-5 border-r-2 border-b-2 border-sage/40" />
+
+        {/* Center loading indicator */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <motion.div
+            className="relative w-12 h-12"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          >
+            <div className="absolute inset-0 rounded-full border-2 border-sage/20" />
+            <motion.div
+              className="absolute inset-0 rounded-full border-2 border-transparent border-t-sage/60"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            />
+          </motion.div>
+        </div>
+
+        {/* Rating badge skeleton */}
+        <div className="absolute top-4 right-4 w-14 h-7 rounded-full bg-muted/30 backdrop-blur-sm overflow-hidden">
+          <motion.div
+            className="absolute inset-0"
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              background: "linear-gradient(90deg, transparent, hsl(var(--sage) / 0.3), transparent)",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Content area */}
+      <div className="h-[40%] p-5 space-y-3">
+        {/* Name skeleton */}
+        <div className="h-6 w-[60%] rounded bg-muted/20 overflow-hidden relative">
+          <motion.div
+            className="absolute inset-0"
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.1 }}
+            style={{
+              background: "linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.1), transparent)",
+            }}
+          />
+        </div>
+
+        {/* Role skeleton */}
+        <div className="h-4 w-[45%] rounded bg-muted/15 overflow-hidden relative">
+          <motion.div
+            className="absolute inset-0"
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+            style={{
+              background: "linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.1), transparent)",
+            }}
+          />
+        </div>
+
+        {/* Location skeleton */}
+        <div className="h-3 w-[35%] rounded bg-muted/10" />
+
+        {/* Stats row */}
+        <div className="flex gap-3 pt-2">
+          {[0, 1].map((i) => (
+            <div key={i} className="flex-1 h-14 rounded-lg bg-muted/10 overflow-hidden relative">
+              <motion.div
+                className="absolute inset-0"
+                animate={{ x: ["-100%", "100%"] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 + i * 0.1 }}
+                style={{
+                  background: "linear-gradient(90deg, transparent, hsl(var(--sage) / 0.15), transparent)",
+                }}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Skills skeleton */}
+        <div className="flex gap-2 pt-1">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="h-5 rounded bg-muted/10" style={{ width: 50 + i * 10 }} />
+          ))}
+        </div>
+      </div>
+
+      {/* Bottom indicator */}
+      <motion.div
+        className="absolute bottom-0 left-0 h-1 bg-sage/40"
+        animate={{ width: ["0%", "100%", "0%"], left: ["0%", "0%", "100%"] }}
+        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </div>
+  );
+};
+
 // Clean, minimal profile card
 const ProfileCard = ({ 
   profile, 
@@ -152,6 +316,7 @@ const ProfileCard = ({
   onClick: () => void;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
     <motion.div
@@ -169,6 +334,19 @@ const ProfileCard = ({
       onHoverEnd={() => setIsHovered(false)}
       onClick={onClick}
     >
+      {/* Loading skeleton */}
+      <AnimatePresence>
+        {!imageLoaded && (
+          <motion.div
+            className="absolute inset-0 z-10"
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <ProfileCardSkeleton />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Card */}
       <motion.div
         className="relative w-full h-full rounded-2xl overflow-hidden bg-background"
@@ -178,6 +356,7 @@ const ProfileCard = ({
               ? "0 40px 100px -20px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.05)"
               : "0 30px 80px -20px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05)"
             : "0 10px 40px -15px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.03)",
+          opacity: imageLoaded ? 1 : 0,
         }}
         transition={{ duration: 0.4 }}
       >
@@ -189,6 +368,7 @@ const ProfileCard = ({
             className="w-full h-full object-cover"
             animate={{ scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+            onLoad={() => setImageLoaded(true)}
           />
           
           {/* Subtle gradient overlay */}
