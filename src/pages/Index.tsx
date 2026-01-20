@@ -2,7 +2,7 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import PageTransition from "@/components/layout/PageTransition";
 import CursorFollower from "@/components/animations/CursorFollower";
-import Preloader from "@/components/animations/Preloader";
+import TypewriterIntro from "@/components/animations/TypewriterIntro";
 import { GridOverlay } from "@/components/animations/GridTransition";
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
@@ -18,11 +18,18 @@ import ContactSection from "@/components/sections/ContactSection";
 import { useState } from "react";
 
 const Index = () => {
+  const [introComplete, setIntroComplete] = useState(false);
   const [showGrid, setShowGrid] = useState(false);
+
+  const handleIntroComplete = () => {
+    setIntroComplete(true);
+    // Small delay before showing grid overlay
+    setTimeout(() => setShowGrid(true), 100);
+  };
 
   return (
     <>
-      <Preloader onComplete={() => setShowGrid(true)} />
+      {!introComplete && <TypewriterIntro onComplete={handleIntroComplete} />}
       {showGrid && <GridOverlay key="home-grid" />}
       <CursorFollower />
       <PageTransition>
