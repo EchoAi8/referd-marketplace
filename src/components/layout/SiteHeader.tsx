@@ -4,7 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import MagneticButton from "@/components/animations/MagneticButton";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import SoundToggle from "@/components/ui/SoundToggle";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
+import { useSoundEffects } from "@/hooks/use-sound-effects";
 
 interface NavLink {
   label: string;
@@ -21,6 +23,7 @@ const navLinks: NavLink[] = [
 
 const SiteHeader = () => {
   const { navigateWithTransition } = useGridNavigation();
+  const { playClick, playWhoosh } = useSoundEffects();
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -46,6 +49,7 @@ const SiteHeader = () => {
 
   const handleNav = (href: string) => {
     setIsMobileMenuOpen(false);
+    playClick();
 
     const isAbsolute = href.startsWith("/");
     const hasAnchor = href.includes("#");
@@ -56,6 +60,7 @@ const SiteHeader = () => {
       if (location.pathname === targetRoute) {
         scrollToAnchor(`#${anchor}`);
       } else {
+        playWhoosh();
         navigateWithTransition(targetRoute);
         setTimeout(() => scrollToAnchor(`#${anchor}`), 900);
       }
@@ -64,6 +69,7 @@ const SiteHeader = () => {
 
     if (isAbsolute) {
       if (location.pathname !== href) {
+        playWhoosh();
         navigateWithTransition(href);
       }
       return;
@@ -82,9 +88,11 @@ const SiteHeader = () => {
   };
 
   const handleLogoClick = () => {
+    playClick();
     if (location.pathname === "/") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
+      playWhoosh();
       navigateWithTransition("/");
     }
   };
@@ -136,7 +144,8 @@ const SiteHeader = () => {
             </nav>
 
             {/* Right Side Actions */}
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-3">
+              <SoundToggle />
               <ThemeToggle />
               <MagneticButton
                 className="px-5 py-2.5 bg-foreground text-background rounded-full text-sm font-medium hover:bg-foreground/90 transition-colors"
@@ -147,10 +156,14 @@ const SiteHeader = () => {
             </div>
 
             {/* Mobile Menu Toggle */}
-            <div className="md:hidden flex items-center gap-3">
+            <div className="md:hidden flex items-center gap-2">
+              <SoundToggle />
               <ThemeToggle />
               <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                onClick={() => {
+                  playClick();
+                  setIsMobileMenuOpen(!isMobileMenuOpen);
+                }}
                 className="p-2 text-foreground"
                 aria-label="Toggle menu"
               >
