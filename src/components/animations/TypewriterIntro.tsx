@@ -1,79 +1,88 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSoundEffects } from "@/hooks/use-sound-effects";
+import { getActiveSequence, type WordConfig, type SequenceConfig } from "@/config/intro-sequences";
 
 interface TypewriterIntroProps {
   onComplete: () => void;
 }
 
-// Word animation configurations
-interface WordConfig {
-  text: string;
-  className?: string;
-  animation?: "drop" | "pop" | "rotate" | "fade" | "slide" | "scale";
-  delay?: number;
-}
+// Typewriter letter-by-letter animation with cursor
+const TypewriterText = ({ 
+  text, 
+  className, 
+  onComplete,
+  playClick 
+}: { 
+  text: string; 
+  className?: string; 
+  onComplete?: () => void;
+  playClick: () => void;
+}) => {
+  const [displayedLetters, setDisplayedLetters] = useState(0);
+  const [showCursor, setShowCursor] = useState(true);
 
-interface SequenceConfig {
-  words: WordConfig[];
-  duration: number;
-  layout?: "center" | "stacked" | "scattered";
-}
+  useEffect(() => {
+    if (displayedLetters < text.length) {
+      const timer = setTimeout(() => {
+        setDisplayedLetters((prev) => prev + 1);
+        playClick();
+      }, 80 + Math.random() * 40); // Variable typing speed for realism
+      return () => clearTimeout(timer);
+    } else {
+      // Hide cursor after typing complete
+      const cursorTimer = setTimeout(() => {
+        setShowCursor(false);
+        onComplete?.();
+      }, 500);
+      return () => clearTimeout(cursorTimer);
+    }
+  }, [displayedLetters, text.length, onComplete, playClick]);
 
-const sequences: SequenceConfig[] = [
-  {
-    words: [{ text: "You know", animation: "fade" }, { text: "great people.", animation: "pop", className: "text-sage" }],
-    duration: 1800,
-    layout: "center",
-  },
-  {
-    words: [{ text: "They know", animation: "slide" }, { text: "you.", animation: "scale", className: "font-bold" }],
-    duration: 1600,
-    layout: "center",
-  },
-  {
-    words: [{ text: "That's", animation: "fade" }, { text: "valuable.", animation: "rotate", className: "text-mustard" }],
-    duration: 1800,
-    layout: "center",
-  },
-  {
-    words: [{ text: "Agencies charge", animation: "drop", className: "text-muted-foreground" }],
-    duration: 1200,
-    layout: "center",
-  },
-  {
-    words: [{ text: "20-25%", animation: "pop", className: "text-rose text-6xl md:text-8xl font-bold" }],
-    duration: 1600,
-    layout: "center",
-  },
-  {
-    words: [{ text: "You get", animation: "fade" }, { text: "nothing.", animation: "drop", className: "text-muted-foreground line-through" }],
-    duration: 1400,
-    layout: "center",
-  },
-  {
-    words: [{ text: "Until now.", animation: "scale", className: "text-foreground font-bold text-5xl md:text-7xl" }],
-    duration: 1800,
-    layout: "center",
-  },
-  {
-    words: [
-      { text: "Refer.", animation: "pop", className: "text-sage" },
-      { text: "Earn.", animation: "pop", className: "text-mustard", delay: 0.15 },
-      { text: "Repeat.", animation: "pop", className: "text-rose", delay: 0.3 },
-    ],
-    duration: 2200,
-    layout: "center",
-  },
-  {
-    words: [{ text: "Referd", animation: "scale", className: "text-7xl md:text-9xl font-bold tracking-tight" }],
-    duration: 2000,
-    layout: "center",
-  },
-];
+  // Cursor blink effect
+  useEffect(() => {
+    if (displayedLetters >= text.length) return;
+    const blinkInterval = setInterval(() => {
+      setShowCursor((prev) => !prev);
+    }, 530);
+    return () => clearInterval(blinkInterval);
+  }, [displayedLetters, text.length]);
 
-const WordAnimation = ({ word, index }: { word: WordConfig; index: number }) => {
+  return (
+    <motion.span
+      className={`inline-block ${className || ""}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
+    >
+      {text.slice(0, displayedLetters)}
+      <motion.span
+        className="inline-block w-[3px] h-[1em] bg-foreground ml-1 align-middle"
+        animate={{ opacity: showCursor ? 1 : 0 }}
+        transition={{ duration: 0.1 }}
+        style={{ verticalAlign: "text-bottom" }}
+      />
+    </motion.span>
+  );
+};
+
+// Standard word animations
+const WordAnimation = ({ 
+  word, 
+  index,
+  playSound
+}: { 
+  word: WordConfig; 
+  index: number;
+  playSound: () => void;
+}) => {
   const baseDelay = word.delay || index * 0.12;
-  
+
+  useEffect(() => {
+    const timer = setTimeout(playSound, baseDelay * 1000);
+    return () => clearTimeout(timer);
+  }, [baseDelay, playSound]);
+
   const getAnimation = () => {
     switch (word.animation) {
       case "drop":
@@ -136,44 +145,84 @@ const WordAnimation = ({ word, index }: { word: WordConfig; index: number }) => 
 };
 
 const TypewriterIntro = ({ onComplete }: TypewriterIntroProps) => {
+  const config = useMemo(() => getActiveSequence(), []);
+  const sequences = config.sequences;
+  
   const [currentSequence, setCurrentSequence] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [typewriterComplete, setTypewriterComplete] = useState(false);
+
+  const { playClick, playHover, playWhoosh, playSuccess, playToggle, enabled: soundEnabled } = useSoundEffects();
+
+  // Sound effect mapper
+  const playSequenceSound = useCallback((sound: SequenceConfig["sound"]) => {
+    if (!soundEnabled) return;
+    switch (sound) {
+      case "whoosh":
+        playWhoosh();
+        break;
+      case "pop":
+        playToggle();
+        break;
+      case "click":
+        playClick();
+        break;
+      case "success":
+        playSuccess();
+        break;
+    }
+  }, [soundEnabled, playWhoosh, playToggle, playClick, playSuccess]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mediaQuery.matches);
-    
+
     const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
     mediaQuery.addEventListener("change", handler);
     return () => mediaQuery.removeEventListener("change", handler);
   }, []);
+
+  // Play sound when sequence changes
+  useEffect(() => {
+    if (currentSequence < sequences.length) {
+      playSequenceSound(sequences[currentSequence].sound);
+    }
+  }, [currentSequence, sequences, playSequenceSound]);
 
   // Auto-advance sequences
   useEffect(() => {
     if (!isVisible || prefersReducedMotion) return;
     if (currentSequence >= sequences.length) return;
 
+    const currentSeq = sequences[currentSequence];
+    const isTypewriter = currentSeq.words.some((w) => w.animation === "typewriter");
+
+    // For typewriter, wait for completion callback
+    if (isTypewriter && !typewriterComplete) return;
+
     const timer = setTimeout(() => {
       if (currentSequence < sequences.length - 1) {
         setCurrentSequence((prev) => prev + 1);
+        setTypewriterComplete(false);
       } else {
-        // Final sequence complete
         handleComplete();
       }
-    }, sequences[currentSequence].duration);
+    }, isTypewriter ? 800 : currentSeq.duration);
 
     return () => clearTimeout(timer);
-  }, [currentSequence, isVisible, prefersReducedMotion]);
+  }, [currentSequence, isVisible, prefersReducedMotion, sequences, typewriterComplete]);
 
   const handleComplete = useCallback(() => {
+    playSuccess();
     setIsVisible(false);
     setTimeout(onComplete, 600);
-  }, [onComplete]);
+  }, [onComplete, playSuccess]);
 
   const handleSkip = useCallback(() => {
+    playClick();
     handleComplete();
-  }, [handleComplete]);
+  }, [handleComplete, playClick]);
 
   // Reduced motion fallback
   if (prefersReducedMotion) {
@@ -201,6 +250,7 @@ const TypewriterIntro = ({ onComplete }: TypewriterIntroProps) => {
   }
 
   const currentSeq = sequences[currentSequence];
+  const hasTypewriter = currentSeq?.words.some((w) => w.animation === "typewriter");
 
   return (
     <AnimatePresence>
@@ -217,6 +267,7 @@ const TypewriterIntro = ({ onComplete }: TypewriterIntroProps) => {
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
             onClick={handleSkip}
+            onMouseEnter={playHover}
             className="fixed top-8 right-8 z-[10001] font-heading text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             Skip →
@@ -234,9 +285,24 @@ const TypewriterIntro = ({ onComplete }: TypewriterIntroProps) => {
                 className="text-center"
               >
                 <div className="font-heading text-3xl md:text-5xl lg:text-6xl text-foreground flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-                  {currentSeq.words.map((word, idx) => (
-                    <WordAnimation key={`${currentSequence}-${idx}`} word={word} index={idx} />
-                  ))}
+                  {currentSeq?.words.map((word, idx) =>
+                    word.animation === "typewriter" ? (
+                      <TypewriterText
+                        key={`${currentSequence}-${idx}`}
+                        text={word.text}
+                        className={word.className}
+                        onComplete={() => setTypewriterComplete(true)}
+                        playClick={playClick}
+                      />
+                    ) : (
+                      <WordAnimation
+                        key={`${currentSequence}-${idx}`}
+                        word={word}
+                        index={idx}
+                        playSound={() => {}}
+                      />
+                    )
+                  )}
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -248,7 +314,11 @@ const TypewriterIntro = ({ onComplete }: TypewriterIntroProps) => {
               <motion.div
                 key={idx}
                 className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                  idx === currentSequence ? "bg-foreground" : idx < currentSequence ? "bg-foreground/40" : "bg-foreground/10"
+                  idx === currentSequence
+                    ? "bg-foreground"
+                    : idx < currentSequence
+                    ? "bg-foreground/40"
+                    : "bg-foreground/10"
                 }`}
                 animate={idx === currentSequence ? { scale: [1, 1.3, 1] } : {}}
                 transition={{ duration: 0.6, repeat: Infinity }}
