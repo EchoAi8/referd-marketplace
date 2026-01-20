@@ -460,6 +460,7 @@ const ProfileShowcase = () => {
   const [selectedProfile, setSelectedProfile] = useState<ProfileData | null>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isInteracting, setIsInteracting] = useState(false);
+  const [hasEntered, setHasEntered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const autoPlayRef = useRef<NodeJS.Timeout>();
   
@@ -468,6 +469,12 @@ const ProfileShowcase = () => {
 
   // Smooth spring rotation
   const springRotation = useSpring(0, { stiffness: 80, damping: 25, mass: 1.2 });
+
+  // Trigger entrance animation on mount
+  useEffect(() => {
+    const timer = setTimeout(() => setHasEntered(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Update rotation based on active index
   useEffect(() => {
@@ -563,21 +570,54 @@ const ProfileShowcase = () => {
               const opacity = 0.25 + normalizedZ * 0.75;
               const scale = 0.75 + normalizedZ * 0.3;
 
+              // Entrance animation: cards fly in from outer edges
+              const entranceDelay = index * 0.08;
+              const entranceAngle = (index * cardAngle * Math.PI) / 180;
+              const entranceX = Math.sin(entranceAngle) * 1200;
+              const entranceZ = -800;
+
               return (
                 <motion.div
                   key={profile.id}
                   className="absolute left-1/2 top-1/2"
-                  style={{
+                  initial={{ 
+                    x: entranceX - 170, 
+                    y: -230, 
+                    z: entranceZ,
+                    opacity: 0,
+                    scale: 0.5,
+                    rotateY: 45,
+                  }}
+                  animate={hasEntered ? {
                     x: x - 170,
                     y: -230,
                     z,
+                    opacity: opacity,
+                    scale: 1,
+                    rotateY: 0,
+                  } : {
+                    x: entranceX - 170, 
+                    y: -230, 
+                    z: entranceZ,
+                    opacity: 0,
+                    scale: 0.5,
+                    rotateY: 45,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 60,
+                    damping: 18,
+                    mass: 1,
+                    delay: hasEntered ? entranceDelay : 0,
+                  }}
+                  style={{
                     zIndex: Math.round(normalizedZ * 100),
                   }}
                 >
                   <ProfileCard
                     profile={profile}
                     isActive={isActive}
-                    opacity={opacity}
+                    opacity={hasEntered ? opacity : 0}
                     scale={scale}
                     onClick={() => handleCardClick(index)}
                   />
