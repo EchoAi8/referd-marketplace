@@ -100,8 +100,8 @@ const InteractiveNetworkCanvas = () => {
   const floatingMoneyRef = useRef<FloatingMoney[]>([]);
   const ripplesRef = useRef<RippleWave[]>([]);
   const trailRef = useRef<TrailPoint[]>([]);
-  const mouseRef = useRef({ x: -1000, y: -1000 });
-  const prevMouseRef = useRef({ x: -1000, y: -1000 });
+  const mouseRef = useRef({ x: -9999, y: -9999 });
+  const prevMouseRef = useRef({ x: -9999, y: -9999 });
   const mouseVelocityRef = useRef({ x: 0, y: 0 });
   const imagesRef = useRef<Map<string, HTMLImageElement>>(new Map());
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -112,6 +112,9 @@ const InteractiveNetworkCanvas = () => {
   const lastHireTimeRef = useRef(0);
   const networkValueRef = useRef(427832);
   const timeRef = useRef(0);
+  
+  // Track which nodes always show faces (2-3 featured nodes)
+  const featuredNodesRef = useRef<Set<number>>(new Set());
 
   // Preload images
   useEffect(() => {
@@ -125,29 +128,31 @@ const InteractiveNetworkCanvas = () => {
     });
   }, []);
 
-  // Initialize particles
+  // Initialize particles - spread across ENTIRE screen
   const initializeParticles = useCallback((width: number, height: number) => {
     const particles: Particle[] = [];
-    const centerX = width / 2;
-    const centerY = height / 2;
     
-    // Create referrers (cyan nodes) - bigger nodes
-    for (let i = 0; i < 12; i++) {
-      const angle = (i / 12) * Math.PI * 2;
-      const radius = Math.min(width, height) * 0.28 + Math.random() * 80;
-      const x = centerX + Math.cos(angle) * radius;
-      const y = centerY + Math.sin(angle) * radius;
+    // Featured nodes that always show faces (indices 0, 3, 7 - referrers)
+    featuredNodesRef.current = new Set([0, 3, 7]);
+    
+    // Create referrers (cyan nodes) - spread across entire screen
+    for (let i = 0; i < 15; i++) {
+      // Distribute across entire canvas with padding
+      const padding = 80;
+      const x = padding + Math.random() * (width - padding * 2);
+      const y = padding + Math.random() * (height - padding * 2);
       const fee = Math.floor(Math.random() * 15000 + 8000);
+      const isFeatured = featuredNodesRef.current.has(i);
       
       particles.push({
         id: i,
         x,
         y,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2,
+        vx: (Math.random() - 0.5) * 3,
+        vy: (Math.random() - 0.5) * 3,
         baseX: x,
         baseY: y,
-        radius: 28 + Math.random() * 14, // Bigger nodes for referrers
+        radius: isFeatured ? 38 + Math.random() * 8 : 26 + Math.random() * 12, // Featured nodes are bigger
         type: "referrer",
         parentId: null,
         name: REFERRER_NAMES[i % REFERRER_NAMES.length],
@@ -162,25 +167,31 @@ const InteractiveNetworkCanvas = () => {
       });
     }
     
-    // Create referred (magenta nodes) - smaller nodes
-    for (let i = 0; i < 20; i++) {
-      const parentId = i % 12;
+    // Create referred (magenta nodes) - also spread across screen
+    for (let i = 0; i < 25; i++) {
+      const parentId = i % 15;
       const parent = particles[parentId];
+      // Position near parent but with more spread
       const offsetAngle = Math.random() * Math.PI * 2;
-      const offsetRadius = 90 + Math.random() * 70;
-      const x = parent.x + Math.cos(offsetAngle) * offsetRadius;
-      const y = parent.y + Math.sin(offsetAngle) * offsetRadius;
+      const offsetRadius = 100 + Math.random() * 150;
+      let x = parent.x + Math.cos(offsetAngle) * offsetRadius;
+      let y = parent.y + Math.sin(offsetAngle) * offsetRadius;
+      
+      // Keep within bounds
+      x = Math.max(50, Math.min(width - 50, x));
+      y = Math.max(50, Math.min(height - 50, y));
+      
       const fee = Math.floor(Math.random() * 8000 + 3000);
       
       particles.push({
-        id: 12 + i,
+        id: 15 + i,
         x,
         y,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2,
+        vx: (Math.random() - 0.5) * 3,
+        vy: (Math.random() - 0.5) * 3,
         baseX: x,
         baseY: y,
-        radius: 14 + Math.random() * 8,
+        radius: 12 + Math.random() * 10,
         type: "referred",
         parentId,
         name: REFERRED_NAMES[i % REFERRED_NAMES.length],
@@ -350,58 +361,71 @@ const InteractiveNetworkCanvas = () => {
       const mouseVx = mouseVelocityRef.current.x;
       const mouseVy = mouseVelocityRef.current.y;
       const mouseSpeed = Math.sqrt(mouseVx * mouseVx + mouseVy * mouseVy);
+      
+      // Check if mouse is actually on screen
+      const mouseOnScreen = mouse.x > 0 && mouse.x < dimensions.width && mouse.y > 0 && mouse.y < dimensions.height;
 
       // Physics simulation with cursor bounce and interaction
       for (const p of particles) {
         const dx = p.x - mouse.x;
         const dy = p.y - mouse.y;
         const mouseDist = Math.sqrt(dx * dx + dy * dy);
-        const cursorRadius = 80; // Collision radius of cursor
+        const cursorRadius = 120; // Larger collision radius
         
-        // BOUNCE OFF CURSOR - when cursor collides with particle
-        if (mouseDist < cursorRadius + p.radius && mouseDist > 0) {
-          // Calculate bounce direction (away from cursor)
-          const nx = dx / mouseDist;
-          const ny = dy / mouseDist;
-          
-          // Transfer mouse velocity to particle with amplification
-          const bounceForce = Math.max(3, mouseSpeed * 0.8);
-          const randomAngle = (Math.random() - 0.5) * 0.5;
-          
-          p.vx += (nx * bounceForce + mouseVx * 0.3) * Math.cos(randomAngle);
-          p.vy += (ny * bounceForce + mouseVy * 0.3) * Math.sin(randomAngle);
-          
-          // Push particle outside cursor radius
-          const overlap = cursorRadius + p.radius - mouseDist;
-          p.x += nx * overlap * 0.5;
-          p.y += ny * overlap * 0.5;
-          
-          // Add a ripple on collision
-          if (mouseSpeed > 5) {
-            ripplesRef.current.push({
-              id: Date.now() + Math.random(),
-              x: p.x,
-              y: p.y,
-              radius: 0,
-              opacity: 0.5,
-              hue: p.type === "referrer" ? 180 : 300,
-            });
+        if (mouseOnScreen) {
+          // BOUNCE OFF CURSOR - when cursor collides with particle
+          if (mouseDist < cursorRadius + p.radius && mouseDist > 0) {
+            // Calculate bounce direction (away from cursor)
+            const nx = dx / mouseDist;
+            const ny = dy / mouseDist;
+            
+            // Strong bounce force - always significant even with slow mouse
+            const baseForce = 8;
+            const velocityBonus = mouseSpeed * 0.5;
+            const bounceForce = baseForce + velocityBonus;
+            
+            // Apply bounce with some randomness
+            const randomSpread = (Math.random() - 0.5) * 0.3;
+            p.vx += nx * bounceForce * (1 + randomSpread);
+            p.vy += ny * bounceForce * (1 + randomSpread);
+            
+            // Also add mouse velocity transfer
+            p.vx += mouseVx * 0.4;
+            p.vy += mouseVy * 0.4;
+            
+            // Push particle outside cursor radius immediately
+            const overlap = cursorRadius + p.radius - mouseDist + 5;
+            p.x += nx * overlap;
+            p.y += ny * overlap;
+            
+            // Add a ripple on collision
+            if (Math.random() > 0.5) {
+              ripplesRef.current.push({
+                id: Date.now() + Math.random(),
+                x: (p.x + mouse.x) / 2,
+                y: (p.y + mouse.y) / 2,
+                radius: 0,
+                opacity: 0.6,
+                hue: p.type === "referrer" ? 180 : 300,
+              });
+            }
           }
-        }
-        // SPEED UP when cursor is nearby (within 200px)
-        else if (mouseDist < 200 && mouseDist > cursorRadius + p.radius) {
-          const proximityFactor = 1 - (mouseDist / 200);
-          const speedBoost = 1 + proximityFactor * 2; // Up to 3x speed boost
-          
-          // Add some chase/flee behavior based on mouse movement
-          if (mouseSpeed > 2) {
-            p.vx += (mouseVx * 0.05) * proximityFactor;
-            p.vy += (mouseVy * 0.05) * proximityFactor;
+          // SPEED UP when cursor is nearby (within 250px)
+          else if (mouseDist < 250 && mouseDist > cursorRadius + p.radius) {
+            const proximityFactor = 1 - (mouseDist / 250);
+            
+            // Flee away from cursor
+            const nx = dx / mouseDist;
+            const ny = dy / mouseDist;
+            p.vx += nx * proximityFactor * 1.5;
+            p.vy += ny * proximityFactor * 1.5;
+            
+            // Also inherit some mouse velocity
+            if (mouseSpeed > 2) {
+              p.vx += mouseVx * 0.08 * proximityFactor;
+              p.vy += mouseVy * 0.08 * proximityFactor;
+            }
           }
-          
-          // Particles become more energetic near cursor
-          p.vx *= 1 + proximityFactor * 0.1;
-          p.vy *= 1 + proximityFactor * 0.1;
         }
 
         // Repulsion from other particles
@@ -539,22 +563,23 @@ const InteractiveNetworkCanvas = () => {
       for (const p of particles) {
         const isHovered = hoveredParticle?.id === p.id;
         const isSelected = selectedParticle?.id === p.id;
-        const isBigNode = p.radius > 25; // Big nodes show photos on hover
+        const isFeatured = featuredNodesRef.current.has(p.id); // Always show face for featured
+        const isBigNode = p.type === "referrer" && p.radius > 30;
         const pulse = Math.sin(time * 0.003 + p.pulsePhase) * 0.2 + 1;
         const energyPulse = Math.sin(time * 0.006 + p.pulsePhase) * 0.15 + 1;
         
         // Calculate velocity magnitude for visual feedback
         const vel = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-        const velScale = 1 + vel * 0.02; // Slight scale based on velocity
+        const velScale = 1 + vel * 0.015;
         
-        const drawRadius = p.radius * (isHovered ? 1.5 : isSelected ? 1.7 : pulse) * velScale;
+        const drawRadius = p.radius * (isHovered ? 1.4 : isSelected ? 1.6 : pulse) * velScale;
         
         const colors = p.type === "referrer" ? REFERRER_COLORS : REFERRED_COLORS;
         
         // Outer glow rings - more intense when moving fast
         for (let ring = 3; ring > 0; ring--) {
-          const ringRadius = drawRadius * (1.5 + ring * 0.4) * energyPulse;
-          const ringOpacity = (0.15 / ring) * (isHovered ? 1.5 : 1) * (1 + vel * 0.1);
+          const ringRadius = drawRadius * (1.4 + ring * 0.35) * energyPulse;
+          const ringOpacity = (0.12 / ring) * (isHovered ? 1.5 : isFeatured ? 1.2 : 1) * (1 + vel * 0.08);
           
           ctx.beginPath();
           ctx.arc(p.x, p.y, ringRadius, 0, Math.PI * 2);
@@ -564,22 +589,22 @@ const InteractiveNetworkCanvas = () => {
         }
         
         // Velocity trail effect
-        if (vel > 2) {
-          const trailLength = Math.min(vel * 3, 30);
+        if (vel > 3) {
+          const trailLength = Math.min(vel * 4, 50);
           const trailGradient = ctx.createLinearGradient(
-            p.x + (p.vx / vel) * trailLength,
-            p.y + (p.vy / vel) * trailLength,
+            p.x - (p.vx / vel) * trailLength,
+            p.y - (p.vy / vel) * trailLength,
             p.x,
             p.y
           );
           trailGradient.addColorStop(0, `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0)`);
-          trailGradient.addColorStop(1, `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0.3)`);
+          trailGradient.addColorStop(1, `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0.4)`);
           
           ctx.beginPath();
           ctx.moveTo(p.x - (p.vx / vel) * trailLength, p.y - (p.vy / vel) * trailLength);
           ctx.lineTo(p.x, p.y);
           ctx.strokeStyle = trailGradient;
-          ctx.lineWidth = drawRadius * 0.8;
+          ctx.lineWidth = drawRadius * 0.7;
           ctx.lineCap = "round";
           ctx.stroke();
         }
@@ -595,8 +620,8 @@ const InteractiveNetworkCanvas = () => {
         ctx.fillStyle = glowGradient;
         ctx.fill();
 
-        // Check if we should show photo (big node + hovered)
-        const showPhoto = isBigNode && isHovered && imagesRef.current.has(p.photoUrl);
+        // Show photo for: featured nodes ALWAYS, or big nodes on hover
+        const showPhoto = (isFeatured || (isBigNode && isHovered)) && imagesRef.current.has(p.photoUrl);
         
         if (showPhoto) {
           // Draw photo with circular clip
