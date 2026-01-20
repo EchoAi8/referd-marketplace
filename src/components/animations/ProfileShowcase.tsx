@@ -662,6 +662,7 @@ const ProfileShowcase = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isInteracting, setIsInteracting] = useState(false);
   const [hasEntered, setHasEntered] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const autoPlayRef = useRef<NodeJS.Timeout>();
   
@@ -710,6 +711,20 @@ const ProfileShowcase = () => {
     setTimeout(() => setIsInteracting(false), 3000);
   }, []);
 
+  // Track mouse for parallax effect
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+    const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+    setMousePos({ x, y });
+  }, []);
+
+  const handleMouseLeaveContainer = useCallback(() => {
+    setMousePos({ x: 0, y: 0 });
+    handleInteractionEnd();
+  }, [handleInteractionEnd]);
+
   const nextCard = () => {
     handleInteractionStart();
     setActiveIndex((prev) => (prev + 1) % profiles.length);
@@ -744,7 +759,7 @@ const ProfileShowcase = () => {
       <div 
         className="relative w-full min-h-[80vh] flex flex-col items-center justify-center overflow-hidden py-8"
         onMouseEnter={handleInteractionStart}
-        onMouseLeave={handleInteractionEnd}
+        onMouseLeave={handleMouseLeaveContainer}
       >
         {/* Subtle background */}
         <div className="absolute inset-0 -z-10">
@@ -756,6 +771,8 @@ const ProfileShowcase = () => {
           ref={containerRef}
           className="relative w-full h-[520px]"
           style={{ perspective: 1800 }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeaveContainer}
         >
           <div 
             className="relative w-full h-full"
@@ -770,6 +787,15 @@ const ProfileShowcase = () => {
               const normalizedZ = (z + radius) / (radius * 2);
               const opacity = 0.25 + normalizedZ * 0.75;
               const scale = 0.75 + normalizedZ * 0.3;
+
+              // Parallax depth effect - cards closer to front move more with mouse
+              const parallaxIntensity = normalizedZ * 25; // More movement for closer cards
+              const parallaxX = mousePos.x * parallaxIntensity;
+              const parallaxY = mousePos.y * parallaxIntensity * 0.5;
+              
+              // Subtle rotation based on mouse position for depth perception
+              const parallaxRotateX = mousePos.y * normalizedZ * -3;
+              const parallaxRotateY = mousePos.x * normalizedZ * 5;
 
               // Entrance animation: cards fly in from outer edges
               const entranceDelay = index * 0.08;
@@ -788,14 +814,16 @@ const ProfileShowcase = () => {
                     opacity: 0,
                     scale: 0.5,
                     rotateY: 45,
+                    rotateX: 0,
                   }}
                   animate={hasEntered ? {
-                    x: x - 170,
-                    y: -230,
+                    x: x - 170 + parallaxX,
+                    y: -230 + parallaxY,
                     z,
                     opacity: opacity,
                     scale: 1,
-                    rotateY: 0,
+                    rotateY: parallaxRotateY,
+                    rotateX: parallaxRotateX,
                   } : {
                     x: entranceX - 170, 
                     y: -230, 
@@ -803,12 +831,13 @@ const ProfileShowcase = () => {
                     opacity: 0,
                     scale: 0.5,
                     rotateY: 45,
+                    rotateX: 0,
                   }}
                   transition={{
                     type: "spring",
-                    stiffness: 60,
-                    damping: 18,
-                    mass: 1,
+                    stiffness: 120,
+                    damping: 20,
+                    mass: 0.8,
                     delay: hasEntered ? entranceDelay : 0,
                   }}
                   style={{
