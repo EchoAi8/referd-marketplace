@@ -51,42 +51,40 @@ const Brands = () => {
         <div className="min-h-screen bg-background">
           <SiteHeader />
           <main>
-            {/* Hero Section */}
-            <section className="relative pt-32 pb-12 px-6">
-              <div className="container mx-auto max-w-5xl">
-                <div className="text-center mb-16">
+            {/* Hero - Carousel First */}
+            <section className="relative pt-24">
+              <div className="container mx-auto max-w-7xl">
+                {/* Tagline above carousel */}
+                <div className="text-center mb-4 px-6">
                   <motion.span
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium mb-6"
+                    className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4"
                   >
-                    For Brands & Employers
+                    CV 2.0 — The Future of Hiring
                   </motion.span>
                   <motion.h1
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.1 }}
-                    className="text-5xl md:text-7xl font-heading font-bold text-foreground leading-tight mb-6"
+                    className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground leading-tight"
                   >
                     Meet Your Next
-                    <br />
-                    <span className="text-primary">Top Performer.</span>
+                    <span className="text-primary"> Top Performer</span>
                   </motion.h1>
                   <motion.p
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="text-xl text-muted-foreground mb-8 max-w-lg mx-auto"
+                    className="text-lg md:text-xl text-muted-foreground mt-4 max-w-lg mx-auto"
                   >
                     Dynamic profiles with verified career timelines. No more boring CVs.
                   </motion.p>
                 </div>
               </div>
-            </section>
 
-            {/* Profile Showcase Section */}
-            <section className="py-12 px-6">
+              {/* Full-width Profile Showcase */}
               <ProfileShowcase />
               
               {/* CTA under showcase */}
@@ -94,7 +92,7 @@ const Brands = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="flex flex-col sm:flex-row justify-center gap-4 mt-16"
+                className="flex flex-col sm:flex-row justify-center gap-4 px-6 pb-16"
               >
                 <MagneticButton className="btn-primary" strength={0.4}>
                   Post a Role
@@ -135,10 +133,10 @@ const Brands = () => {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.6, delay: index * 0.1 }}
-                      className="group p-8 bg-muted/30 rounded-2xl border border-foreground/5 hover:border-sage/30 transition-all duration-300"
+                      className="group p-8 bg-muted/30 rounded-2xl border border-foreground/5 hover:border-primary/30 transition-all duration-300"
                     >
-                      <div className="w-14 h-14 bg-sage/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-sage/20 transition-colors">
-                        <benefit.icon className="w-7 h-7 text-sage" />
+                      <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                        <benefit.icon className="w-7 h-7 text-primary" />
                       </div>
                       <h3 className="text-xl font-heading font-semibold text-foreground mb-3">
                         {benefit.title}
@@ -153,7 +151,7 @@ const Brands = () => {
             </section>
 
             {/* CTA Section */}
-            <section className="py-24 px-6 bg-gradient-to-b from-sage/5 to-background">
+            <section className="py-24 px-6 bg-gradient-to-b from-primary/5 to-background">
               <div className="container mx-auto max-w-4xl text-center">
                 <motion.h2
                   initial={{ opacity: 0, y: 40 }}
