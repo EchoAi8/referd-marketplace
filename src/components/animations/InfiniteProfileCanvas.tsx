@@ -43,8 +43,11 @@ const InfiniteProfileCanvas = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [mouseParallax, setMouseParallax] = useState({ x: 0, y: 0 });
   const velocityRef = useRef({ x: 0.3, y: 0.2 });
   const targetOffsetRef = useRef({ x: 0, y: 0 });
+  const mouseRef = useRef({ x: 0.5, y: 0.5 });
+  const targetMouseRef = useRef({ x: 0.5, y: 0.5 });
   const isDraggingRef = useRef(false);
   const lastMouseRef = useRef({ x: 0, y: 0 });
 
@@ -91,6 +94,15 @@ const InfiniteProfileCanvas = () => {
         y: prev.y + (targetOffsetRef.current.y - prev.y) * 0.08,
       }));
 
+      // Smooth mouse parallax interpolation
+      mouseRef.current.x += (targetMouseRef.current.x - mouseRef.current.x) * 0.06;
+      mouseRef.current.y += (targetMouseRef.current.y - mouseRef.current.y) * 0.06;
+      
+      setMouseParallax({
+        x: (mouseRef.current.x - 0.5) * 60,
+        y: (mouseRef.current.y - 0.5) * 40,
+      });
+
       animationId = requestAnimationFrame(animate);
     };
 
@@ -104,6 +116,15 @@ const InfiniteProfileCanvas = () => {
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (rect) {
+      // Update normalized mouse position for parallax
+      targetMouseRef.current = {
+        x: (e.clientX - rect.left) / rect.width,
+        y: (e.clientY - rect.top) / rect.height,
+      };
+    }
+    
     if (isDraggingRef.current) {
       const dx = e.clientX - lastMouseRef.current.x;
       const dy = e.clientY - lastMouseRef.current.y;
@@ -117,6 +138,12 @@ const InfiniteProfileCanvas = () => {
     isDraggingRef.current = false;
   };
 
+  const handleMouseLeave = () => {
+    isDraggingRef.current = false;
+    // Reset parallax to center
+    targetMouseRef.current = { x: 0.5, y: 0.5 };
+  };
+
   const tileWidth = 280 * 4;
   const tileHeight = 200 * 3;
 
@@ -127,7 +154,7 @@ const InfiniteProfileCanvas = () => {
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Render 3x3 grid for infinite tiling */}
       {[-1, 0, 1].map((tileY) =>
@@ -142,16 +169,19 @@ const InfiniteProfileCanvas = () => {
             }}
           >
             {profiles.map((profile) => {
-              const parallaxX = offset.x * profile.parallaxFactor * 0.1;
-              const parallaxY = offset.y * profile.parallaxFactor * 0.1;
+              // Combine scroll parallax + cursor parallax
+              const scrollParallaxX = offset.x * profile.parallaxFactor * 0.1;
+              const scrollParallaxY = offset.y * profile.parallaxFactor * 0.1;
+              const cursorParallaxX = mouseParallax.x * profile.parallaxFactor;
+              const cursorParallaxY = mouseParallax.y * profile.parallaxFactor;
 
               return (
                 <motion.div
                   key={profile.id}
                   className="absolute"
                   style={{
-                    left: profile.x + parallaxX,
-                    top: profile.y + parallaxY,
+                    left: profile.x + scrollParallaxX + cursorParallaxX,
+                    top: profile.y + scrollParallaxY + cursorParallaxY,
                     transform: `scale(${profile.scale})`,
                   }}
                   initial={{ opacity: 0, scale: 0.5 }}
@@ -159,11 +189,14 @@ const InfiniteProfileCanvas = () => {
                   transition={{ duration: 0.6, delay: profile.id * 0.05 }}
                 >
                   <div className="group relative">
-                    <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-background/20 shadow-lg transition-transform duration-300 group-hover:scale-110">
+                    {/* Glow effect behind the profile */}
+                    <div className="absolute inset-0 rounded-full bg-primary/0 group-hover:bg-primary/30 blur-xl transition-all duration-500 scale-150 group-hover:scale-[2]" />
+                    
+                    <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-background/20 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:border-primary/50 group-hover:shadow-primary/20 group-hover:shadow-2xl">
                       <img
                         src={profile.image}
                         alt={profile.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                         loading="lazy"
                       />
                     </div>
