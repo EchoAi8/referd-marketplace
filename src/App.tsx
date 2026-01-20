@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "@/hooks/use-theme";
+import { SoundEffectsProvider } from "@/hooks/use-sound-effects";
 import { NavigationProvider } from "@/hooks/use-grid-navigation";
 import CursorFollower from "@/components/animations/CursorFollower";
 import ScrollProgress from "@/components/animations/ScrollProgress";
@@ -44,17 +45,19 @@ const AnimatedRoutes = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
-      <TooltipProvider>
-        <CursorFollower />
-        <ScrollProgress />
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <NavigationProvider>
-            <AnimatedRoutes />
-          </NavigationProvider>
-        </BrowserRouter>
-      </TooltipProvider>
+      <SoundEffectsProvider>
+        <TooltipProvider>
+          <CursorFollower />
+          <ScrollProgress />
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <NavigationProvider>
+              <AnimatedRoutes />
+            </NavigationProvider>
+          </BrowserRouter>
+        </TooltipProvider>
+      </SoundEffectsProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );
