@@ -20,6 +20,8 @@ interface Particle {
   referralCount: number;
   joinDate: string;
   successRate: number;
+  photoUrl: string;
+  fee: number;
 }
 
 interface FloatingMoney {
@@ -61,6 +63,22 @@ const REFERRED_NAMES = [
   "Avery Wilson", "Sam Mitchell", "Drew Anderson", "Blake Harris"
 ];
 
+// Random professional headshot URLs
+const PHOTO_URLS = [
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face",
+];
+
 // Vibrant color palette - Cyan/Electric for referrers, Magenta/Violet for referred
 const REFERRER_COLORS = {
   primary: { r: 0, g: 245, b: 255 },    // Cyan
@@ -84,6 +102,8 @@ const InteractiveNetworkCanvas = () => {
   const trailRef = useRef<TrailPoint[]>([]);
   const mouseRef = useRef({ x: -1000, y: -1000 });
   const prevMouseRef = useRef({ x: -1000, y: -1000 });
+  const mouseVelocityRef = useRef({ x: 0, y: 0 });
+  const imagesRef = useRef<Map<string, HTMLImageElement>>(new Map());
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [networkValue, setNetworkValue] = useState(427832);
   const [hoveredParticle, setHoveredParticle] = useState<Particle | null>(null);
@@ -93,18 +113,31 @@ const InteractiveNetworkCanvas = () => {
   const networkValueRef = useRef(427832);
   const timeRef = useRef(0);
 
+  // Preload images
+  useEffect(() => {
+    PHOTO_URLS.forEach((url) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = url;
+      img.onload = () => {
+        imagesRef.current.set(url, img);
+      };
+    });
+  }, []);
+
   // Initialize particles
   const initializeParticles = useCallback((width: number, height: number) => {
     const particles: Particle[] = [];
     const centerX = width / 2;
     const centerY = height / 2;
     
-    // Create referrers (cyan nodes)
+    // Create referrers (cyan nodes) - bigger nodes
     for (let i = 0; i < 12; i++) {
       const angle = (i / 12) * Math.PI * 2;
       const radius = Math.min(width, height) * 0.28 + Math.random() * 80;
       const x = centerX + Math.cos(angle) * radius;
       const y = centerY + Math.sin(angle) * radius;
+      const fee = Math.floor(Math.random() * 15000 + 8000);
       
       particles.push({
         id: i,
@@ -114,20 +147,22 @@ const InteractiveNetworkCanvas = () => {
         vy: (Math.random() - 0.5) * 2,
         baseX: x,
         baseY: y,
-        radius: 22 + Math.random() * 12,
+        radius: 28 + Math.random() * 14, // Bigger nodes for referrers
         type: "referrer",
         parentId: null,
         name: REFERRER_NAMES[i % REFERRER_NAMES.length],
         earnings: Math.floor(Math.random() * 25000 + 5000),
         pulsePhase: Math.random() * Math.PI * 2,
-        hue: 180 + Math.random() * 40, // Cyan range
+        hue: 180 + Math.random() * 40,
         referralCount: Math.floor(Math.random() * 20 + 5),
         joinDate: `${Math.floor(Math.random() * 12 + 1)}/${2022 + Math.floor(Math.random() * 3)}`,
         successRate: Math.floor(Math.random() * 30 + 70),
+        photoUrl: PHOTO_URLS[i % PHOTO_URLS.length],
+        fee,
       });
     }
     
-    // Create referred (magenta nodes) connected to referrers
+    // Create referred (magenta nodes) - smaller nodes
     for (let i = 0; i < 20; i++) {
       const parentId = i % 12;
       const parent = particles[parentId];
@@ -135,6 +170,7 @@ const InteractiveNetworkCanvas = () => {
       const offsetRadius = 90 + Math.random() * 70;
       const x = parent.x + Math.cos(offsetAngle) * offsetRadius;
       const y = parent.y + Math.sin(offsetAngle) * offsetRadius;
+      const fee = Math.floor(Math.random() * 8000 + 3000);
       
       particles.push({
         id: 12 + i,
@@ -150,10 +186,12 @@ const InteractiveNetworkCanvas = () => {
         name: REFERRED_NAMES[i % REFERRED_NAMES.length],
         earnings: Math.floor(Math.random() * 12000 + 2000),
         pulsePhase: Math.random() * Math.PI * 2,
-        hue: 300 + Math.random() * 40, // Magenta range
+        hue: 300 + Math.random() * 40,
         referralCount: Math.floor(Math.random() * 5),
         joinDate: `${Math.floor(Math.random() * 12 + 1)}/${2023 + Math.floor(Math.random() * 2)}`,
         successRate: Math.floor(Math.random() * 40 + 60),
+        photoUrl: PHOTO_URLS[(i + 6) % PHOTO_URLS.length],
+        fee,
       });
     }
     
@@ -187,16 +225,24 @@ const InteractiveNetworkCanvas = () => {
     return () => window.removeEventListener("resize", updateDimensions);
   }, [initializeParticles]);
 
-  // Mouse tracking with trail
+  // Mouse tracking with trail and velocity
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     
     prevMouseRef.current = { ...mouseRef.current };
-    mouseRef.current = {
+    const newMouse = {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
     };
+    
+    // Calculate mouse velocity
+    mouseVelocityRef.current = {
+      x: newMouse.x - mouseRef.current.x,
+      y: newMouse.y - mouseRef.current.y,
+    };
+    
+    mouseRef.current = newMouse;
 
     // Add trail points with velocity-based sizing
     const dx = mouseRef.current.x - prevMouseRef.current.x;
@@ -208,29 +254,31 @@ const InteractiveNetworkCanvas = () => {
         x: mouseRef.current.x,
         y: mouseRef.current.y,
         opacity: 1,
-        size: Math.min(12, 4 + speed * 0.3),
+        size: Math.min(16, 5 + speed * 0.4),
         hue: (timeRef.current * 0.1) % 360,
       });
       
       // Limit trail length
-      if (trailRef.current.length > 50) {
+      if (trailRef.current.length > 60) {
         trailRef.current.shift();
       }
     }
 
-    // Check for hover
+    // Check for hover - prioritize bigger nodes
     const particles = particlesRef.current;
     let found: Particle | null = null;
+    let closestDist = Infinity;
+    
     for (const p of particles) {
       const dist = Math.sqrt((mouseRef.current.x - p.x) ** 2 + (mouseRef.current.y - p.y) ** 2);
-      if (dist < p.radius + 15) {
+      if (dist < p.radius + 20 && dist < closestDist) {
         found = p;
-        break;
+        closestDist = dist;
       }
     }
     setHoveredParticle(found);
     if (found) {
-      setTooltipPos({ x: found.x, y: found.y - found.radius - 25 });
+      setTooltipPos({ x: found.x, y: found.y - found.radius - 30 });
     }
   }, []);
 
@@ -298,42 +346,90 @@ const InteractiveNetworkCanvas = () => {
       ctx.fillStyle = orbGradient;
       ctx.fillRect(0, 0, dimensions.width, dimensions.height);
 
-      // Physics simulation with more dynamic movement
+      // Get mouse velocity for bounce calculations
+      const mouseVx = mouseVelocityRef.current.x;
+      const mouseVy = mouseVelocityRef.current.y;
+      const mouseSpeed = Math.sqrt(mouseVx * mouseVx + mouseVy * mouseVy);
+
+      // Physics simulation with cursor bounce and interaction
       for (const p of particles) {
-        // Mouse attraction (within 200px) - stronger force
-        const mouseDist = Math.sqrt((mouse.x - p.x) ** 2 + (mouse.y - p.y) ** 2);
-        if (mouseDist < 250 && mouseDist > 0) {
-          const force = Math.pow((250 - mouseDist) / 250, 2) * 0.8;
-          p.vx += ((mouse.x - p.x) / mouseDist) * force;
-          p.vy += ((mouse.y - p.y) / mouseDist) * force;
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const mouseDist = Math.sqrt(dx * dx + dy * dy);
+        const cursorRadius = 80; // Collision radius of cursor
+        
+        // BOUNCE OFF CURSOR - when cursor collides with particle
+        if (mouseDist < cursorRadius + p.radius && mouseDist > 0) {
+          // Calculate bounce direction (away from cursor)
+          const nx = dx / mouseDist;
+          const ny = dy / mouseDist;
+          
+          // Transfer mouse velocity to particle with amplification
+          const bounceForce = Math.max(3, mouseSpeed * 0.8);
+          const randomAngle = (Math.random() - 0.5) * 0.5;
+          
+          p.vx += (nx * bounceForce + mouseVx * 0.3) * Math.cos(randomAngle);
+          p.vy += (ny * bounceForce + mouseVy * 0.3) * Math.sin(randomAngle);
+          
+          // Push particle outside cursor radius
+          const overlap = cursorRadius + p.radius - mouseDist;
+          p.x += nx * overlap * 0.5;
+          p.y += ny * overlap * 0.5;
+          
+          // Add a ripple on collision
+          if (mouseSpeed > 5) {
+            ripplesRef.current.push({
+              id: Date.now() + Math.random(),
+              x: p.x,
+              y: p.y,
+              radius: 0,
+              opacity: 0.5,
+              hue: p.type === "referrer" ? 180 : 300,
+            });
+          }
+        }
+        // SPEED UP when cursor is nearby (within 200px)
+        else if (mouseDist < 200 && mouseDist > cursorRadius + p.radius) {
+          const proximityFactor = 1 - (mouseDist / 200);
+          const speedBoost = 1 + proximityFactor * 2; // Up to 3x speed boost
+          
+          // Add some chase/flee behavior based on mouse movement
+          if (mouseSpeed > 2) {
+            p.vx += (mouseVx * 0.05) * proximityFactor;
+            p.vy += (mouseVy * 0.05) * proximityFactor;
+          }
+          
+          // Particles become more energetic near cursor
+          p.vx *= 1 + proximityFactor * 0.1;
+          p.vy *= 1 + proximityFactor * 0.1;
         }
 
-        // Repulsion from other particles - softer
+        // Repulsion from other particles
         for (const other of particles) {
           if (p.id === other.id) continue;
-          const dx = p.x - other.x;
-          const dy = p.y - other.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+          const pdx = p.x - other.x;
+          const pdy = p.y - other.y;
+          const dist = Math.sqrt(pdx * pdx + pdy * pdy);
           const minDist = p.radius + other.radius + 40;
           
           if (dist < minDist && dist > 0) {
             const force = (minDist - dist) / dist * 0.2;
-            p.vx += dx * force * 0.08;
-            p.vy += dy * force * 0.08;
+            p.vx += pdx * force * 0.08;
+            p.vy += pdy * force * 0.08;
           }
         }
 
         // Attraction to parent with elastic spring
         if (p.parentId !== null) {
           const parent = particles[p.parentId];
-          const dx = parent.x - p.x;
-          const dy = parent.y - p.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+          const pdx = parent.x - p.x;
+          const pdy = parent.y - p.y;
+          const dist = Math.sqrt(pdx * pdx + pdy * pdy);
           const targetDist = 110;
           
           const springForce = (dist - targetDist) * 0.003;
-          p.vx += dx / dist * springForce;
-          p.vy += dy / dist * springForce;
+          p.vx += pdx / dist * springForce;
+          p.vy += pdy / dist * springForce;
         }
 
         // Organic drifting motion
@@ -346,20 +442,30 @@ const InteractiveNetworkCanvas = () => {
         p.vx += centerDx * 0.0002;
         p.vy += centerDy * 0.0002;
 
-        // Friction
-        p.vx *= 0.95;
-        p.vy *= 0.95;
+        // Friction - slightly less when near cursor for more dynamic feel
+        const nearCursor = mouseDist < 200;
+        const friction = nearCursor ? 0.97 : 0.95;
+        p.vx *= friction;
+        p.vy *= friction;
+
+        // Clamp max velocity
+        const maxVel = 15;
+        const vel = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        if (vel > maxVel) {
+          p.vx = (p.vx / vel) * maxVel;
+          p.vy = (p.vy / vel) * maxVel;
+        }
 
         // Apply velocity
         p.x += p.vx;
         p.y += p.vy;
 
-        // Soft bounds
+        // Soft bounds with bounce
         const margin = p.radius + 20;
-        if (p.x < margin) p.vx += 0.5;
-        if (p.x > dimensions.width - margin) p.vx -= 0.5;
-        if (p.y < margin) p.vy += 0.5;
-        if (p.y > dimensions.height - margin) p.vy -= 0.5;
+        if (p.x < margin) { p.vx += 1; p.x = margin; }
+        if (p.x > dimensions.width - margin) { p.vx -= 1; p.x = dimensions.width - margin; }
+        if (p.y < margin) { p.vy += 1; p.y = margin; }
+        if (p.y > dimensions.height - margin) { p.vy -= 1; p.y = dimensions.height - margin; }
       }
 
       // Draw particle trails (mouse following)
@@ -429,25 +535,52 @@ const InteractiveNetworkCanvas = () => {
         }
       }
 
-      // Draw particles with enhanced effects
+      // Draw particles with enhanced effects and photo reveal
       for (const p of particles) {
         const isHovered = hoveredParticle?.id === p.id;
         const isSelected = selectedParticle?.id === p.id;
+        const isBigNode = p.radius > 25; // Big nodes show photos on hover
         const pulse = Math.sin(time * 0.003 + p.pulsePhase) * 0.2 + 1;
         const energyPulse = Math.sin(time * 0.006 + p.pulsePhase) * 0.15 + 1;
-        const drawRadius = p.radius * (isHovered ? 1.4 : isSelected ? 1.6 : pulse);
+        
+        // Calculate velocity magnitude for visual feedback
+        const vel = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        const velScale = 1 + vel * 0.02; // Slight scale based on velocity
+        
+        const drawRadius = p.radius * (isHovered ? 1.5 : isSelected ? 1.7 : pulse) * velScale;
         
         const colors = p.type === "referrer" ? REFERRER_COLORS : REFERRED_COLORS;
         
-        // Outer glow rings
+        // Outer glow rings - more intense when moving fast
         for (let ring = 3; ring > 0; ring--) {
           const ringRadius = drawRadius * (1.5 + ring * 0.4) * energyPulse;
-          const ringOpacity = (0.15 / ring) * (isHovered ? 1.5 : 1);
+          const ringOpacity = (0.15 / ring) * (isHovered ? 1.5 : 1) * (1 + vel * 0.1);
           
           ctx.beginPath();
           ctx.arc(p.x, p.y, ringRadius, 0, Math.PI * 2);
           ctx.strokeStyle = `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, ${ringOpacity})`;
           ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+        
+        // Velocity trail effect
+        if (vel > 2) {
+          const trailLength = Math.min(vel * 3, 30);
+          const trailGradient = ctx.createLinearGradient(
+            p.x + (p.vx / vel) * trailLength,
+            p.y + (p.vy / vel) * trailLength,
+            p.x,
+            p.y
+          );
+          trailGradient.addColorStop(0, `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0)`);
+          trailGradient.addColorStop(1, `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0.3)`);
+          
+          ctx.beginPath();
+          ctx.moveTo(p.x - (p.vx / vel) * trailLength, p.y - (p.vy / vel) * trailLength);
+          ctx.lineTo(p.x, p.y);
+          ctx.strokeStyle = trailGradient;
+          ctx.lineWidth = drawRadius * 0.8;
+          ctx.lineCap = "round";
           ctx.stroke();
         }
         
@@ -462,37 +595,93 @@ const InteractiveNetworkCanvas = () => {
         ctx.fillStyle = glowGradient;
         ctx.fill();
 
-        // Main circle with inner gradient
-        const mainGradient = ctx.createRadialGradient(
-          p.x - drawRadius * 0.3, p.y - drawRadius * 0.3, 0,
-          p.x, p.y, drawRadius
-        );
-        mainGradient.addColorStop(0, `rgba(255, 255, 255, ${isHovered ? 1 : 0.9})`);
-        mainGradient.addColorStop(0.3, `rgba(${colors.primary.r}, ${colors.primary.g}, ${colors.primary.b}, ${isHovered ? 1 : 0.95})`);
-        mainGradient.addColorStop(1, `rgba(${colors.secondary.r}, ${colors.secondary.g}, ${colors.secondary.b}, 0.9)`);
+        // Check if we should show photo (big node + hovered)
+        const showPhoto = isBigNode && isHovered && imagesRef.current.has(p.photoUrl);
         
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, drawRadius, 0, Math.PI * 2);
-        ctx.fillStyle = mainGradient;
-        ctx.shadowColor = `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0.8)`;
-        ctx.shadowBlur = isHovered ? 30 : 15;
-        ctx.fill();
-        ctx.shadowBlur = 0;
+        if (showPhoto) {
+          // Draw photo with circular clip
+          const img = imagesRef.current.get(p.photoUrl)!;
+          
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, drawRadius, 0, Math.PI * 2);
+          ctx.clip();
+          
+          // Draw the image
+          ctx.drawImage(
+            img,
+            p.x - drawRadius,
+            p.y - drawRadius,
+            drawRadius * 2,
+            drawRadius * 2
+          );
+          
+          ctx.restore();
+          
+          // Border glow around photo
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, drawRadius, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0.9)`;
+          ctx.lineWidth = 4;
+          ctx.shadowColor = `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 1)`;
+          ctx.shadowBlur = 25;
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+          
+          // Draw fee badge
+          const badgeX = p.x + drawRadius * 0.7;
+          const badgeY = p.y - drawRadius * 0.7;
+          const feeText = `£${(p.fee / 1000).toFixed(0)}k`;
+          
+          // Badge background
+          ctx.beginPath();
+          ctx.roundRect(badgeX - 25, badgeY - 12, 50, 24, 12);
+          ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
+          ctx.fill();
+          ctx.strokeStyle = `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0.8)`;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          
+          // Badge text
+          ctx.font = "bold 12px 'Syne', sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillStyle = `rgb(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b})`;
+          ctx.fillText(feeText, badgeX, badgeY);
+          
+        } else {
+          // Regular node rendering (non-photo)
+          const mainGradient = ctx.createRadialGradient(
+            p.x - drawRadius * 0.3, p.y - drawRadius * 0.3, 0,
+            p.x, p.y, drawRadius
+          );
+          mainGradient.addColorStop(0, `rgba(255, 255, 255, ${isHovered ? 1 : 0.9})`);
+          mainGradient.addColorStop(0.3, `rgba(${colors.primary.r}, ${colors.primary.g}, ${colors.primary.b}, ${isHovered ? 1 : 0.95})`);
+          mainGradient.addColorStop(1, `rgba(${colors.secondary.r}, ${colors.secondary.g}, ${colors.secondary.b}, 0.9)`);
+          
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, drawRadius, 0, Math.PI * 2);
+          ctx.fillStyle = mainGradient;
+          ctx.shadowColor = `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0.8)`;
+          ctx.shadowBlur = isHovered ? 30 : 15;
+          ctx.fill();
+          ctx.shadowBlur = 0;
 
-        // Animated border
-        const borderPulse = Math.sin(time * 0.005 + p.pulsePhase) * 0.5 + 0.5;
-        ctx.strokeStyle = `rgba(255, 255, 255, ${0.3 + borderPulse * 0.4})`;
-        ctx.lineWidth = isHovered ? 3 : 2;
-        ctx.stroke();
+          // Animated border
+          const borderPulse = Math.sin(time * 0.005 + p.pulsePhase) * 0.5 + 0.5;
+          ctx.strokeStyle = `rgba(255, 255, 255, ${0.3 + borderPulse * 0.4})`;
+          ctx.lineWidth = isHovered ? 3 : 2;
+          ctx.stroke();
+        }
         
-        // Inner sparkle
+        // Inner sparkle for any hovered/selected
         if (isHovered || isSelected) {
           const sparkleAngle = time * 0.01;
           const sparkleX = p.x + Math.cos(sparkleAngle) * drawRadius * 0.5;
           const sparkleY = p.y + Math.sin(sparkleAngle) * drawRadius * 0.5;
           
           ctx.beginPath();
-          ctx.arc(sparkleX, sparkleY, 3, 0, Math.PI * 2);
+          ctx.arc(sparkleX, sparkleY, 4, 0, Math.PI * 2);
           ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
           ctx.fill();
         }
