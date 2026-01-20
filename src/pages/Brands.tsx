@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import MagneticButton from "@/components/animations/MagneticButton";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
 import { Building2, Users, TrendingUp, Clock, Shield, Zap } from "lucide-react";
-import InfiniteProfileCanvas from "@/components/animations/InfiniteProfileCanvas";
+import ProfileShowcase from "@/components/animations/ProfileShowcase";
 
 const benefits = [
   {
@@ -51,18 +51,15 @@ const Brands = () => {
         <div className="min-h-screen bg-background">
           <SiteHeader />
           <main>
-            {/* Hero Section with Infinite Profile Canvas */}
-            <section className="relative pt-32 pb-20 px-6 bg-foreground min-h-[90vh] overflow-hidden">
-              {/* Infinite Profile Canvas Background */}
-              <InfiniteProfileCanvas />
-              
-              <div className="container mx-auto max-w-5xl relative z-10">
-                <div className="flex flex-col items-center text-center">
+            {/* Hero Section */}
+            <section className="relative pt-32 pb-12 px-6">
+              <div className="container mx-auto max-w-5xl">
+                <div className="text-center mb-16">
                   <motion.span
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="inline-block px-4 py-1.5 bg-mustard/20 text-mustard rounded-full text-sm font-medium mb-6"
+                    className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium mb-6"
                   >
                     For Brands & Employers
                   </motion.span>
@@ -70,39 +67,46 @@ const Brands = () => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.1 }}
-                    className="text-5xl md:text-7xl font-heading font-bold text-background leading-tight mb-6"
+                    className="text-5xl md:text-7xl font-heading font-bold text-foreground leading-tight mb-6"
                   >
-                    Hire Better.
+                    Meet Your Next
                     <br />
-                    <span className="text-sage">Pay Less.</span>
+                    <span className="text-primary">Top Performer.</span>
                   </motion.h1>
                   <motion.p
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="text-xl text-background/70 mb-8 max-w-lg"
+                    className="text-xl text-muted-foreground mb-8 max-w-lg mx-auto"
                   >
-                    Access pre-vetted talent through trusted referrals. Only pay when you make a successful hire.
+                    Dynamic profiles with verified career timelines. No more boring CVs.
                   </motion.p>
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                    className="flex flex-col sm:flex-row gap-4"
-                  >
-                    <MagneticButton className="btn-primary" strength={0.4}>
-                      Post a Role
-                    </MagneticButton>
-                    <MagneticButton
-                      onClick={() => navigateWithTransition("/contact")}
-                      className="px-8 py-4 border border-background/30 text-background rounded-full font-semibold hover:bg-white/10 transition-colors"
-                      strength={0.4}
-                    >
-                      Book a Demo
-                    </MagneticButton>
-                  </motion.div>
                 </div>
               </div>
+            </section>
+
+            {/* Profile Showcase Section */}
+            <section className="py-12 px-6">
+              <ProfileShowcase />
+              
+              {/* CTA under showcase */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="flex flex-col sm:flex-row justify-center gap-4 mt-16"
+              >
+                <MagneticButton className="btn-primary" strength={0.4}>
+                  Post a Role
+                </MagneticButton>
+                <MagneticButton
+                  onClick={() => navigateWithTransition("/contact")}
+                  className="px-8 py-4 border border-foreground/20 text-foreground rounded-full font-semibold hover:bg-foreground/5 transition-colors"
+                  strength={0.4}
+                >
+                  Book a Demo
+                </MagneticButton>
+              </motion.div>
             </section>
 
             {/* Benefits Grid */}
