@@ -154,7 +154,7 @@ const FloatingParticle = ({ delay, duration, size, x, y }: {
   />
 );
 
-// Flip Card component
+// Flip Card component with dramatic 3D depth
 const FlipCard = ({ 
   profile, 
   isActive, 
@@ -167,177 +167,290 @@ const FlipCard = ({
   onActivate: () => void;
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Handle mouse move for 3D tilt effect
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setMousePos({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setIsFlipped(false);
+    setMousePos({ x: 0, y: 0 });
+  };
 
   return (
     <motion.div
+      ref={cardRef}
       className="relative flex-shrink-0 cursor-pointer"
       style={{ 
-        width: 340,
-        height: 480,
-        perspective: 1500,
+        width: 400,
+        height: 520,
+        perspective: 2000,
       }}
+      onMouseMove={handleMouseMove}
       onHoverStart={() => setIsFlipped(true)}
-      onHoverEnd={() => setIsFlipped(false)}
+      onHoverEnd={handleMouseLeave}
       onClick={onActivate}
       animate={{
-        scale: isActive ? 1.08 : 0.92,
-        opacity: isActive ? 1 : 0.6,
-        filter: isActive ? "brightness(1)" : "brightness(0.7)",
+        scale: isActive ? 1.12 : 0.88,
+        opacity: isActive ? 1 : 0.5,
+        filter: isActive ? "brightness(1)" : "brightness(0.6)",
+        z: isActive ? 100 : 0,
       }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
     >
-      {/* Spotlight effect for active card */}
+      {/* Dramatic Spotlight effect for active card */}
       {isActive && (
         <>
-          {/* Main spotlight glow */}
+          {/* Outer glow ring */}
           <motion.div
-            className="absolute -inset-8 rounded-3xl bg-gradient-radial from-primary/40 via-primary/10 to-transparent blur-2xl"
+            className="absolute -inset-16 rounded-[3rem]"
+            style={{
+              background: "radial-gradient(ellipse at center, hsl(var(--primary) / 0.4) 0%, hsl(var(--primary) / 0.1) 40%, transparent 70%)",
+            }}
             animate={{
-              opacity: [0.5, 0.8, 0.5],
-              scale: [1, 1.1, 1],
+              opacity: [0.6, 1, 0.6],
+              scale: [0.95, 1.05, 0.95],
+            }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          />
+          
+          {/* Inner spotlight cone */}
+          <motion.div
+            className="absolute -inset-6 rounded-3xl"
+            style={{
+              background: "conic-gradient(from 0deg at 50% 0%, transparent 30%, hsl(var(--primary) / 0.3) 50%, transparent 70%)",
+              filter: "blur(20px)",
+            }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          />
+          
+          {/* Ground reflection */}
+          <motion.div
+            className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-[120%] h-20"
+            style={{
+              background: "radial-gradient(ellipse at center, hsl(var(--primary) / 0.5) 0%, transparent 70%)",
+              filter: "blur(15px)",
+            }}
+            animate={{
+              opacity: [0.4, 0.7, 0.4],
+              scaleX: [0.9, 1.1, 0.9],
             }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           />
           
-          {/* Floating particles */}
-          {[...Array(12)].map((_, i) => (
+          {/* Floating particles - more dramatic */}
+          {[...Array(20)].map((_, i) => (
             <FloatingParticle
               key={i}
-              delay={i * 0.2}
-              duration={2 + Math.random() * 2}
-              size={4 + Math.random() * 6}
-              x={-50 + Math.random() * 440}
-              y={400 + Math.random() * 80}
+              delay={i * 0.15}
+              duration={2.5 + Math.random() * 2}
+              size={3 + Math.random() * 8}
+              x={-80 + Math.random() * 560}
+              y={450 + Math.random() * 100}
             />
           ))}
         </>
       )}
 
-      {/* Card container with 3D flip */}
+      {/* Card container with 3D flip and tilt */}
       <motion.div
         className="relative w-full h-full"
         style={{ transformStyle: "preserve-3d" }}
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+        animate={{ 
+          rotateY: isFlipped ? 180 : mousePos.x * 15,
+          rotateX: isFlipped ? 0 : -mousePos.y * 15,
+        }}
+        transition={{ 
+          rotateY: { duration: 0.7, ease: [0.23, 1, 0.32, 1] },
+          rotateX: { duration: 0.1, ease: "linear" },
+        }}
       >
+        {/* Dynamic shadow based on flip state */}
+        <motion.div
+          className="absolute inset-0 rounded-3xl"
+          style={{ transform: "translateZ(-50px)" }}
+          animate={{
+            boxShadow: isFlipped
+              ? "30px 30px 60px rgba(0,0,0,0.5), -30px 30px 60px rgba(0,0,0,0.3)"
+              : isActive
+                ? "0 25px 80px rgba(0,0,0,0.6), 0 10px 30px hsl(var(--primary) / 0.3)"
+                : "0 15px 40px rgba(0,0,0,0.3)",
+          }}
+          transition={{ duration: 0.5 }}
+        />
+
         {/* FRONT - Profile Image Side */}
-        <div
-          className="absolute inset-0 rounded-2xl overflow-hidden border-2 border-foreground/10"
-          style={{ backfaceVisibility: "hidden" }}
+        <motion.div
+          className="absolute inset-0 rounded-3xl overflow-hidden border border-foreground/20"
+          style={{ 
+            backfaceVisibility: "hidden",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)",
+          }}
+          animate={{
+            boxShadow: isActive 
+              ? "inset 0 1px 0 rgba(255,255,255,0.2), 0 0 0 2px hsl(var(--primary) / 0.5)"
+              : "inset 0 1px 0 rgba(255,255,255,0.1)",
+          }}
         >
           {/* Full-bleed profile image */}
           <img
             src={profile.image}
             alt={profile.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-500"
+            style={{ transform: `scale(${isActive ? 1.05 : 1})` }}
             loading="lazy"
           />
 
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+          {/* Premium gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 transition-opacity duration-500" 
+               style={{ opacity: isActive ? 0.8 : 0 }} />
 
-          {/* Shine effect on hover */}
+          {/* Glossy shine effect on flip */}
           <motion.div
-            className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent"
-            initial={{ x: "-100%", opacity: 0 }}
-            animate={isFlipped ? { x: "100%", opacity: 1 } : { x: "-100%", opacity: 0 }}
-            transition={{ duration: 0.6 }}
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.15) 55%, transparent 60%)",
+            }}
+            initial={{ x: "-200%", opacity: 0 }}
+            animate={isFlipped ? { x: "200%", opacity: 1 } : { x: "-200%", opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
           />
 
           {/* Content overlay */}
-          <div className="absolute bottom-0 left-0 right-0 p-6">
-            {/* Rating stars */}
-            <div className="flex items-center gap-1 mb-3">
+          <div className="absolute bottom-0 left-0 right-0 p-7">
+            {/* Rating stars - larger */}
+            <div className="flex items-center gap-1.5 mb-4">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`w-4 h-4 ${i < Math.floor(profile.rating) ? "text-amber-400 fill-amber-400" : "text-foreground/20"}`}
+                  className={`w-5 h-5 ${i < Math.floor(profile.rating) ? "text-amber-400 fill-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.5)]" : "text-foreground/20"}`}
                 />
               ))}
-              <span className="ml-2 text-sm font-semibold text-foreground">{profile.rating}</span>
+              <span className="ml-2 text-base font-bold text-foreground">{profile.rating}</span>
             </div>
 
-            {/* Name & Role */}
-            <h3 className="text-2xl font-bold text-foreground mb-1">
+            {/* Name & Role - larger typography */}
+            <h3 className="text-3xl font-bold text-foreground mb-2 tracking-tight">
               {profile.name}
             </h3>
-            <p className="text-base text-muted-foreground mb-3">
+            <p className="text-lg text-muted-foreground mb-4 font-medium">
               {profile.role}
             </p>
 
-            {/* Quick stats */}
-            <div className="flex gap-4">
-              <div className="bg-primary/20 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-primary/30">
-                <span className="text-primary font-bold text-lg">{profile.earnings}</span>
+            {/* Quick stats - enhanced */}
+            <div className="flex gap-3">
+              <div className="bg-primary/25 backdrop-blur-md rounded-xl px-4 py-2 border border-primary/40 shadow-lg shadow-primary/10">
+                <span className="text-primary font-bold text-xl">{profile.earnings}</span>
               </div>
-              <div className="bg-foreground/10 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-foreground/20">
-                <span className="text-foreground font-medium">{profile.referrals} referrals</span>
+              <div className="bg-foreground/10 backdrop-blur-md rounded-xl px-4 py-2 border border-foreground/20">
+                <span className="text-foreground font-semibold text-lg">{profile.referrals} referrals</span>
               </div>
             </div>
           </div>
 
-          {/* Flip hint */}
-          <div className="absolute top-4 right-4 bg-background/60 backdrop-blur-sm rounded-full px-3 py-1 text-xs text-muted-foreground border border-foreground/10">
+          {/* Animated flip hint */}
+          <motion.div 
+            className="absolute top-5 right-5 bg-background/70 backdrop-blur-md rounded-full px-4 py-1.5 text-sm text-muted-foreground border border-foreground/10 flex items-center gap-2"
+            animate={{ opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <motion.span
+              animate={{ rotateY: [0, 180, 360] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              style={{ display: "inline-block" }}
+            >
+              ↻
+            </motion.span>
             Hover to flip
-          </div>
+          </motion.div>
 
-          {/* Active border glow */}
+          {/* Active ring effect */}
           {isActive && (
             <motion.div
-              className="absolute inset-0 rounded-2xl border-2 border-primary/60"
+              className="absolute inset-0 rounded-3xl"
               animate={{
-                boxShadow: ["0 0 20px 0 hsl(var(--primary) / 0.3)", "0 0 40px 0 hsl(var(--primary) / 0.5)", "0 0 20px 0 hsl(var(--primary) / 0.3)"],
+                boxShadow: [
+                  "inset 0 0 0 2px hsl(var(--primary) / 0.4), 0 0 30px 0 hsl(var(--primary) / 0.2)",
+                  "inset 0 0 0 3px hsl(var(--primary) / 0.6), 0 0 50px 0 hsl(var(--primary) / 0.4)",
+                  "inset 0 0 0 2px hsl(var(--primary) / 0.4), 0 0 30px 0 hsl(var(--primary) / 0.2)",
+                ],
               }}
-              transition={{ duration: 2, repeat: Infinity }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
             />
           )}
-        </div>
+        </motion.div>
 
         {/* BACK - Timeline Side */}
-        <div
-          className="absolute inset-0 rounded-2xl overflow-hidden bg-gradient-to-br from-background via-background to-muted/30 border-2 border-foreground/10"
+        <motion.div
+          className="absolute inset-0 rounded-3xl overflow-hidden bg-gradient-to-br from-background via-background to-muted/20 border border-foreground/20"
           style={{ 
             backfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
           }}
+          animate={{
+            boxShadow: isActive 
+              ? "inset 0 1px 0 rgba(255,255,255,0.2), 0 0 0 2px hsl(var(--primary) / 0.5)"
+              : "inset 0 1px 0 rgba(255,255,255,0.1)",
+          }}
         >
-          {/* Pattern background */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--foreground)) 1px, transparent 0)`,
-              backgroundSize: "20px 20px",
-            }} />
+          {/* Animated pattern background */}
+          <div className="absolute inset-0 opacity-[0.03]">
+            <motion.div 
+              className="absolute inset-0" 
+              style={{
+                backgroundImage: `radial-gradient(circle at 2px 2px, hsl(var(--foreground)) 1px, transparent 0)`,
+                backgroundSize: "24px 24px",
+              }}
+              animate={{ backgroundPosition: ["0 0", "24px 24px"] }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            />
           </div>
 
-          {/* Header */}
-          <div className="p-5 border-b border-foreground/10">
-            <div className="flex items-center gap-3">
-              <img
-                src={profile.image}
-                alt={profile.name}
-                className="w-12 h-12 rounded-full object-cover border-2 border-primary/50"
-              />
+          {/* Header - enhanced */}
+          <div className="p-6 border-b border-foreground/10 bg-gradient-to-r from-primary/5 to-transparent">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <img
+                  src={profile.image}
+                  alt={profile.name}
+                  className="w-14 h-14 rounded-full object-cover border-2 border-primary/50"
+                />
+                <motion.div
+                  className="absolute inset-0 rounded-full border-2 border-primary"
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              </div>
               <div>
-                <h4 className="font-bold text-foreground">{profile.name}</h4>
+                <h4 className="font-bold text-lg text-foreground">{profile.name}</h4>
                 <p className="text-sm text-muted-foreground">{profile.role}</p>
               </div>
             </div>
           </div>
 
-          {/* Sexy Vertical Timeline */}
-          <div className="relative p-5 h-[calc(100%-84px)] overflow-hidden">
-            {/* Glowing timeline line */}
-            <div className="absolute left-8 top-0 bottom-0 w-0.5">
-              <div className="absolute inset-0 bg-gradient-to-b from-primary via-primary/50 to-primary/20" />
+          {/* Sexy Vertical Timeline - enhanced */}
+          <div className="relative p-6 h-[calc(100%-100px)] overflow-hidden">
+            {/* Glowing timeline line - thicker */}
+            <div className="absolute left-9 top-0 bottom-0 w-1">
+              <div className="absolute inset-0 bg-gradient-to-b from-primary via-primary/50 to-primary/10 rounded-full" />
               <motion.div
-                className="absolute inset-0 bg-gradient-to-b from-primary to-transparent"
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute inset-0 bg-gradient-to-b from-primary via-primary/70 to-transparent rounded-full"
+                animate={{ opacity: [0.3, 1, 0.3], scaleY: [0.98, 1, 0.98] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               />
             </div>
 
-            {/* Timeline items */}
-            <div className="space-y-4 ml-4">
+            {/* Timeline items - larger */}
+            <div className="space-y-5 ml-4">
               {profile.timeline.map((item, idx) => {
                 const Icon = typeIcons[item.type];
                 const colorClass = typeColors[item.type];
@@ -346,68 +459,72 @@ const FlipCard = ({
                   <motion.div
                     key={idx}
                     className="relative flex items-start gap-4 group"
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.1 + 0.3 }}
+                    transition={{ delay: idx * 0.12 + 0.2, ease: [0.23, 1, 0.32, 1] }}
                   >
-                    {/* Node */}
-                    <div className={`relative z-10 flex-shrink-0 w-8 h-8 rounded-full ${colorClass} flex items-center justify-center border transition-transform duration-300 group-hover:scale-125`}>
-                      <Icon className="w-4 h-4" />
+                    {/* Node - larger */}
+                    <div className={`relative z-10 flex-shrink-0 w-10 h-10 rounded-full ${colorClass} flex items-center justify-center border-2 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}>
+                      <Icon className="w-5 h-5" />
                       
                       {/* Pulse effect */}
                       <motion.div
-                        className="absolute inset-0 rounded-full bg-primary/30"
-                        animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: idx * 0.3 }}
+                        className="absolute inset-0 rounded-full bg-current opacity-30"
+                        animate={{ scale: [1, 1.6, 1], opacity: [0.3, 0, 0.3] }}
+                        transition={{ duration: 2.5, repeat: Infinity, delay: idx * 0.4 }}
                       />
                     </div>
 
-                    {/* Content */}
-                    <div className="flex-1 bg-foreground/5 rounded-xl p-3 border border-foreground/10 transition-all duration-300 group-hover:border-primary/30 group-hover:bg-foreground/10">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-bold text-primary">{item.year}</span>
-                        <span className="text-xs text-muted-foreground">{item.company}</span>
+                    {/* Content - enhanced card */}
+                    <div className="flex-1 bg-foreground/5 rounded-xl p-4 border border-foreground/10 transition-all duration-300 group-hover:border-primary/40 group-hover:bg-foreground/10 group-hover:translate-x-1">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-sm font-bold text-primary">{item.year}</span>
+                        <span className="text-xs text-muted-foreground font-medium">{item.company}</span>
                       </div>
-                      <p className="font-semibold text-foreground text-sm">{item.title}</p>
+                      <p className="font-semibold text-foreground">{item.title}</p>
                     </div>
                   </motion.div>
                 );
               })}
             </div>
 
-            {/* Bottom stats */}
-            <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-background via-background/90 to-transparent">
-              <div className="flex justify-between">
+            {/* Bottom stats - enhanced */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background/95 to-transparent">
+              <div className="flex justify-between items-end">
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-primary">{profile.earnings}</p>
-                  <p className="text-xs text-muted-foreground">Total Earned</p>
+                  <p className="text-2xl font-bold text-primary drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]">{profile.earnings}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Total Earned</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-foreground">{profile.referrals}</p>
-                  <p className="text-xs text-muted-foreground">Referrals</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Referrals</p>
                 </div>
                 <div className="text-center flex flex-col items-center">
-                  <div className="flex items-center gap-1">
-                    <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
+                  <div className="flex items-center gap-1.5">
+                    <Star className="w-6 h-6 text-amber-400 fill-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
                     <span className="text-2xl font-bold text-foreground">{profile.rating}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground">Rating</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Rating</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Active border glow */}
+          {/* Active ring effect */}
           {isActive && (
             <motion.div
-              className="absolute inset-0 rounded-2xl border-2 border-primary/60"
+              className="absolute inset-0 rounded-3xl"
               animate={{
-                boxShadow: ["0 0 20px 0 hsl(var(--primary) / 0.3)", "0 0 40px 0 hsl(var(--primary) / 0.5)", "0 0 20px 0 hsl(var(--primary) / 0.3)"],
+                boxShadow: [
+                  "inset 0 0 0 2px hsl(var(--primary) / 0.4), 0 0 30px 0 hsl(var(--primary) / 0.2)",
+                  "inset 0 0 0 3px hsl(var(--primary) / 0.6), 0 0 50px 0 hsl(var(--primary) / 0.4)",
+                  "inset 0 0 0 2px hsl(var(--primary) / 0.4), 0 0 30px 0 hsl(var(--primary) / 0.2)",
+                ],
               }}
-              transition={{ duration: 2, repeat: Infinity }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
             />
           )}
-        </div>
+        </motion.div>
       </motion.div>
     </motion.div>
   );
@@ -420,8 +537,8 @@ const ProfileShowcase = () => {
   const animationRef = useRef<number>();
   const scrollPosition = useRef(0);
 
-  const cardWidth = 340;
-  const cardGap = 32;
+  const cardWidth = 400;
+  const cardGap = 48;
   const totalWidth = profiles.length * (cardWidth + cardGap);
 
   // Auto-scroll conveyor belt
