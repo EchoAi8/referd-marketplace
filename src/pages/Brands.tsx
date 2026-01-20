@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import MagneticButton from "@/components/animations/MagneticButton";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
 import { Building2, Users, TrendingUp, Clock, Shield, Zap } from "lucide-react";
+import InfiniteProfileCanvas from "@/components/animations/InfiniteProfileCanvas";
 
 const benefits = [
   {
@@ -50,98 +51,55 @@ const Brands = () => {
         <div className="min-h-screen bg-background">
           <SiteHeader />
           <main>
-            {/* Hero Section */}
-            <section className="pt-32 pb-20 px-6 bg-foreground">
-              <div className="container mx-auto max-w-5xl">
-                <div className="flex flex-col lg:flex-row items-center gap-12">
-                  <div className="flex-1 text-center lg:text-left">
-                    <motion.span
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6 }}
-                      className="inline-block px-4 py-1.5 bg-mustard/20 text-mustard rounded-full text-sm font-medium mb-6"
-                    >
-                      For Brands & Employers
-                    </motion.span>
-                    <motion.h1
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.1 }}
-                      className="text-5xl md:text-6xl font-heading font-bold text-background leading-tight mb-6"
-                    >
-                      Hire Better.
-                      <br />
-                      <span className="text-sage">Pay Less.</span>
-                    </motion.h1>
-                    <motion.p
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.2 }}
-                      className="text-xl text-background/60 mb-8 max-w-lg"
-                    >
-                      Access pre-vetted talent through trusted referrals. Only pay when you make a successful hire.
-                    </motion.p>
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.3 }}
-                      className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-                    >
-                      <MagneticButton className="btn-primary" strength={0.4}>
-                        Post a Role
-                      </MagneticButton>
-                      <MagneticButton
-                        onClick={() => navigateWithTransition("/contact")}
-                        className="px-8 py-4 border border-background/30 text-background rounded-full font-semibold hover:bg-white/10 transition-colors"
-                        strength={0.4}
-                      >
-                        Book a Demo
-                      </MagneticButton>
-                    </motion.div>
-                  </div>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1, delay: 0.3 }}
-                    className="flex-1 hidden lg:block"
+            {/* Hero Section with Infinite Profile Canvas */}
+            <section className="relative pt-32 pb-20 px-6 bg-foreground min-h-[90vh] overflow-hidden">
+              {/* Infinite Profile Canvas Background */}
+              <InfiniteProfileCanvas />
+              
+              <div className="container mx-auto max-w-5xl relative z-10">
+                <div className="flex flex-col items-center text-center">
+                  <motion.span
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="inline-block px-4 py-1.5 bg-mustard/20 text-mustard rounded-full text-sm font-medium mb-6"
                   >
-                    <div className="relative">
-                      <div className="absolute -inset-4 bg-gradient-to-r from-sage/20 to-mustard/20 blur-3xl rounded-full" />
-                      <div className="relative bg-background/10 backdrop-blur-sm rounded-3xl p-8 border border-background/10">
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-4 p-4 bg-background/5 rounded-xl">
-                            <div className="w-12 h-12 bg-sage/20 rounded-full flex items-center justify-center">
-                              <span className="text-sage font-bold">JS</span>
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-background font-medium">Senior Engineer</p>
-                              <p className="text-background/50 text-sm">Referred by Sarah K.</p>
-                            </div>
-                            <span className="px-3 py-1 bg-sage/20 text-sage rounded-full text-sm">Hired</span>
-                          </div>
-                          <div className="flex items-center gap-4 p-4 bg-background/5 rounded-xl">
-                            <div className="w-12 h-12 bg-mustard/20 rounded-full flex items-center justify-center">
-                              <span className="text-mustard font-bold">ML</span>
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-background font-medium">Product Manager</p>
-                              <p className="text-background/50 text-sm">Referred by Mike T.</p>
-                            </div>
-                            <span className="px-3 py-1 bg-mustard/20 text-mustard rounded-full text-sm">Interview</span>
-                          </div>
-                          <div className="flex items-center gap-4 p-4 bg-background/5 rounded-xl">
-                            <div className="w-12 h-12 bg-rose/20 rounded-full flex items-center justify-center">
-                              <span className="text-rose font-bold">AK</span>
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-background font-medium">UX Designer</p>
-                              <p className="text-background/50 text-sm">Referred by Alex P.</p>
-                            </div>
-                            <span className="px-3 py-1 bg-rose/20 text-rose rounded-full text-sm">Applied</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    For Brands & Employers
+                  </motion.span>
+                  <motion.h1
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.1 }}
+                    className="text-5xl md:text-7xl font-heading font-bold text-background leading-tight mb-6"
+                  >
+                    Hire Better.
+                    <br />
+                    <span className="text-sage">Pay Less.</span>
+                  </motion.h1>
+                  <motion.p
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className="text-xl text-background/70 mb-8 max-w-lg"
+                  >
+                    Access pre-vetted talent through trusted referrals. Only pay when you make a successful hire.
+                  </motion.p>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
+                    className="flex flex-col sm:flex-row gap-4"
+                  >
+                    <MagneticButton className="btn-primary" strength={0.4}>
+                      Post a Role
+                    </MagneticButton>
+                    <MagneticButton
+                      onClick={() => navigateWithTransition("/contact")}
+                      className="px-8 py-4 border border-background/30 text-background rounded-full font-semibold hover:bg-white/10 transition-colors"
+                      strength={0.4}
+                    >
+                      Book a Demo
+                    </MagneticButton>
                   </motion.div>
                 </div>
               </div>
