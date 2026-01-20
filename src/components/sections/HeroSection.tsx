@@ -30,7 +30,7 @@ const HeroSection = () => {
       {/* Interactive Network Canvas Background with parallax */}
       <motion.div 
         style={{ opacity: heroOpacity, scale: heroScale, y: canvasY }} 
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-auto"
       >
         <motion.div
           initial={{ opacity: 0 }}
@@ -47,7 +47,7 @@ const HeroSection = () => {
       </motion.div>
 
       {/* Large Logo Overlay with parallax */}
-      <div className="relative z-10 h-screen flex flex-col justify-between p-6 md:p-12">
+      <div className="relative z-10 h-screen flex flex-col justify-between p-6 md:p-12 pointer-events-none">
         {/* Top - Logo with character animation and parallax */}
         <motion.div 
           style={{ y: logoY, scale: logoScale }} 
@@ -118,7 +118,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col sm:flex-row gap-4 mt-8"
+              className="flex flex-col sm:flex-row gap-4 mt-8 pointer-events-auto"
             >
               <MagneticButton className="btn-primary" strength={0.4}>
                 Start Earning
@@ -139,7 +139,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0, rotate: 3 }}
             transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ scale: 1.03, rotate: 0 }}
-            className="hidden lg:block w-72 bg-background/95 backdrop-blur-sm rounded-2xl overflow-hidden shadow-2xl cursor-pointer border border-foreground/5"
+            className="hidden lg:block w-72 bg-background/95 backdrop-blur-sm rounded-2xl overflow-hidden shadow-2xl cursor-pointer border border-foreground/5 pointer-events-auto"
           >
             <div className="p-6">
               <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-4">

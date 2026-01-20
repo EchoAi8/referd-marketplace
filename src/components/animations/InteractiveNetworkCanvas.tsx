@@ -112,6 +112,9 @@ const InteractiveNetworkCanvas = () => {
   const lastHireTimeRef = useRef(0);
   const networkValueRef = useRef(427832);
   const timeRef = useRef(0);
+
+  // Per-particle state for the "gravity well" orbit + slingshot
+  const orbitStateRef = useRef<Map<number, { inOrbit: boolean; enteredAt: number }>>(new Map());
   
   // Track which nodes always show faces (2-3 featured nodes)
   const featuredNodesRef = useRef<Set<number>>(new Set());
@@ -370,61 +373,98 @@ const InteractiveNetworkCanvas = () => {
         const dx = p.x - mouse.x;
         const dy = p.y - mouse.y;
         const mouseDist = Math.sqrt(dx * dx + dy * dy);
-        const cursorRadius = 120; // Larger collision radius
-        
-        if (mouseOnScreen) {
-          // BOUNCE OFF CURSOR - when cursor collides with particle
-          if (mouseDist < cursorRadius + p.radius && mouseDist > 0) {
-            // Calculate bounce direction (away from cursor)
+
+        // Zones
+        const orbitRadius = 190;
+        const collisionRadius = 95;
+
+        if (mouseOnScreen && mouseDist > 0) {
+          // ---- Gravity well orbit (brief orbit, then slingshot) ----
+          const orbitState = orbitStateRef.current.get(p.id) ?? { inOrbit: false, enteredAt: 0 };
+          const isInOrbitZone = mouseDist < orbitRadius && mouseDist > collisionRadius;
+
+          if (isInOrbitZone) {
+            if (!orbitState.inOrbit) {
+              orbitState.inOrbit = true;
+              orbitState.enteredAt = time;
+            }
+
+            // Unit vectors
             const nx = dx / mouseDist;
             const ny = dy / mouseDist;
-            
-            // Strong bounce force - always significant even with slow mouse
-            const baseForce = 8;
-            const velocityBonus = mouseSpeed * 0.5;
+            // Tangential direction for orbit
+            const tx = -ny;
+            const ty = nx;
+
+            const proximity = 1 - mouseDist / orbitRadius;
+            const swirl = 1.8 * proximity;
+            const pull = 0.9 * proximity;
+
+            // Orbiting motion (tangential) + gentle pull toward cursor
+            p.vx += tx * swirl;
+            p.vy += ty * swirl;
+            p.vx += -nx * pull;
+            p.vy += -ny * pull;
+
+            // Add a little mouse-velocity influence so it feels "magnetic"
+            p.vx += mouseVx * 0.05 * proximity;
+            p.vy += mouseVy * 0.05 * proximity;
+
+            orbitStateRef.current.set(p.id, orbitState);
+          } else if (orbitState.inOrbit) {
+            // Slingshot impulse when leaving the orbit zone
+            const duration = Math.max(0, time - orbitState.enteredAt);
+            const charge = Math.min(1, duration / 350);
+            const nx = dx / mouseDist;
+            const ny = dy / mouseDist;
+
+            p.vx += nx * (10 + 14 * charge);
+            p.vy += ny * (10 + 14 * charge);
+
+            orbitState.inOrbit = false;
+            orbitStateRef.current.set(p.id, orbitState);
+          }
+
+          // ---- Bounce / collision off cursor ----
+          if (mouseDist < collisionRadius + p.radius) {
+            const nx = dx / mouseDist;
+            const ny = dy / mouseDist;
+
+            const baseForce = 10;
+            const velocityBonus = mouseSpeed * 0.6;
             const bounceForce = baseForce + velocityBonus;
-            
-            // Apply bounce with some randomness
-            const randomSpread = (Math.random() - 0.5) * 0.3;
-            p.vx += nx * bounceForce * (1 + randomSpread);
-            p.vy += ny * bounceForce * (1 + randomSpread);
-            
-            // Also add mouse velocity transfer
-            p.vx += mouseVx * 0.4;
-            p.vy += mouseVy * 0.4;
-            
-            // Push particle outside cursor radius immediately
-            const overlap = cursorRadius + p.radius - mouseDist + 5;
+
+            p.vx += nx * bounceForce + mouseVx * 0.35;
+            p.vy += ny * bounceForce + mouseVy * 0.35;
+
+            // Push particle outside cursor immediately
+            const overlap = collisionRadius + p.radius - mouseDist + 6;
             p.x += nx * overlap;
             p.y += ny * overlap;
-            
-            // Add a ripple on collision
-            if (Math.random() > 0.5) {
+
+            // Ripple pop
+            if (Math.random() > 0.6) {
               ripplesRef.current.push({
                 id: Date.now() + Math.random(),
-                x: (p.x + mouse.x) / 2,
-                y: (p.y + mouse.y) / 2,
+                x: p.x,
+                y: p.y,
                 radius: 0,
-                opacity: 0.6,
+                opacity: 0.55,
                 hue: p.type === "referrer" ? 180 : 300,
               });
             }
           }
-          // SPEED UP when cursor is nearby (within 250px)
-          else if (mouseDist < 250 && mouseDist > cursorRadius + p.radius) {
-            const proximityFactor = 1 - (mouseDist / 250);
-            
-            // Flee away from cursor
+
+          // ---- Speed-up / agitation in outer proximity ----
+          if (mouseDist < 280 && mouseDist > orbitRadius) {
+            const proximity = 1 - mouseDist / 280;
             const nx = dx / mouseDist;
             const ny = dy / mouseDist;
-            p.vx += nx * proximityFactor * 1.5;
-            p.vy += ny * proximityFactor * 1.5;
-            
-            // Also inherit some mouse velocity
-            if (mouseSpeed > 2) {
-              p.vx += mouseVx * 0.08 * proximityFactor;
-              p.vy += mouseVy * 0.08 * proximityFactor;
-            }
+            // Flee and energize
+            p.vx += nx * proximity * 1.1;
+            p.vy += ny * proximity * 1.1;
+            p.vx += mouseVx * 0.06 * proximity;
+            p.vy += mouseVy * 0.06 * proximity;
           }
         }
 
@@ -588,25 +628,48 @@ const InteractiveNetworkCanvas = () => {
           ctx.stroke();
         }
         
-        // Velocity trail effect
-        if (vel > 3) {
-          const trailLength = Math.min(vel * 4, 50);
-          const trailGradient = ctx.createLinearGradient(
-            p.x - (p.vx / vel) * trailLength,
-            p.y - (p.vy / vel) * trailLength,
+        // Comet trail effect (fast nodes leave a glowing tail)
+        if (vel > 6) {
+          const trailLength = Math.min(vel * 6, 90);
+          const ux = p.vx / vel;
+          const uy = p.vy / vel;
+
+          // Soft beam
+          const beamGradient = ctx.createLinearGradient(
+            p.x - ux * trailLength,
+            p.y - uy * trailLength,
             p.x,
             p.y
           );
-          trailGradient.addColorStop(0, `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0)`);
-          trailGradient.addColorStop(1, `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0.4)`);
-          
+          beamGradient.addColorStop(0, `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0)`);
+          beamGradient.addColorStop(1, `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0.45)`);
+
           ctx.beginPath();
-          ctx.moveTo(p.x - (p.vx / vel) * trailLength, p.y - (p.vy / vel) * trailLength);
+          ctx.moveTo(p.x - ux * trailLength, p.y - uy * trailLength);
           ctx.lineTo(p.x, p.y);
-          ctx.strokeStyle = trailGradient;
-          ctx.lineWidth = drawRadius * 0.7;
+          ctx.strokeStyle = beamGradient;
+          ctx.lineWidth = drawRadius * 0.75;
           ctx.lineCap = "round";
           ctx.stroke();
+
+          // Spark particles along the tail
+          for (let s = 0; s < 7; s++) {
+            const t = s / 7;
+            const px = p.x - ux * trailLength * t + (Math.random() - 0.5) * 6;
+            const py = p.y - uy * trailLength * t + (Math.random() - 0.5) * 6;
+            const r = (1 - t) * (3 + Math.random() * 3);
+            const a = (1 - t) * 0.25;
+
+            const g = ctx.createRadialGradient(px, py, 0, px, py, r * 3);
+            g.addColorStop(0, `rgba(255,255,255,${a})`);
+            g.addColorStop(0.4, `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, ${a})`);
+            g.addColorStop(1, `rgba(${colors.glow.r}, ${colors.glow.g}, ${colors.glow.b}, 0)`);
+
+            ctx.beginPath();
+            ctx.arc(px, py, r * 3, 0, Math.PI * 2);
+            ctx.fillStyle = g;
+            ctx.fill();
+          }
         }
         
         // Main glow gradient
@@ -825,7 +888,9 @@ const InteractiveNetworkCanvas = () => {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 overflow-hidden"
+      className="absolute inset-0 overflow-hidden pointer-events-auto"
+      onPointerMove={(e) => handleMouseMove(e as unknown as React.MouseEvent)}
+      onPointerLeave={() => handleMouseLeave()}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
