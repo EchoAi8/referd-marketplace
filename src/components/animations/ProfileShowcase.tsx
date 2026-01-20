@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-import { motion, AnimatePresence, useSpring } from "framer-motion";
+import { motion, AnimatePresence, useSpring, PanInfo } from "framer-motion";
 import { 
   Briefcase, 
   GraduationCap, 
@@ -13,8 +13,15 @@ import {
   Pause, 
   Play,
   Sparkles,
-  Calendar
+  Calendar,
+  MessageCircle,
+  Send,
+  User,
+  Mail
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 interface TimelineItem {
   year: string;
@@ -157,6 +164,160 @@ const typeConfig = {
   training: { icon: TrendingUp, color: "primary", label: "Training" },
 };
 
+// Quick Contact Modal
+const QuickContactModal = ({
+  profile,
+  onClose,
+}: {
+  profile: ProfileData;
+  onClose: () => void;
+}) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.email || !formData.message) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    
+    toast.success(`Message sent to ${profile.name}!`, {
+      description: "They'll get back to you soon.",
+    });
+    
+    setIsSubmitting(false);
+    onClose();
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      {/* Backdrop */}
+      <motion.div
+        className="absolute inset-0 bg-foreground/70 backdrop-blur-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      />
+
+      {/* Modal */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        className="relative w-full max-w-md bg-background rounded-2xl overflow-hidden shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header with profile preview */}
+        <div className="relative p-6 pb-4 bg-gradient-to-b from-sage/10 to-transparent">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-foreground/5 flex items-center justify-center text-muted-foreground hover:bg-foreground/10 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+
+          <div className="flex items-center gap-4">
+            <img
+              src={profile.image}
+              alt={profile.name}
+              className="w-16 h-16 rounded-xl object-cover border-2 border-sage/30"
+            />
+            <div>
+              <h3 className="text-xl font-heading font-bold text-foreground">
+                Contact {profile.name.split(" ")[0]}
+              </h3>
+              <p className="text-sm text-muted-foreground">{profile.role}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6 pt-2 space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Your Name</label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="John Smith"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="pl-10 bg-muted/30 border-foreground/10 focus:border-sage"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Your Email</label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                type="email"
+                placeholder="john@company.com"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="pl-10 bg-muted/30 border-foreground/10 focus:border-sage"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Message</label>
+            <Textarea
+              placeholder={`Hi ${profile.name.split(" ")[0]}, I'd love to connect about...`}
+              value={formData.message}
+              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              className="bg-muted/30 border-foreground/10 focus:border-sage min-h-[100px] resize-none"
+            />
+          </div>
+
+          <motion.button
+            type="submit"
+            disabled={isSubmitting}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full py-3 px-4 bg-sage text-foreground font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-sage/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? (
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="w-5 h-5 border-2 border-foreground/30 border-t-foreground rounded-full"
+              />
+            ) : (
+              <>
+                <Send className="w-4 h-4" />
+                Send Message
+              </>
+            )}
+          </motion.button>
+
+          <p className="text-xs text-center text-muted-foreground">
+            Messages are sent via Referd's secure platform
+          </p>
+        </form>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 // Flip Card Component - Bold rectangular design
 const FlipCard = ({
   profile,
@@ -164,18 +325,20 @@ const FlipCard = ({
   isFlipped,
   onFlip,
   onClick,
+  onContactClick,
 }: {
   profile: ProfileData;
   isActive: boolean;
   isFlipped: boolean;
   onFlip: (flipped: boolean) => void;
   onClick: () => void;
+  onContactClick: () => void;
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
     <div
-      className="relative cursor-pointer select-none"
+      className="relative cursor-pointer select-none touch-none"
       style={{
         width: 380,
         height: 520,
@@ -237,6 +400,7 @@ const FlipCard = ({
                 }}
                 transition={{ duration: 0.5 }}
                 onLoad={() => setImageLoaded(true)}
+                draggable={false}
               />
               
               {/* Gradient overlay */}
@@ -334,7 +498,7 @@ const FlipCard = ({
           }}
         >
           <div 
-            className="relative w-full h-full p-6"
+            className="relative w-full h-full p-5"
             style={{
               background: "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.3) 100%)",
             }}
@@ -348,9 +512,9 @@ const FlipCard = ({
             />
 
             {/* Header */}
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-xl font-heading font-bold text-foreground">{profile.name}</h3>
+                <h3 className="text-lg font-heading font-bold text-foreground">{profile.name}</h3>
                 <p className="text-sm text-muted-foreground">{profile.role}</p>
               </div>
               <div className="flex items-center gap-1 px-2.5 py-1 bg-sage/15 rounded-full">
@@ -359,10 +523,10 @@ const FlipCard = ({
               </div>
             </div>
 
-            {/* Timeline */}
-            <div className="relative space-y-3 overflow-y-auto h-[calc(100%-70px)] pr-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+            {/* Timeline - adjusted height for contact button */}
+            <div className="relative space-y-2.5 overflow-y-auto h-[calc(100%-130px)] pr-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
               {/* Vertical line */}
-              <div className="absolute left-[18px] top-2 bottom-2 w-px bg-gradient-to-b from-sage via-foreground/20 to-transparent" />
+              <div className="absolute left-[15px] top-2 bottom-2 w-px bg-gradient-to-b from-sage via-foreground/20 to-transparent" />
 
               {profile.timeline.map((item, idx) => {
                 const config = typeConfig[item.type];
@@ -373,12 +537,12 @@ const FlipCard = ({
                     key={idx}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.08, duration: 0.3 }}
-                    className="relative flex gap-3 group"
+                    transition={{ delay: idx * 0.06, duration: 0.3 }}
+                    className="relative flex gap-2.5 group"
                   >
                     {/* Icon node */}
                     <div 
-                      className="relative z-10 w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200 group-hover:scale-110"
+                      className="relative z-10 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200 group-hover:scale-110"
                       style={{
                         background: item.logo 
                           ? "hsl(var(--background))" 
@@ -390,7 +554,7 @@ const FlipCard = ({
                         <img 
                           src={item.logo} 
                           alt={item.company} 
-                          className="w-5 h-5 rounded object-contain"
+                          className="w-4 h-4 rounded object-contain"
                           onError={(e) => {
                             e.currentTarget.style.display = 'none';
                             e.currentTarget.nextElementSibling?.classList.remove('hidden');
@@ -398,17 +562,17 @@ const FlipCard = ({
                         />
                       ) : null}
                       <Icon 
-                        className={`w-4 h-4 ${item.logo ? 'hidden' : ''}`}
+                        className={`w-3.5 h-3.5 ${item.logo ? 'hidden' : ''}`}
                         style={{ color: `hsl(var(--color-${config.color}))` }}
                       />
                     </div>
 
                     {/* Content */}
-                    <div className="flex-1 min-w-0 pb-3">
+                    <div className="flex-1 min-w-0 pb-2">
                       <div className="flex items-baseline justify-between gap-2">
                         <h4 className="text-sm font-semibold text-foreground truncate">{item.title}</h4>
                         <span 
-                          className="text-xs font-bold flex-shrink-0 px-2 py-0.5 rounded-full"
+                          className="text-[10px] font-bold flex-shrink-0 px-1.5 py-0.5 rounded-full"
                           style={{
                             background: `hsl(var(--color-${config.color}) / 0.15)`,
                             color: `hsl(var(--color-${config.color}))`,
@@ -417,20 +581,14 @@ const FlipCard = ({
                           {item.year}
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-0.5">{item.company}</p>
-                      
-                      {item.description && (
-                        <p className="text-xs text-muted-foreground/80 mt-1.5 leading-relaxed line-clamp-2">
-                          {item.description}
-                        </p>
-                      )}
+                      <p className="text-xs text-muted-foreground">{item.company}</p>
 
                       {item.achievements && item.achievements.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mt-2">
+                        <div className="flex flex-wrap gap-1 mt-1.5">
                           {item.achievements.slice(0, 2).map((achievement, i) => (
                             <span
                               key={i}
-                              className="px-2 py-0.5 text-[10px] font-medium bg-sage/10 text-sage rounded-full"
+                              className="px-1.5 py-0.5 text-[9px] font-medium bg-sage/10 text-sage rounded-full"
                             >
                               {achievement}
                             </span>
@@ -443,18 +601,20 @@ const FlipCard = ({
               })}
             </div>
 
-            {/* Skills footer */}
-            <div className="absolute bottom-4 left-6 right-6">
-              <div className="flex flex-wrap gap-1.5">
-                {profile.skills.slice(0, 4).map((skill) => (
-                  <span
-                    key={skill}
-                    className="px-2.5 py-1 text-[11px] font-semibold text-foreground/80 bg-foreground/5 rounded-full border border-foreground/10"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
+            {/* Contact Button */}
+            <div className="absolute bottom-5 left-5 right-5">
+              <motion.button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onContactClick();
+                }}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="w-full py-3 px-4 bg-sage text-foreground font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-sage/90 transition-colors shadow-lg"
+              >
+                <MessageCircle className="w-4 h-4" />
+                Contact {profile.name.split(" ")[0]}
+              </motion.button>
             </div>
           </div>
         </motion.div>
@@ -648,12 +808,14 @@ const ProfileModal = ({
   );
 };
 
-// Main Conveyor Belt Showcase
+// Main Conveyor Belt Showcase with Drag Support
 const ProfileShowcase = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedProfile, setSelectedProfile] = useState<ProfileData | null>(null);
+  const [contactProfile, setContactProfile] = useState<ProfileData | null>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isHovering, setIsHovering] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [flippedIndex, setFlippedIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const autoPlayRef = useRef<NodeJS.Timeout>();
@@ -663,9 +825,8 @@ const ProfileShowcase = () => {
 
   const cardWidth = 400;
   const cardGap = 30;
-  const totalWidth = profiles.length * (cardWidth + cardGap);
 
-  // Calculate position for infinite loop effect
+  // Calculate position
   useEffect(() => {
     const targetX = -activeIndex * (cardWidth + cardGap);
     springX.set(targetX);
@@ -673,7 +834,7 @@ const ProfileShowcase = () => {
 
   // Auto-rotation
   useEffect(() => {
-    if (isAutoPlaying && !isHovering && !selectedProfile) {
+    if (isAutoPlaying && !isHovering && !isDragging && !selectedProfile && !contactProfile) {
       autoPlayRef.current = setInterval(() => {
         setActiveIndex((prev) => (prev + 1) % profiles.length);
       }, 4000);
@@ -682,7 +843,7 @@ const ProfileShowcase = () => {
     return () => {
       if (autoPlayRef.current) clearInterval(autoPlayRef.current);
     };
-  }, [isAutoPlaying, isHovering, selectedProfile]);
+  }, [isAutoPlaying, isHovering, isDragging, selectedProfile, contactProfile]);
 
   const handleHoverStart = useCallback(() => {
     setIsHovering(true);
@@ -694,6 +855,40 @@ const ProfileShowcase = () => {
     setFlippedIndex(null);
   }, []);
 
+  // Drag handlers with momentum
+  const handleDragStart = () => {
+    setIsDragging(true);
+    setFlippedIndex(null);
+    if (autoPlayRef.current) clearInterval(autoPlayRef.current);
+  };
+
+  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    setIsDragging(false);
+    
+    const threshold = cardWidth / 4;
+    const velocity = info.velocity.x;
+    const offset = info.offset.x;
+    
+    // Calculate direction based on velocity and offset
+    let direction = 0;
+    
+    if (Math.abs(velocity) > 500) {
+      // High velocity flick
+      direction = velocity > 0 ? -1 : 1;
+    } else if (Math.abs(offset) > threshold) {
+      // Slow drag past threshold
+      direction = offset > 0 ? -1 : 1;
+    }
+    
+    if (direction !== 0) {
+      const newIndex = Math.max(0, Math.min(profiles.length - 1, activeIndex + direction));
+      setActiveIndex(newIndex);
+    } else {
+      // Snap back
+      springX.set(-activeIndex * (cardWidth + cardGap));
+    }
+  };
+
   const nextCard = () => {
     setActiveIndex((prev) => (prev + 1) % profiles.length);
   };
@@ -703,6 +898,8 @@ const ProfileShowcase = () => {
   };
 
   const handleCardClick = (index: number) => {
+    if (isDragging) return;
+    
     if (index === activeIndex) {
       setSelectedProfile(profiles[index]);
     } else {
@@ -733,10 +930,15 @@ const ProfileShowcase = () => {
         <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
-        {/* Conveyor belt container */}
-        <div
+        {/* Conveyor belt container with drag */}
+        <motion.div
           ref={containerRef}
-          className="relative h-[560px] flex items-center"
+          className="relative h-[560px] flex items-center cursor-grab active:cursor-grabbing"
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.1}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
         >
           <motion.div
             className="flex items-center gap-[30px] px-[calc(50vw-190px)]"
@@ -762,22 +964,35 @@ const ProfileShowcase = () => {
                   <FlipCard
                     profile={profile}
                     isActive={isActive}
-                    isFlipped={flippedIndex === index && isActive}
+                    isFlipped={flippedIndex === index && isActive && !isDragging}
                     onFlip={(flipped) => {
-                      if (isActive) {
+                      if (isActive && !isDragging) {
                         setFlippedIndex(flipped ? index : null);
                       }
                     }}
                     onClick={() => handleCardClick(index)}
+                    onContactClick={() => setContactProfile(profile)}
                   />
                 </motion.div>
               );
             })}
           </motion.div>
-        </div>
+        </motion.div>
+
+        {/* Drag hint on mobile */}
+        <motion.div
+          className="flex items-center justify-center gap-2 text-muted-foreground mb-4 md:hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+        >
+          <ChevronLeft className="w-4 h-4" />
+          <span className="text-sm">Swipe to explore</span>
+          <ChevronRight className="w-4 h-4" />
+        </motion.div>
 
         {/* Navigation */}
-        <div className="flex items-center justify-center gap-6 mt-6">
+        <div className="flex items-center justify-center gap-6 mt-4">
           {/* Prev */}
           <motion.button
             onClick={prevCard}
@@ -838,6 +1053,16 @@ const ProfileShowcase = () => {
           <ProfileModal
             profile={selectedProfile}
             onClose={() => setSelectedProfile(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Quick Contact Modal */}
+      <AnimatePresence>
+        {contactProfile && (
+          <QuickContactModal
+            profile={contactProfile}
+            onClose={() => setContactProfile(null)}
           />
         )}
       </AnimatePresence>
