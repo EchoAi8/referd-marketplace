@@ -1,12 +1,26 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence, useSpring } from "framer-motion";
-import { Briefcase, GraduationCap, Award, TrendingUp, Star, ChevronLeft, ChevronRight, MapPin, X, ArrowUpRight, Pause, Play } from "lucide-react";
+import { 
+  Briefcase, 
+  GraduationCap, 
+  Award, 
+  TrendingUp, 
+  Star, 
+  ChevronLeft, 
+  ChevronRight, 
+  MapPin, 
+  X, 
+  Pause, 
+  Play,
+  Sparkles,
+  Calendar
+} from "lucide-react";
 
 interface TimelineItem {
   year: string;
   title: string;
   company: string;
-  type: "work" | "education" | "achievement" | "growth";
+  type: "work" | "education" | "achievement" | "training";
   description?: string;
   achievements?: string[];
   logo?: string;
@@ -35,9 +49,10 @@ const profiles: ProfileData[] = [
     earnings: "£12,400",
     referrals: 8,
     rating: 4.9,
-    skills: ["Figma", "Design Systems", "User Research"],
+    skills: ["Figma", "Design Systems", "User Research", "Prototyping"],
     timeline: [
       { year: "2024", title: "Design Lead", company: "Stripe", type: "work", description: "Leading product design for payment infrastructure", achievements: ["Redesigned checkout flow", "40% conversion increase"], logo: "https://logo.clearbit.com/stripe.com" },
+      { year: "2023", title: "Design Leadership Cert", company: "IDEO U", type: "training", description: "Advanced design leadership program" },
       { year: "2022", title: "Sr. Designer", company: "Figma", type: "work", description: "Core product design for collaboration features", achievements: ["FigJam launch", "Auto Layout v4"], logo: "https://logo.clearbit.com/figma.com" },
       { year: "2020", title: "Product Designer", company: "Airbnb", type: "work", description: "Experiences team design", achievements: ["Online Experiences launch"], logo: "https://logo.clearbit.com/airbnb.com" },
       { year: "2018", title: "MA Design", company: "RISD", type: "education", description: "Master of Arts in Industrial Design" },
@@ -52,9 +67,10 @@ const profiles: ProfileData[] = [
     earnings: "£28,750",
     referrals: 14,
     rating: 5.0,
-    skills: ["React", "TypeScript", "System Design"],
+    skills: ["React", "TypeScript", "System Design", "Team Leadership"],
     timeline: [
       { year: "2024", title: "Eng Manager", company: "Vercel", type: "work", description: "Leading Next.js core team", achievements: ["Next.js 14 release", "Turbopack stable"], logo: "https://logo.clearbit.com/vercel.com" },
+      { year: "2022", title: "AWS Solutions Architect", company: "Amazon", type: "training", description: "Professional certification" },
       { year: "2021", title: "Staff Engineer", company: "Meta", type: "work", description: "React core team contributor", achievements: ["React 18 concurrent features"], logo: "https://logo.clearbit.com/meta.com" },
       { year: "2019", title: "Top Referrer", company: "Referd", type: "achievement", description: "Recognized as top platform contributor" },
       { year: "2017", title: "Sr. Engineer", company: "Google", type: "work", description: "Chrome DevTools team", logo: "https://logo.clearbit.com/google.com" },
@@ -69,11 +85,12 @@ const profiles: ProfileData[] = [
     earnings: "£45,200",
     referrals: 23,
     rating: 4.8,
-    skills: ["Growth", "Brand Strategy", "Analytics"],
+    skills: ["Growth", "Brand Strategy", "Analytics", "Content"],
     timeline: [
       { year: "2024", title: "VP Marketing", company: "Notion", type: "work", description: "Leading global marketing strategy", achievements: ["2x brand awareness", "Enterprise expansion"], logo: "https://logo.clearbit.com/notion.so" },
+      { year: "2023", title: "Growth Leadership", company: "Reforge", type: "training", description: "Advanced growth strategy program" },
       { year: "2022", title: "Dir. Growth", company: "Spotify", type: "work", description: "Podcast marketing growth", achievements: ["50M new podcast listeners"], logo: "https://logo.clearbit.com/spotify.com" },
-      { year: "2020", title: "20+ Referrals", company: "Milestone", type: "growth", description: "Reached 20 successful referrals" },
+      { year: "2020", title: "20+ Referrals Milestone", company: "Referd", type: "achievement", description: "Reached 20 successful referrals" },
       { year: "2018", title: "Marketing Lead", company: "Netflix", type: "work", description: "Original content marketing", logo: "https://logo.clearbit.com/netflix.com" },
     ],
   },
@@ -86,9 +103,10 @@ const profiles: ProfileData[] = [
     earnings: "£19,800",
     referrals: 11,
     rating: 4.7,
-    skills: ["Python", "ML/AI", "TensorFlow"],
+    skills: ["Python", "ML/AI", "TensorFlow", "Data Viz"],
     timeline: [
       { year: "2024", title: "Principal DS", company: "OpenAI", type: "work", description: "Large language model research", achievements: ["GPT-4 fine-tuning", "RLHF improvements"], logo: "https://logo.clearbit.com/openai.com" },
+      { year: "2023", title: "Deep Learning Specialization", company: "Coursera", type: "training", description: "Andrew Ng's advanced ML course" },
       { year: "2022", title: "Lead Scientist", company: "DeepMind", type: "work", description: "Reinforcement learning research", logo: "https://logo.clearbit.com/deepmind.com" },
       { year: "2020", title: "PhD AI/ML", company: "Stanford", type: "education", description: "Artificial Intelligence & Machine Learning" },
       { year: "2018", title: "Data Scientist", company: "Tesla", type: "work", description: "Autopilot ML team", logo: "https://logo.clearbit.com/tesla.com" },
@@ -103,9 +121,10 @@ const profiles: ProfileData[] = [
     earnings: "£32,100",
     referrals: 19,
     rating: 4.9,
-    skills: ["Leadership", "Culture", "DEI"],
+    skills: ["Leadership", "Culture", "DEI", "Talent Strategy"],
     timeline: [
       { year: "2024", title: "CPO", company: "Canva", type: "work", description: "Global people & culture strategy", achievements: ["Best Places to Work 2024", "4.8 Glassdoor rating"], logo: "https://logo.clearbit.com/canva.com" },
+      { year: "2022", title: "Executive Coaching Cert", company: "ICF", type: "training", description: "International Coach Federation certified" },
       { year: "2021", title: "VP People", company: "Shopify", type: "work", description: "Remote-first transformation", achievements: ["Digital by default program"], logo: "https://logo.clearbit.com/shopify.com" },
       { year: "2019", title: "HR Director", company: "Uber", type: "work", description: "EMEA talent acquisition", logo: "https://logo.clearbit.com/uber.com" },
       { year: "2017", title: "MBA", company: "Harvard", type: "education", description: "Business Administration" },
@@ -120,362 +139,336 @@ const profiles: ProfileData[] = [
     earnings: "£52,300",
     referrals: 31,
     rating: 5.0,
-    skills: ["Enterprise Sales", "Negotiation", "SaaS"],
+    skills: ["Enterprise Sales", "Negotiation", "SaaS", "Team Building"],
     timeline: [
       { year: "2024", title: "Head of Sales", company: "Stripe", type: "work", description: "Enterprise sales leadership", achievements: ["$2B ARR milestone", "Fortune 100 expansion"], logo: "https://logo.clearbit.com/stripe.com" },
+      { year: "2023", title: "Sandler Sales Training", company: "Sandler", type: "training", description: "Advanced enterprise sales methodology" },
       { year: "2022", title: "Sales Director", company: "Salesforce", type: "work", description: "Mid-market sales team", achievements: ["150% quota attainment"], logo: "https://logo.clearbit.com/salesforce.com" },
-      { year: "2020", title: "30+ Referrals", company: "Milestone", type: "growth", description: "Top referrer status achieved" },
+      { year: "2020", title: "30+ Referrals", company: "Milestone", type: "achievement", description: "Top referrer status achieved" },
       { year: "2018", title: "Account Exec", company: "Oracle", type: "work", description: "Cloud infrastructure sales", logo: "https://logo.clearbit.com/oracle.com" },
     ],
   },
 ];
 
-const typeIcons = {
-  work: Briefcase,
-  education: GraduationCap,
-  achievement: Award,
-  growth: TrendingUp,
+const typeConfig = {
+  work: { icon: Briefcase, color: "sage", label: "Experience" },
+  education: { icon: GraduationCap, color: "rose", label: "Education" },
+  achievement: { icon: Award, color: "mustard", label: "Achievement" },
+  training: { icon: TrendingUp, color: "primary", label: "Training" },
 };
 
-// Modern holographic skeleton for loading state
-const ProfileCardSkeleton = () => {
+// Flip Card Component - Bold rectangular design
+const FlipCard = ({
+  profile,
+  isActive,
+  isFlipped,
+  onFlip,
+  onClick,
+}: {
+  profile: ProfileData;
+  isActive: boolean;
+  isFlipped: boolean;
+  onFlip: (flipped: boolean) => void;
+  onClick: () => void;
+}) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
-    <div className="relative w-[340px] h-[460px] rounded-3xl overflow-hidden border border-foreground/10" style={{
-      background: "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.3) 100%)",
-    }}>
-      {/* Image area skeleton */}
-      <div className="relative h-[55%] overflow-hidden bg-muted/20">
-        {/* Scan lines */}
-        <div 
-          className="absolute inset-0 opacity-30"
-          style={{
-            backgroundImage: `repeating-linear-gradient(
-              0deg,
-              transparent,
-              transparent 4px,
-              hsl(var(--foreground) / 0.03) 4px,
-              hsl(var(--foreground) / 0.03) 8px
-            )`,
-          }}
-        />
-
-        {/* Holographic sweep */}
+    <div
+      className="relative cursor-pointer select-none"
+      style={{
+        width: 380,
+        height: 520,
+        perspective: 2000,
+      }}
+      onMouseEnter={() => onFlip(true)}
+      onMouseLeave={() => onFlip(false)}
+      onClick={onClick}
+    >
+      <motion.div
+        className="relative w-full h-full"
+        style={{ transformStyle: "preserve-3d" }}
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        transition={{ 
+          type: "spring", 
+          stiffness: 100, 
+          damping: 20,
+          mass: 0.8,
+        }}
+      >
+        {/* FRONT SIDE */}
         <motion.div
-          className="absolute inset-0"
-          animate={{ 
-            backgroundPosition: ["200% 0%", "-200% 0%"],
+          className="absolute inset-0 rounded-2xl overflow-hidden"
+          style={{ 
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
           }}
-          transition={{
-            duration: 2.5,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{
-            background: `linear-gradient(
-              120deg,
-              transparent 0%,
-              hsl(var(--sage) / 0.1) 30%,
-              hsl(var(--sage) / 0.25) 50%,
-              hsl(var(--sage) / 0.1) 70%,
-              transparent 100%
-            )`,
-            backgroundSize: "200% 100%",
-          }}
-        />
-
-        {/* Top badges skeleton */}
-        <div className="absolute top-4 left-4 right-4 flex justify-between">
-          <div className="w-24 h-7 rounded-full bg-background/60 backdrop-blur-sm" />
-          <div className="w-16 h-7 rounded-full bg-background/60 backdrop-blur-sm" />
-        </div>
-
-        {/* Center loader */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div
-            className="relative w-14 h-14"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+        >
+          {/* Card container with glass effect */}
+          <div 
+            className="relative w-full h-full"
+            style={{
+              background: "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.4) 100%)",
+            }}
           >
-            <div className="absolute inset-0 rounded-full border-2 border-sage/10" />
+            {/* Gradient border effect */}
             <motion.div
-              className="absolute inset-0 rounded-full"
-              style={{
-                borderWidth: 2,
-                borderStyle: "solid",
-                borderColor: "transparent",
-                borderTopColor: "hsl(var(--sage) / 0.5)",
-                borderRightColor: "hsl(var(--sage) / 0.2)",
+              className="absolute inset-0 rounded-2xl pointer-events-none"
+              animate={{
+                boxShadow: isActive
+                  ? "inset 0 0 0 2px hsl(var(--color-sage) / 0.5), 0 30px 60px -15px rgba(0,0,0,0.25)"
+                  : "inset 0 0 0 1px hsl(var(--foreground) / 0.08), 0 15px 40px -10px rgba(0,0,0,0.15)",
               }}
+              transition={{ duration: 0.3 }}
             />
-          </motion.div>
-        </div>
-      </div>
 
-      {/* Content area */}
-      <div className="h-[45%] p-5 space-y-4">
-        {/* Name skeleton */}
-        <div className="space-y-2">
-          <div className="h-6 w-[65%] rounded-lg bg-foreground/10 overflow-hidden relative">
+            {/* Image - 65% of card */}
+            <div className="relative h-[65%] overflow-hidden">
+              {!imageLoaded && (
+                <div className="absolute inset-0 bg-muted/50 animate-pulse" />
+              )}
+              <motion.img
+                src={profile.image}
+                alt={profile.name}
+                className="w-full h-full object-cover"
+                animate={{
+                  scale: isActive ? 1.02 : 1,
+                  filter: isActive ? "brightness(1.05)" : "brightness(0.95)",
+                }}
+                transition={{ duration: 0.5 }}
+                onLoad={() => setImageLoaded(true)}
+              />
+              
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+
+              {/* Status badges */}
+              <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
+                {/* Available badge */}
+                <motion.div
+                  className="flex items-center gap-2 px-3 py-1.5 bg-background/90 backdrop-blur-md rounded-full"
+                  animate={{
+                    borderColor: isActive ? "hsl(var(--color-sage))" : "transparent",
+                  }}
+                  style={{ border: "1px solid" }}
+                >
+                  <motion.div
+                    className="w-2 h-2 rounded-full bg-sage"
+                    animate={{
+                      scale: [1, 1.3, 1],
+                      opacity: [1, 0.6, 1],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
+                  <span className="text-xs font-semibold tracking-wide text-foreground">AVAILABLE</span>
+                </motion.div>
+
+                {/* Rating */}
+                <div className="flex items-center gap-1 px-2.5 py-1.5 bg-background/90 backdrop-blur-md rounded-full">
+                  <Star className="w-3.5 h-3.5 text-mustard fill-mustard" />
+                  <span className="text-sm font-bold text-foreground">{profile.rating}</span>
+                </div>
+              </div>
+
+              {/* Flip hint */}
+              <motion.div
+                className="absolute bottom-4 right-4 flex items-center gap-2 px-3 py-1.5 bg-foreground/80 rounded-full"
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: isActive ? 1 : 0, x: isActive ? 0 : 10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Sparkles className="w-3 h-3 text-background" />
+                <span className="text-xs font-medium text-background">Hover for timeline</span>
+              </motion.div>
+            </div>
+
+            {/* Content - 35% of card */}
+            <div className="h-[35%] p-5 flex flex-col justify-between">
+              {/* Name & role */}
+              <div>
+                <h3 className="text-2xl font-heading font-bold text-foreground tracking-tight leading-tight">
+                  {profile.name}
+                </h3>
+                <p className="text-base text-muted-foreground mt-0.5 font-medium">{profile.role}</p>
+                <div className="flex items-center gap-1.5 mt-2">
+                  <MapPin className="w-3.5 h-3.5 text-sage" />
+                  <span className="text-sm text-muted-foreground">{profile.location}</span>
+                </div>
+              </div>
+
+              {/* Stats row */}
+              <div className="flex gap-3">
+                <div className="flex-1 py-2.5 px-3 bg-sage/15 rounded-xl border border-sage/20">
+                  <p className="text-xl font-bold text-foreground leading-none">{profile.earnings}</p>
+                  <p className="text-[10px] uppercase tracking-wider text-sage font-bold mt-1">Earned</p>
+                </div>
+                <div className="flex-1 py-2.5 px-3 bg-foreground/5 rounded-xl border border-foreground/10">
+                  <p className="text-xl font-bold text-foreground leading-none">{profile.referrals}</p>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mt-1">Referrals</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom accent */}
             <motion.div
-              className="absolute inset-0"
-              animate={{ x: ["-100%", "100%"] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute bottom-0 left-0 right-0 h-1"
               style={{
-                background: "linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.08), transparent)",
+                background: "linear-gradient(90deg, hsl(var(--color-sage)), hsl(var(--color-mustard)))",
               }}
+              animate={{
+                scaleX: isActive ? 1 : 0,
+                opacity: isActive ? 1 : 0,
+              }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             />
           </div>
-          <div className="h-4 w-[50%] rounded-lg bg-foreground/5" />
-          <div className="h-3 w-[35%] rounded-lg bg-foreground/5" />
-        </div>
+        </motion.div>
 
-        {/* Stats row */}
-        <div className="flex gap-2">
-          {[0, 1].map((i) => (
-            <div key={i} className="flex-1 h-16 rounded-xl bg-foreground/5 border border-foreground/5 overflow-hidden relative">
-              <motion.div
-                className="absolute inset-0"
-                animate={{ x: ["-100%", "100%"] }}
-                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: i * 0.15 }}
-                style={{
-                  background: "linear-gradient(90deg, transparent, hsl(var(--sage) / 0.1), transparent)",
-                }}
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Skills skeleton */}
-        <div className="flex gap-2">
-          {[0, 1, 2].map((i) => (
+        {/* BACK SIDE - Timeline */}
+        <motion.div
+          className="absolute inset-0 rounded-2xl overflow-hidden"
+          style={{
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
+          }}
+        >
+          <div 
+            className="relative w-full h-full p-6"
+            style={{
+              background: "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.3) 100%)",
+            }}
+          >
+            {/* Gradient border */}
             <div 
-              key={i} 
-              className="h-6 rounded-full bg-foreground/5 border border-foreground/5" 
-              style={{ width: 55 + i * 12 }} 
+              className="absolute inset-0 rounded-2xl pointer-events-none"
+              style={{
+                boxShadow: "inset 0 0 0 2px hsl(var(--color-sage) / 0.4), 0 30px 60px -15px rgba(0,0,0,0.25)",
+              }}
             />
-          ))}
-        </div>
-      </div>
 
-      {/* Bottom gradient line */}
-      <motion.div
-        className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-sage/60 to-mustard/60"
-        animate={{ 
-          width: ["0%", "100%", "0%"], 
-          left: ["0%", "0%", "100%"],
-        }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-      />
+            {/* Header */}
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h3 className="text-xl font-heading font-bold text-foreground">{profile.name}</h3>
+                <p className="text-sm text-muted-foreground">{profile.role}</p>
+              </div>
+              <div className="flex items-center gap-1 px-2.5 py-1 bg-sage/15 rounded-full">
+                <Calendar className="w-3.5 h-3.5 text-sage" />
+                <span className="text-xs font-semibold text-sage">Timeline</span>
+              </div>
+            </div>
+
+            {/* Timeline */}
+            <div className="relative space-y-3 overflow-y-auto h-[calc(100%-70px)] pr-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+              {/* Vertical line */}
+              <div className="absolute left-[18px] top-2 bottom-2 w-px bg-gradient-to-b from-sage via-foreground/20 to-transparent" />
+
+              {profile.timeline.map((item, idx) => {
+                const config = typeConfig[item.type];
+                const Icon = config.icon;
+
+                return (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.08, duration: 0.3 }}
+                    className="relative flex gap-3 group"
+                  >
+                    {/* Icon node */}
+                    <div 
+                      className="relative z-10 w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200 group-hover:scale-110"
+                      style={{
+                        background: item.logo 
+                          ? "hsl(var(--background))" 
+                          : `hsl(var(--color-${config.color}) / 0.15)`,
+                        border: `1px solid hsl(var(--color-${config.color}) / 0.3)`,
+                      }}
+                    >
+                      {item.logo ? (
+                        <img 
+                          src={item.logo} 
+                          alt={item.company} 
+                          className="w-5 h-5 rounded object-contain"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                          }}
+                        />
+                      ) : null}
+                      <Icon 
+                        className={`w-4 h-4 ${item.logo ? 'hidden' : ''}`}
+                        style={{ color: `hsl(var(--color-${config.color}))` }}
+                      />
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0 pb-3">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <h4 className="text-sm font-semibold text-foreground truncate">{item.title}</h4>
+                        <span 
+                          className="text-xs font-bold flex-shrink-0 px-2 py-0.5 rounded-full"
+                          style={{
+                            background: `hsl(var(--color-${config.color}) / 0.15)`,
+                            color: `hsl(var(--color-${config.color}))`,
+                          }}
+                        >
+                          {item.year}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-0.5">{item.company}</p>
+                      
+                      {item.description && (
+                        <p className="text-xs text-muted-foreground/80 mt-1.5 leading-relaxed line-clamp-2">
+                          {item.description}
+                        </p>
+                      )}
+
+                      {item.achievements && item.achievements.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {item.achievements.slice(0, 2).map((achievement, i) => (
+                            <span
+                              key={i}
+                              className="px-2 py-0.5 text-[10px] font-medium bg-sage/10 text-sage rounded-full"
+                            >
+                              {achievement}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Skills footer */}
+            <div className="absolute bottom-4 left-6 right-6">
+              <div className="flex flex-wrap gap-1.5">
+                {profile.skills.slice(0, 4).map((skill) => (
+                  <span
+                    key={skill}
+                    className="px-2.5 py-1 text-[11px] font-semibold text-foreground/80 bg-foreground/5 rounded-full border border-foreground/10"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
 
-// Modern, high-tech profile card
-const ProfileCard = ({ 
-  profile, 
-  isActive,
-  opacity,
-  scale,
-  onClick,
-}: { 
-  profile: ProfileData; 
-  isActive: boolean;
-  opacity: number;
-  scale: number;
-  onClick: () => void;
-}) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  return (
-    <motion.div
-      className="relative cursor-pointer select-none"
-      style={{ 
-        width: 340,
-        height: 460,
-      }}
-      animate={{
-        opacity,
-        scale,
-      }}
-      transition={{ type: "spring", stiffness: 120, damping: 20 }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      onClick={onClick}
-    >
-      {/* Loading skeleton */}
-      <AnimatePresence>
-        {!imageLoaded && (
-          <motion.div
-            className="absolute inset-0 z-10"
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <ProfileCardSkeleton />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Card Container */}
-      <motion.div
-        className="relative w-full h-full rounded-3xl overflow-hidden"
-        animate={{
-          opacity: imageLoaded ? 1 : 0,
-        }}
-        transition={{ duration: 0.4 }}
-        style={{
-          background: "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.3) 100%)",
-        }}
-      >
-        {/* Outer border glow for active state */}
-        <motion.div
-          className="absolute inset-0 rounded-3xl pointer-events-none"
-          animate={{
-            boxShadow: isActive 
-              ? isHovered
-                ? "0 0 0 2px hsl(var(--sage) / 0.6), 0 40px 80px -20px rgba(0,0,0,0.3), inset 0 0 60px -30px hsl(var(--sage) / 0.1)"
-                : "0 0 0 1px hsl(var(--sage) / 0.4), 0 30px 60px -20px rgba(0,0,0,0.25), inset 0 0 40px -20px hsl(var(--sage) / 0.05)"
-              : "0 0 0 1px hsl(var(--foreground) / 0.08), 0 10px 30px -10px rgba(0,0,0,0.1)",
-          }}
-          transition={{ duration: 0.4 }}
-        />
-
-        {/* Image section with overlay */}
-        <div className="relative h-[55%] overflow-hidden">
-          {/* Image */}
-          <motion.img
-            src={profile.image}
-            alt={profile.name}
-            className="w-full h-full object-cover"
-            animate={{ 
-              scale: isHovered ? 1.08 : 1,
-              filter: isActive ? "brightness(1)" : "brightness(0.9) saturate(0.8)",
-            }}
-            transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-            onLoad={() => setImageLoaded(true)}
-          />
-          
-          {/* Gradient overlays */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-br from-sage/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          
-          {/* Top status bar */}
-          <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
-            {/* Live indicator */}
-            <motion.div 
-              className="flex items-center gap-2 px-3 py-1.5 bg-background/80 backdrop-blur-md rounded-full border border-foreground/10"
-              animate={{
-                borderColor: isActive ? "hsl(var(--sage) / 0.3)" : "hsl(var(--foreground) / 0.1)",
-              }}
-            >
-              <motion.div 
-                className="w-2 h-2 rounded-full bg-sage"
-                animate={{
-                  opacity: isActive ? [1, 0.4, 1] : 0.4,
-                  scale: isActive ? [1, 1.2, 1] : 1,
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: isActive ? Infinity : 0,
-                }}
-              />
-              <span className="text-xs font-medium text-foreground/80">Available</span>
-            </motion.div>
-
-            {/* Rating */}
-            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-background/80 backdrop-blur-md rounded-full border border-foreground/10">
-              <Star className="w-3.5 h-3.5 text-mustard fill-mustard" />
-              <span className="text-sm font-bold text-foreground">{profile.rating}</span>
-            </div>
-          </div>
-
-          {/* View Profile overlay */}
-          <AnimatePresence>
-            {isActive && isHovered && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-foreground/40 to-foreground/10 backdrop-blur-[2px]"
-              >
-                <motion.div 
-                  initial={{ scale: 0.8, y: 10 }}
-                  animate={{ scale: 1, y: 0 }}
-                  exit={{ scale: 0.8, y: 10 }}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-background rounded-full shadow-xl border border-foreground/10"
-                >
-                  <span className="text-sm font-semibold text-foreground">View Full Profile</span>
-                  <ArrowUpRight className="w-4 h-4 text-sage" />
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Content section */}
-        <div className="relative h-[45%] p-5 flex flex-col">
-          {/* Name and role */}
-          <div className="mb-auto">
-            <h3 className="text-xl font-heading font-bold text-foreground tracking-tight leading-tight">
-              {profile.name}
-            </h3>
-            <p className="text-sm text-muted-foreground mt-1 font-medium">{profile.role}</p>
-            <div className="flex items-center gap-1.5 mt-2">
-              <MapPin className="w-3 h-3 text-sage" />
-              <span className="text-xs text-muted-foreground">{profile.location}</span>
-            </div>
-          </div>
-
-          {/* Stats - modern glass cards */}
-          <div className="flex gap-2 mb-3">
-            <div className="flex-1 py-3 px-3 bg-sage/10 border border-sage/20 rounded-xl">
-              <p className="text-lg font-bold text-foreground leading-none">{profile.earnings}</p>
-              <p className="text-[10px] uppercase tracking-wider text-sage mt-1 font-semibold">Earned</p>
-            </div>
-            <div className="flex-1 py-3 px-3 bg-foreground/5 border border-foreground/10 rounded-xl">
-              <p className="text-lg font-bold text-foreground leading-none">{profile.referrals}</p>
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground mt-1 font-semibold">Referrals</p>
-            </div>
-          </div>
-
-          {/* Skills as pills */}
-          <div className="flex flex-wrap gap-1.5">
-            {profile.skills.slice(0, 3).map((skill, i) => (
-              <motion.span 
-                key={skill} 
-                className="px-2.5 py-1 text-[11px] font-semibold text-foreground/70 bg-foreground/5 rounded-full border border-foreground/10"
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.05 }}
-              >
-                {skill}
-              </motion.span>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom accent line */}
-        <motion.div
-          className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-sage via-sage to-mustard"
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ 
-            scaleX: isActive ? 1 : 0, 
-            opacity: isActive ? 1 : 0,
-          }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          style={{ transformOrigin: "left" }}
-        />
-      </motion.div>
-    </motion.div>
-  );
-};
-
-// Fullscreen Profile Modal
-const ProfileModal = ({ 
-  profile, 
-  onClose 
-}: { 
-  profile: ProfileData; 
+// Modal for full profile view
+const ProfileModal = ({
+  profile,
+  onClose,
+}: {
+  profile: ProfileData;
   onClose: () => void;
 }) => {
   const [expandedItem, setExpandedItem] = useState<number | null>(0);
@@ -489,7 +482,7 @@ const ProfileModal = ({
       onClick={onClose}
     >
       {/* Backdrop */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 bg-foreground/80 backdrop-blur-md"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -514,7 +507,7 @@ const ProfileModal = ({
         </button>
 
         <div className="flex flex-col md:flex-row h-full max-h-[90vh]">
-          {/* Left - Image & Quick Info */}
+          {/* Left - Image */}
           <div className="relative w-full md:w-2/5 h-64 md:h-auto">
             <img
               src={profile.image}
@@ -522,8 +515,7 @@ const ProfileModal = ({
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent md:bg-gradient-to-r" />
-            
-            {/* Overlay info on mobile */}
+
             <div className="absolute bottom-0 left-0 right-0 p-6 md:hidden">
               <h2 className="text-3xl font-heading font-bold text-foreground">{profile.name}</h2>
               <p className="text-lg text-muted-foreground">{profile.role}</p>
@@ -532,7 +524,6 @@ const ProfileModal = ({
 
           {/* Right - Details */}
           <div className="flex-1 p-6 md:p-8 overflow-y-auto">
-            {/* Header - desktop only */}
             <div className="hidden md:block mb-8">
               <div className="flex items-start justify-between">
                 <div>
@@ -550,7 +541,7 @@ const ProfileModal = ({
               </div>
             </div>
 
-            {/* Stats grid */}
+            {/* Stats */}
             <div className="grid grid-cols-2 gap-4 mb-8">
               <div className="p-4 bg-muted/30 rounded-xl border border-foreground/5">
                 <p className="text-3xl font-bold text-primary">{profile.earnings}</p>
@@ -567,7 +558,7 @@ const ProfileModal = ({
               <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Expertise</h3>
               <div className="flex flex-wrap gap-2">
                 {profile.skills.map((skill) => (
-                  <span 
+                  <span
                     key={skill}
                     className="px-3 py-1.5 text-sm font-medium text-foreground bg-muted/50 rounded-full border border-foreground/5"
                   >
@@ -582,7 +573,8 @@ const ProfileModal = ({
               <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">Career Timeline</h3>
               <div className="space-y-3">
                 {profile.timeline.map((item, idx) => {
-                  const Icon = typeIcons[item.type];
+                  const config = typeConfig[item.type];
+                  const Icon = config.icon;
                   const isExpanded = expandedItem === idx;
 
                   return (
@@ -591,13 +583,14 @@ const ProfileModal = ({
                       className="relative cursor-pointer"
                       onClick={() => setExpandedItem(isExpanded ? null : idx)}
                     >
-                      <div className={`p-4 rounded-xl border transition-all duration-200 ${
-                        isExpanded 
-                          ? "bg-muted/50 border-foreground/10" 
-                          : "bg-transparent border-foreground/5 hover:bg-muted/30"
-                      }`}>
+                      <div
+                        className={`p-4 rounded-xl border transition-all duration-200 ${
+                          isExpanded
+                            ? "bg-muted/50 border-foreground/10"
+                            : "bg-transparent border-foreground/5 hover:bg-muted/30"
+                        }`}
+                      >
                         <div className="flex items-start gap-3">
-                          {/* Icon */}
                           <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
                             {item.logo ? (
                               <img src={item.logo} alt={item.company} className="w-6 h-6 rounded object-cover" />
@@ -606,7 +599,6 @@ const ProfileModal = ({
                             )}
                           </div>
 
-                          {/* Content */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between gap-2">
                               <h4 className="font-semibold text-foreground">{item.title}</h4>
@@ -629,8 +621,8 @@ const ProfileModal = ({
                                   {item.achievements && item.achievements.length > 0 && (
                                     <div className="flex flex-wrap gap-2">
                                       {item.achievements.map((achievement, i) => (
-                                        <span 
-                                          key={i} 
+                                        <span
+                                          key={i}
                                           className="px-2.5 py-1 text-xs font-medium text-primary bg-primary/10 rounded-full"
                                         >
                                           {achievement}
@@ -656,280 +648,196 @@ const ProfileModal = ({
   );
 };
 
+// Main Conveyor Belt Showcase
 const ProfileShowcase = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedProfile, setSelectedProfile] = useState<ProfileData | null>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [isInteracting, setIsInteracting] = useState(false);
-  const [hasEntered, setHasEntered] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+  const [flippedIndex, setFlippedIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const autoPlayRef = useRef<NodeJS.Timeout>();
-  
-  const cardAngle = 360 / profiles.length;
-  const radius = 420;
 
-  // Smooth spring rotation
-  const springRotation = useSpring(0, { stiffness: 80, damping: 25, mass: 1.2 });
+  // Spring for smooth conveyor movement
+  const springX = useSpring(0, { stiffness: 60, damping: 20, mass: 1 });
 
-  // Trigger entrance animation on mount
+  const cardWidth = 400;
+  const cardGap = 30;
+  const totalWidth = profiles.length * (cardWidth + cardGap);
+
+  // Calculate position for infinite loop effect
   useEffect(() => {
-    const timer = setTimeout(() => setHasEntered(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Update rotation based on active index
-  useEffect(() => {
-    springRotation.set(-activeIndex * cardAngle);
-  }, [activeIndex, cardAngle, springRotation]);
+    const targetX = -activeIndex * (cardWidth + cardGap);
+    springX.set(targetX);
+  }, [activeIndex, springX]);
 
   // Auto-rotation
   useEffect(() => {
-    if (isAutoPlaying && !isInteracting && !selectedProfile) {
+    if (isAutoPlaying && !isHovering && !selectedProfile) {
       autoPlayRef.current = setInterval(() => {
         setActiveIndex((prev) => (prev + 1) % profiles.length);
       }, 4000);
     }
 
     return () => {
-      if (autoPlayRef.current) {
-        clearInterval(autoPlayRef.current);
-      }
+      if (autoPlayRef.current) clearInterval(autoPlayRef.current);
     };
-  }, [isAutoPlaying, isInteracting, selectedProfile]);
+  }, [isAutoPlaying, isHovering, selectedProfile]);
 
-  // Pause on interaction
-  const handleInteractionStart = useCallback(() => {
-    setIsInteracting(true);
-    if (autoPlayRef.current) {
-      clearInterval(autoPlayRef.current);
-    }
+  const handleHoverStart = useCallback(() => {
+    setIsHovering(true);
+    if (autoPlayRef.current) clearInterval(autoPlayRef.current);
   }, []);
 
-  const handleInteractionEnd = useCallback(() => {
-    // Resume after a delay
-    setTimeout(() => setIsInteracting(false), 3000);
+  const handleHoverEnd = useCallback(() => {
+    setIsHovering(false);
+    setFlippedIndex(null);
   }, []);
-
-  // Track mouse for parallax effect
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
-    const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
-    setMousePos({ x, y });
-  }, []);
-
-  const handleMouseLeaveContainer = useCallback(() => {
-    setMousePos({ x: 0, y: 0 });
-    handleInteractionEnd();
-  }, [handleInteractionEnd]);
 
   const nextCard = () => {
-    handleInteractionStart();
     setActiveIndex((prev) => (prev + 1) % profiles.length);
-    handleInteractionEnd();
   };
 
   const prevCard = () => {
-    handleInteractionStart();
     setActiveIndex((prev) => (prev - 1 + profiles.length) % profiles.length);
-    handleInteractionEnd();
   };
 
   const handleCardClick = (index: number) => {
-    handleInteractionStart();
     if (index === activeIndex) {
       setSelectedProfile(profiles[index]);
     } else {
       setActiveIndex(index);
     }
-    handleInteractionEnd();
   };
 
-  // Subscribe to spring changes
-  const [currentRotation, setCurrentRotation] = useState(0);
+  // Subscribe to spring
+  const [currentX, setCurrentX] = useState(0);
   useEffect(() => {
-    const unsubscribe = springRotation.on("change", (v) => setCurrentRotation(v));
+    const unsubscribe = springX.on("change", (v) => setCurrentX(v));
     return () => unsubscribe();
-  }, [springRotation]);
+  }, [springX]);
 
   return (
     <>
-      <div 
-        className="relative w-full min-h-[80vh] flex flex-col items-center justify-center overflow-hidden py-8"
-        onMouseEnter={handleInteractionStart}
-        onMouseLeave={handleMouseLeaveContainer}
+      <div
+        className="relative w-full py-8 overflow-hidden"
+        onMouseEnter={handleHoverStart}
+        onMouseLeave={handleHoverEnd}
       >
-        {/* Subtle background */}
+        {/* Subtle gradient background */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-gradient-radial from-muted/30 via-transparent to-transparent" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[800px] bg-gradient-radial from-sage/5 via-transparent to-transparent" />
         </div>
 
-        {/* 3D Carousel */}
+        {/* Edge fades */}
+        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+
+        {/* Conveyor belt container */}
         <div
           ref={containerRef}
-          className="relative w-full h-[520px]"
-          style={{ perspective: 1800 }}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeaveContainer}
+          className="relative h-[560px] flex items-center"
         >
-          <div 
-            className="relative w-full h-full"
-            style={{ transformStyle: "preserve-3d" }}
+          <motion.div
+            className="flex items-center gap-[30px] px-[calc(50vw-190px)]"
+            style={{ x: currentX }}
           >
             {profiles.map((profile, index) => {
-              const angle = index * cardAngle + currentRotation;
-              const radian = (angle * Math.PI) / 180;
-              const x = Math.sin(radian) * radius;
-              const z = Math.cos(radian) * radius - radius;
               const isActive = index === activeIndex;
-              const normalizedZ = (z + radius) / (radius * 2);
-              const opacity = 0.25 + normalizedZ * 0.75;
-              const scale = 0.75 + normalizedZ * 0.3;
-
-              // Parallax depth effect - cards closer to front move more with mouse
-              const parallaxIntensity = normalizedZ * 25; // More movement for closer cards
-              const parallaxX = mousePos.x * parallaxIntensity;
-              const parallaxY = mousePos.y * parallaxIntensity * 0.5;
-              
-              // Subtle rotation based on mouse position for depth perception
-              const parallaxRotateX = mousePos.y * normalizedZ * -3;
-              const parallaxRotateY = mousePos.x * normalizedZ * 5;
-
-              // Entrance animation: cards fly in from outer edges
-              const entranceDelay = index * 0.08;
-              const entranceAngle = (index * cardAngle * Math.PI) / 180;
-              const entranceX = Math.sin(entranceAngle) * 1200;
-              const entranceZ = -800;
+              const distance = Math.abs(index - activeIndex);
+              const opacity = isActive ? 1 : Math.max(0.4, 1 - distance * 0.25);
+              const scale = isActive ? 1 : Math.max(0.85, 1 - distance * 0.08);
 
               return (
                 <motion.div
                   key={profile.id}
-                  className="absolute left-1/2 top-1/2"
-                  initial={{ 
-                    x: entranceX - 170, 
-                    y: -230, 
-                    z: entranceZ,
-                    opacity: 0,
-                    scale: 0.5,
-                    rotateY: 45,
-                    rotateX: 0,
+                  animate={{
+                    opacity,
+                    scale,
+                    y: isActive ? -10 : 0,
                   }}
-                  animate={hasEntered ? {
-                    x: x - 170 + parallaxX,
-                    y: -230 + parallaxY,
-                    z,
-                    opacity: opacity,
-                    scale: 1,
-                    rotateY: parallaxRotateY,
-                    rotateX: parallaxRotateX,
-                  } : {
-                    x: entranceX - 170, 
-                    y: -230, 
-                    z: entranceZ,
-                    opacity: 0,
-                    scale: 0.5,
-                    rotateY: 45,
-                    rotateX: 0,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 120,
-                    damping: 20,
-                    mass: 0.8,
-                    delay: hasEntered ? entranceDelay : 0,
-                  }}
-                  style={{
-                    zIndex: Math.round(normalizedZ * 100),
-                  }}
+                  transition={{ type: "spring", stiffness: 150, damping: 20 }}
+                  style={{ zIndex: isActive ? 10 : 5 - distance }}
                 >
-                  <ProfileCard
+                  <FlipCard
                     profile={profile}
                     isActive={isActive}
-                    opacity={hasEntered ? opacity : 0}
-                    scale={scale}
+                    isFlipped={flippedIndex === index && isActive}
+                    onFlip={(flipped) => {
+                      if (isActive) {
+                        setFlippedIndex(flipped ? index : null);
+                      }
+                    }}
                     onClick={() => handleCardClick(index)}
                   />
                 </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
 
-        {/* Active profile name */}
-        <motion.div
-          key={activeIndex}
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="text-center mt-2"
-        >
-          <h3 className="text-2xl md:text-3xl font-heading font-bold text-foreground">{profiles[activeIndex].name}</h3>
-          <p className="text-muted-foreground">{profiles[activeIndex].role}</p>
-        </motion.div>
-
         {/* Navigation */}
-        <div className="flex items-center justify-center gap-6 mt-8">
-          <button
+        <div className="flex items-center justify-center gap-6 mt-6">
+          {/* Prev */}
+          <motion.button
             onClick={prevCard}
-            className="w-12 h-12 rounded-full bg-muted/50 hover:bg-muted flex items-center justify-center text-foreground transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-12 h-12 rounded-full bg-foreground/5 border border-foreground/10 flex items-center justify-center text-foreground hover:bg-foreground/10 transition-colors"
           >
             <ChevronLeft className="w-5 h-5" />
-          </button>
+          </motion.button>
 
           {/* Dots */}
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             {profiles.map((_, index) => (
               <button
                 key={index}
-                onClick={() => {
-                  handleInteractionStart();
-                  setActiveIndex(index);
-                  handleInteractionEnd();
-                }}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  index === activeIndex
-                    ? "w-8 bg-foreground"
-                    : "w-2 bg-foreground/20 hover:bg-foreground/40"
-                }`}
-              />
+                onClick={() => setActiveIndex(index)}
+                className="group p-1"
+              >
+                <motion.div
+                  animate={{
+                    width: index === activeIndex ? 24 : 8,
+                    backgroundColor: index === activeIndex 
+                      ? "hsl(var(--color-sage))" 
+                      : "hsl(var(--foreground) / 0.2)",
+                  }}
+                  transition={{ duration: 0.3 }}
+                  className="h-2 rounded-full group-hover:bg-sage/60"
+                />
+              </button>
             ))}
           </div>
 
-          <button
+          {/* Next */}
+          <motion.button
             onClick={nextCard}
-            className="w-12 h-12 rounded-full bg-muted/50 hover:bg-muted flex items-center justify-center text-foreground transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-12 h-12 rounded-full bg-foreground/5 border border-foreground/10 flex items-center justify-center text-foreground hover:bg-foreground/10 transition-colors"
           >
             <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
+          </motion.button>
 
-        {/* Auto-play toggle */}
-        <button
-          onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-          className="flex items-center gap-2 mt-4 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          {isAutoPlaying ? (
-            <>
-              <Pause className="w-3.5 h-3.5" />
-              <span>Pause</span>
-            </>
-          ) : (
-            <>
-              <Play className="w-3.5 h-3.5" />
-              <span>Play</span>
-            </>
-          )}
-        </button>
+          {/* Play/Pause */}
+          <motion.button
+            onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-10 h-10 rounded-full bg-sage/20 border border-sage/30 flex items-center justify-center text-sage hover:bg-sage/30 transition-colors ml-2"
+          >
+            {isAutoPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+          </motion.button>
+        </div>
       </div>
 
       {/* Profile Modal */}
       <AnimatePresence>
         {selectedProfile && (
-          <ProfileModal 
-            profile={selectedProfile} 
-            onClose={() => setSelectedProfile(null)} 
+          <ProfileModal
+            profile={selectedProfile}
+            onClose={() => setSelectedProfile(null)}
           />
         )}
       </AnimatePresence>
