@@ -20,7 +20,10 @@ import {
   Zap,
   ExternalLink,
   Clock,
-  Building2
+  Building2,
+  Video,
+  Volume2,
+  VolumeX
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -46,6 +49,7 @@ interface ProfileData {
   company: string;
   location: string;
   image: string;
+  videoIntro?: string;
   coverGradient: string;
   bio: string;
   connections: number;
@@ -65,7 +69,8 @@ const profiles: ProfileData[] = [
     role: "Senior Product Designer",
     company: "Stripe",
     location: "San Francisco, CA",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=face",
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=600&fit=crop&crop=top",
+    videoIntro: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=600&fit=crop&crop=top",
     coverGradient: "from-violet-500/20 via-fuchsia-500/10 to-pink-500/20",
     bio: "Crafting intuitive payment experiences. Previously @figma @airbnb. RISD '18. She/her 💜",
     connections: 847,
@@ -88,7 +93,8 @@ const profiles: ProfileData[] = [
     role: "Engineering Manager",
     company: "Vercel",
     location: "Brooklyn, NY",
-    image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=400&fit=crop&crop=face",
+    image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=600&fit=crop&crop=top",
+    videoIntro: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=600&fit=crop&crop=top",
     coverGradient: "from-blue-500/20 via-cyan-500/10 to-teal-500/20",
     bio: "Building the future of web dev. React contributor. Speaker. Mentor. Open source enthusiast 🚀",
     connections: 2340,
@@ -111,7 +117,7 @@ const profiles: ProfileData[] = [
     role: "VP of Marketing",
     company: "Notion",
     location: "Austin, TX",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=600&fit=crop&crop=top",
     coverGradient: "from-orange-500/20 via-amber-500/10 to-yellow-500/20",
     bio: "Growth nerd. Content strategist. Podcast addict. Building brands that matter. Mom of 2 🌻",
     connections: 1560,
@@ -134,7 +140,8 @@ const profiles: ProfileData[] = [
     role: "Principal Data Scientist",
     company: "OpenAI",
     location: "Seattle, WA",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop&crop=face",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=600&fit=crop&crop=top",
+    videoIntro: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=600&fit=crop&crop=top",
     coverGradient: "from-emerald-500/20 via-green-500/10 to-lime-500/20",
     bio: "ML researcher. Stanford PhD. Building AGI one model at a time. Coffee enthusiast ☕",
     connections: 923,
@@ -157,7 +164,7 @@ const profiles: ProfileData[] = [
     role: "Chief People Officer",
     company: "Canva",
     location: "London, UK",
-    image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop&crop=face",
+    image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=600&fit=crop&crop=top",
     coverGradient: "from-pink-500/20 via-rose-500/10 to-red-500/20",
     bio: "People-first leader. Culture architect. Harvard MBA. DEI advocate. Always learning 📚",
     connections: 1890,
@@ -180,7 +187,8 @@ const profiles: ProfileData[] = [
     role: "Head of Sales",
     company: "Stripe",
     location: "Chicago, IL",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=top",
+    videoIntro: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=top",
     coverGradient: "from-indigo-500/20 via-purple-500/10 to-violet-500/20",
     bio: "Enterprise sales leader. Quota crusher. Team builder. Golf on weekends ⛳",
     connections: 3420,
@@ -203,6 +211,85 @@ const typeConfig = {
   education: { icon: GraduationCap, color: "rose", bgColor: "rose" },
   achievement: { icon: Award, color: "mustard", bgColor: "mustard" },
   training: { icon: TrendingUp, color: "sage", bgColor: "sage" },
+};
+
+// Video Intro Modal
+const VideoIntroModal = ({
+  profile,
+  onClose,
+}: {
+  profile: ProfileData;
+  onClose: () => void;
+}) => {
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <motion.div className="absolute inset-0 bg-foreground/90 backdrop-blur-md" />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        className="relative w-full max-w-lg bg-background rounded-3xl overflow-hidden shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Video Container */}
+        <div className="relative aspect-[9/16] max-h-[70vh] bg-foreground/5">
+          {/* Placeholder - In production, this would be actual video */}
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-muted/50 to-muted">
+            <div className="text-center">
+              <div className="w-24 h-24 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
+                <Video className="w-10 h-10 text-muted-foreground" />
+              </div>
+              <p className="text-sm text-muted-foreground">Video intro coming soon</p>
+              <p className="text-xs text-muted-foreground/60 mt-1">30-second introduction</p>
+            </div>
+          </div>
+          
+          {/* Floating profile info */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-foreground/80 to-transparent">
+            <div className="flex items-center gap-3">
+              <img 
+                src={profile.image} 
+                alt={profile.name}
+                className="w-12 h-12 rounded-full object-cover ring-2 ring-background/20"
+              />
+              <div className="text-background">
+                <div className="flex items-center gap-1.5">
+                  <h3 className="font-heading font-bold">{profile.name}</h3>
+                  {profile.verified && <BadgeCheck className="w-4 h-4 text-sage" />}
+                </div>
+                <p className="text-sm text-background/70">{profile.role}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Controls */}
+          <div className="absolute top-4 right-4 flex gap-2">
+            <button 
+              onClick={() => setIsMuted(!isMuted)}
+              className="w-10 h-10 rounded-full bg-foreground/20 backdrop-blur-sm flex items-center justify-center text-background hover:bg-foreground/30 transition-colors"
+            >
+              {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+            </button>
+            <button 
+              onClick={onClose}
+              className="w-10 h-10 rounded-full bg-foreground/20 backdrop-blur-sm flex items-center justify-center text-background hover:bg-foreground/30 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
 };
 
 // Quick Contact Modal
@@ -288,7 +375,7 @@ const QuickContactModal = ({
   );
 };
 
-// Instagram-style Profile Card
+// Floating Head Profile Card with Video Intro
 const FlipCard = ({
   profile,
   isActive,
@@ -296,6 +383,7 @@ const FlipCard = ({
   onFlip,
   onClick,
   onContactClick,
+  onVideoClick,
 }: {
   profile: ProfileData;
   isActive: boolean;
@@ -303,6 +391,7 @@ const FlipCard = ({
   onFlip: (flipped: boolean) => void;
   onClick: () => void;
   onContactClick: () => void;
+  onVideoClick: () => void;
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -314,13 +403,61 @@ const FlipCard = ({
       onMouseLeave={() => onFlip(false)}
       onClick={onClick}
     >
+      {/* Floating Head - Extends above card */}
+      <motion.div 
+        className="absolute left-1/2 -translate-x-1/2 z-30 pointer-events-none"
+        style={{ top: -60, width: 200, height: 240 }}
+        animate={{ 
+          y: isFlipped ? 20 : 0,
+          scale: isFlipped ? 0.85 : 1,
+          opacity: isFlipped ? 0 : 1
+        }}
+        transition={{ type: "spring", stiffness: 200, damping: 25 }}
+      >
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-gradient-to-b from-muted to-transparent rounded-t-full animate-pulse" />
+        )}
+        <motion.img
+          src={profile.image}
+          alt={profile.name}
+          className={`w-full h-full object-cover object-top ${!imageLoaded ? 'opacity-0' : 'opacity-100'}`}
+          style={{ 
+            maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+          }}
+          onLoad={() => setImageLoaded(true)}
+          draggable={false}
+        />
+        
+        {/* Video intro button overlay */}
+        {profile.videoIntro && (
+          <motion.button
+            className="absolute bottom-16 left-1/2 -translate-x-1/2 pointer-events-auto"
+            onClick={(e) => { e.stopPropagation(); onVideoClick(); }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <div className="relative">
+              <motion.div 
+                className="absolute inset-0 bg-sage/30 rounded-full blur-md"
+                animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0.2, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+              <div className="relative w-12 h-12 bg-sage rounded-full flex items-center justify-center shadow-lg">
+                <Play className="w-5 h-5 text-foreground ml-0.5" fill="currentColor" />
+              </div>
+            </div>
+          </motion.button>
+        )}
+      </motion.div>
+
       <motion.div
         className="relative w-full h-full"
         style={{ transformStyle: "preserve-3d" }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ type: "spring", stiffness: 100, damping: 20, mass: 0.8 }}
       >
-        {/* FRONT - Social Profile Style */}
+        {/* FRONT - Clean Card with Floating Head Space */}
         <motion.div
           className="absolute inset-0 rounded-2xl overflow-hidden bg-background"
           style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
@@ -335,64 +472,8 @@ const FlipCard = ({
             }}
           />
 
-          {/* Cover gradient */}
-          <div className={`absolute top-0 left-0 right-0 h-28 bg-gradient-to-br ${profile.coverGradient}`} />
-
-          {/* Profile image - centered, overlapping cover */}
-          <div className="relative z-10 flex justify-center pt-14">
-            <div className="relative">
-              {!imageLoaded && <div className="w-28 h-28 rounded-full bg-muted animate-pulse" />}
-              <motion.img
-                src={profile.image}
-                alt={profile.name}
-                className={`w-28 h-28 rounded-full object-cover ring-4 ring-background ${!imageLoaded ? 'hidden' : ''}`}
-                onLoad={() => setImageLoaded(true)}
-                draggable={false}
-              />
-              {/* Online indicator */}
-              <div className="absolute bottom-1 right-1 w-5 h-5 bg-sage rounded-full ring-3 ring-background" />
-            </div>
-          </div>
-
-          {/* Name & verification */}
-          <div className="text-center mt-3 px-5">
-            <div className="flex items-center justify-center gap-1.5">
-              <h3 className="text-xl font-heading font-bold text-foreground">{profile.name}</h3>
-              {profile.verified && <BadgeCheck className="w-5 h-5 text-sage fill-sage/20" />}
-            </div>
-            <p className="text-sm text-muted-foreground mt-0.5">{profile.handle}</p>
-          </div>
-
-          {/* Role & company */}
-          <div className="text-center mt-2 px-5">
-            <p className="text-sm font-medium text-foreground">{profile.role}</p>
-            <div className="flex items-center justify-center gap-1.5 mt-1 text-muted-foreground">
-              <Building2 className="w-3.5 h-3.5" />
-              <span className="text-xs">{profile.company}</span>
-              <span className="text-xs">•</span>
-              <MapPin className="w-3.5 h-3.5" />
-              <span className="text-xs">{profile.location}</span>
-            </div>
-          </div>
-
-          {/* Bio */}
-          <p className="text-center text-sm text-muted-foreground mt-3 px-6 line-clamp-2">{profile.bio}</p>
-
-          {/* Stats row */}
-          <div className="flex justify-center gap-8 mt-4 px-5">
-            <div className="text-center">
-              <p className="text-lg font-bold text-foreground">{profile.connections.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground">Connections</p>
-            </div>
-            <div className="text-center">
-              <p className="text-lg font-bold text-foreground">{profile.endorsements}</p>
-              <p className="text-xs text-muted-foreground">Endorsements</p>
-            </div>
-            <div className="text-center">
-              <p className="text-lg font-bold text-sage">{profile.responseTime}</p>
-              <p className="text-xs text-muted-foreground">Response</p>
-            </div>
-          </div>
+          {/* Top gradient area where head floats */}
+          <div className={`absolute top-0 left-0 right-0 h-36 bg-gradient-to-b ${profile.coverGradient} to-transparent`} />
 
           {/* Top referrer badge */}
           {profile.topReferrer && (
@@ -404,14 +485,57 @@ const FlipCard = ({
             </div>
           )}
 
-          {/* Skills */}
-          <div className="absolute bottom-5 left-5 right-5">
-            <div className="flex flex-wrap justify-center gap-1.5">
-              {profile.skills.slice(0, 4).map((skill) => (
-                <span key={skill} className="px-2.5 py-1 text-xs font-medium text-foreground/80 bg-muted rounded-full">
-                  {skill}
-                </span>
-              ))}
+          {/* Content - pushed down to account for floating head */}
+          <div className="absolute inset-x-0 top-32 bottom-0 flex flex-col">
+            {/* Name & verification */}
+            <div className="text-center mt-12 px-5">
+              <div className="flex items-center justify-center gap-2">
+                <h3 className="text-2xl font-heading font-bold text-foreground">{profile.name}</h3>
+                {profile.verified && <BadgeCheck className="w-6 h-6 text-sage fill-sage/20" />}
+              </div>
+              <p className="text-sm text-muted-foreground mt-0.5">{profile.handle}</p>
+            </div>
+
+            {/* Role & company */}
+            <div className="text-center mt-3 px-5">
+              <p className="text-sm font-medium text-foreground">{profile.role}</p>
+              <div className="flex items-center justify-center gap-1.5 mt-1 text-muted-foreground">
+                <Building2 className="w-3.5 h-3.5" />
+                <span className="text-xs">{profile.company}</span>
+                <span className="text-xs">•</span>
+                <MapPin className="w-3.5 h-3.5" />
+                <span className="text-xs">{profile.location}</span>
+              </div>
+            </div>
+
+            {/* Bio */}
+            <p className="text-center text-sm text-muted-foreground mt-4 px-6 line-clamp-2">{profile.bio}</p>
+
+            {/* Stats row */}
+            <div className="flex justify-center gap-8 mt-5 px-5">
+              <div className="text-center">
+                <p className="text-lg font-bold text-foreground">{profile.connections.toLocaleString()}</p>
+                <p className="text-xs text-muted-foreground">Connections</p>
+              </div>
+              <div className="text-center">
+                <p className="text-lg font-bold text-foreground">{profile.endorsements}</p>
+                <p className="text-xs text-muted-foreground">Endorsements</p>
+              </div>
+              <div className="text-center">
+                <p className="text-lg font-bold text-sage">{profile.responseTime}</p>
+                <p className="text-xs text-muted-foreground">Response</p>
+              </div>
+            </div>
+
+            {/* Skills */}
+            <div className="mt-auto pb-5 px-5">
+              <div className="flex flex-wrap justify-center gap-1.5">
+                {profile.skills.slice(0, 4).map((skill) => (
+                  <span key={skill} className="px-2.5 py-1 text-xs font-medium text-foreground/80 bg-muted rounded-full">
+                    {skill}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </motion.div>
@@ -424,10 +548,22 @@ const FlipCard = ({
           {/* Border */}
           <div className="absolute inset-0 rounded-2xl pointer-events-none z-20" style={{ boxShadow: "inset 0 0 0 2px hsl(var(--foreground) / 0.1), 0 25px 50px -12px rgba(0,0,0,0.25)" }} />
 
-          {/* Header */}
-          <div className="p-5 pb-3 border-b border-foreground/5">
+          {/* Header with mini profile */}
+          <div className="p-5 pb-3 border-b border-foreground/5 bg-gradient-to-b from-muted/30 to-transparent">
             <div className="flex items-center gap-3">
-              <img src={profile.image} alt={profile.name} className="w-12 h-12 rounded-full object-cover" />
+              <div className="relative">
+                <img src={profile.image} alt={profile.name} className="w-14 h-14 rounded-xl object-cover object-top" />
+                {profile.videoIntro && (
+                  <motion.button
+                    className="absolute -bottom-1 -right-1 w-6 h-6 bg-sage rounded-full flex items-center justify-center shadow-md"
+                    onClick={(e) => { e.stopPropagation(); onVideoClick(); }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Play className="w-3 h-3 text-foreground ml-0.5" fill="currentColor" />
+                  </motion.button>
+                )}
+              </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
                   <h3 className="text-base font-heading font-bold text-foreground truncate">{profile.name}</h3>
@@ -435,15 +571,11 @@ const FlipCard = ({
                 </div>
                 <p className="text-xs text-muted-foreground truncate">{profile.role} at {profile.company}</p>
               </div>
-              <div className="flex items-center gap-1 px-2 py-1 bg-muted rounded-full">
-                <Clock className="w-3 h-3 text-muted-foreground" />
-                <span className="text-[10px] font-medium text-muted-foreground">Experience</span>
-              </div>
             </div>
           </div>
 
           {/* Timeline */}
-          <div className="p-5 pt-4 h-[calc(100%-140px)] overflow-y-auto scrollbar-thin scrollbar-thumb-muted/50 scrollbar-track-transparent">
+          <div className="p-5 pt-4 h-[calc(100%-150px)] overflow-y-auto scrollbar-thin scrollbar-thumb-muted/50 scrollbar-track-transparent">
             <div className="relative">
               {/* Timeline line */}
               <div className="absolute left-5 top-0 bottom-0 w-px bg-gradient-to-b from-foreground/20 via-foreground/10 to-transparent" />
@@ -546,6 +678,7 @@ const ProfileShowcase = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedProfile, setSelectedProfile] = useState<ProfileData | null>(null);
   const [contactProfile, setContactProfile] = useState<ProfileData | null>(null);
+  const [videoProfile, setVideoProfile] = useState<ProfileData | null>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isHovering, setIsHovering] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -562,13 +695,13 @@ const ProfileShowcase = () => {
   }, [activeIndex, springX]);
 
   useEffect(() => {
-    if (isAutoPlaying && !isHovering && !isDragging && !selectedProfile && !contactProfile) {
+    if (isAutoPlaying && !isHovering && !isDragging && !selectedProfile && !contactProfile && !videoProfile) {
       autoPlayRef.current = setInterval(() => {
         setActiveIndex((prev) => (prev + 1) % profiles.length);
       }, 4000);
     }
     return () => { if (autoPlayRef.current) clearInterval(autoPlayRef.current); };
-  }, [isAutoPlaying, isHovering, isDragging, selectedProfile, contactProfile]);
+  }, [isAutoPlaying, isHovering, isDragging, selectedProfile, contactProfile, videoProfile]);
 
   const handleHoverStart = useCallback(() => { setIsHovering(true); if (autoPlayRef.current) clearInterval(autoPlayRef.current); }, []);
   const handleHoverEnd = useCallback(() => { setIsHovering(false); setFlippedIndex(null); }, []);
@@ -589,7 +722,7 @@ const ProfileShowcase = () => {
 
   return (
     <>
-      <div className="relative w-full py-8 overflow-hidden" onMouseEnter={handleHoverStart} onMouseLeave={handleHoverEnd}>
+      <div className="relative w-full py-8 pt-20 overflow-hidden" onMouseEnter={handleHoverStart} onMouseLeave={handleHoverEnd}>
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[800px] bg-gradient-radial from-muted/30 via-transparent to-transparent" />
         </div>
@@ -597,7 +730,7 @@ const ProfileShowcase = () => {
         <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
-        <motion.div ref={containerRef} className="relative h-[560px] flex items-center cursor-grab active:cursor-grabbing" drag="x" dragConstraints={{ left: 0, right: 0 }} dragElastic={0.1} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <motion.div ref={containerRef} className="relative h-[580px] flex items-center cursor-grab active:cursor-grabbing" drag="x" dragConstraints={{ left: 0, right: 0 }} dragElastic={0.1} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           <motion.div className="flex items-center gap-[30px] px-[calc(50vw-190px)]" style={{ x: currentX }}>
             {profiles.map((profile, index) => {
               const isActive = index === activeIndex;
@@ -616,6 +749,7 @@ const ProfileShowcase = () => {
                     onFlip={(f) => { if (isActive && !isDragging) setFlippedIndex(f ? index : null); }}
                     onClick={() => { if (!isDragging) isActive ? setSelectedProfile(profile) : setActiveIndex(index); }}
                     onContactClick={() => setContactProfile(profile)}
+                    onVideoClick={() => setVideoProfile(profile)}
                   />
                 </motion.div>
               );
@@ -652,6 +786,7 @@ const ProfileShowcase = () => {
 
       <AnimatePresence>
         {contactProfile && <QuickContactModal profile={contactProfile} onClose={() => setContactProfile(null)} />}
+        {videoProfile && <VideoIntroModal profile={videoProfile} onClose={() => setVideoProfile(null)} />}
       </AnimatePresence>
     </>
   );
