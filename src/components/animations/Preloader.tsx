@@ -154,21 +154,27 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
         if (prev >= 100) {
           clearInterval(interval);
           setPhase("complete");
+          // Longer delay before exit for smoother transition
           setTimeout(() => {
             setIsLoading(false);
             onComplete?.();
-          }, 800);
+          }, 1200);
           return 100;
         }
-        return prev + Math.random() * 12;
+        // Slower progression near the end for smoother finish
+        const remaining = 100 - prev;
+        const increment = remaining > 20 
+          ? Math.random() * 12 
+          : Math.random() * 3 + 1;
+        return Math.min(prev + increment, 100);
       });
-    }, 100);
+    }, 120);
 
     return () => clearInterval(interval);
   }, [onComplete]);
 
   useEffect(() => {
-    if (progress > 60) setPhase("reveal");
+    if (progress > 70) setPhase("reveal");
   }, [progress]);
 
   const particles = useMemo(() => [...Array(60)], []);
@@ -179,8 +185,11 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ 
-            clipPath: "circle(0% at 50% 50%)",
-            transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+            opacity: 0,
+            transition: { 
+              duration: 1.2, 
+              ease: [0.22, 1, 0.36, 1],
+            }
           }}
           className="fixed inset-0 z-[10000] bg-foreground flex flex-col items-center justify-center overflow-hidden"
         >

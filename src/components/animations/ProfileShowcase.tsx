@@ -137,22 +137,24 @@ const typeIcons = {
   growth: TrendingUp,
 };
 
-// Holographic skeleton for loading state
+// Modern holographic skeleton for loading state
 const ProfileCardSkeleton = () => {
   return (
-    <div className="relative w-[340px] h-[460px] rounded-2xl overflow-hidden bg-background border border-border/30">
+    <div className="relative w-[340px] h-[460px] rounded-3xl overflow-hidden border border-foreground/10" style={{
+      background: "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.3) 100%)",
+    }}>
       {/* Image area skeleton */}
-      <div className="relative h-[60%] overflow-hidden bg-muted/10">
+      <div className="relative h-[55%] overflow-hidden bg-muted/20">
         {/* Scan lines */}
-        <motion.div
-          className="absolute inset-0"
+        <div 
+          className="absolute inset-0 opacity-30"
           style={{
             backgroundImage: `repeating-linear-gradient(
               0deg,
               transparent,
-              transparent 3px,
-              hsl(var(--foreground) / 0.02) 3px,
-              hsl(var(--foreground) / 0.02) 6px
+              transparent 4px,
+              hsl(var(--foreground) / 0.03) 4px,
+              hsl(var(--foreground) / 0.03) 8px
             )`,
           }}
         />
@@ -164,119 +166,79 @@ const ProfileCardSkeleton = () => {
             backgroundPosition: ["200% 0%", "-200% 0%"],
           }}
           transition={{
-            duration: 3,
+            duration: 2.5,
             repeat: Infinity,
             ease: "linear",
           }}
           style={{
             background: `linear-gradient(
-              90deg,
+              120deg,
               transparent 0%,
-              hsl(var(--sage) / 0.15) 25%,
-              hsl(var(--sage) / 0.3) 50%,
-              hsl(var(--sage) / 0.15) 75%,
+              hsl(var(--sage) / 0.1) 30%,
+              hsl(var(--sage) / 0.25) 50%,
+              hsl(var(--sage) / 0.1) 70%,
               transparent 100%
             )`,
             backgroundSize: "200% 100%",
           }}
         />
 
-        {/* Data streams */}
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-px bg-gradient-to-b from-transparent via-sage/30 to-transparent"
-            style={{
-              left: `${15 + i * 14}%`,
-              height: "40%",
-            }}
-            animate={{ 
-              y: ["-40%", "140%"],
-              opacity: [0, 1, 1, 0],
-            }}
-            transition={{
-              duration: 1.8,
-              repeat: Infinity,
-              delay: i * 0.2,
-              ease: "linear",
-            }}
-          />
-        ))}
-
-        {/* Corner brackets */}
-        <div className="absolute top-3 left-3 w-5 h-5 border-l-2 border-t-2 border-sage/40" />
-        <div className="absolute top-3 right-3 w-5 h-5 border-r-2 border-t-2 border-sage/40" />
-        <div className="absolute bottom-3 left-3 w-5 h-5 border-l-2 border-b-2 border-sage/40" />
-        <div className="absolute bottom-3 right-3 w-5 h-5 border-r-2 border-b-2 border-sage/40" />
-
-        {/* Center loading indicator */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div
-            className="relative w-12 h-12"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          >
-            <div className="absolute inset-0 rounded-full border-2 border-sage/20" />
-            <motion.div
-              className="absolute inset-0 rounded-full border-2 border-transparent border-t-sage/60"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            />
-          </motion.div>
+        {/* Top badges skeleton */}
+        <div className="absolute top-4 left-4 right-4 flex justify-between">
+          <div className="w-24 h-7 rounded-full bg-background/60 backdrop-blur-sm" />
+          <div className="w-16 h-7 rounded-full bg-background/60 backdrop-blur-sm" />
         </div>
 
-        {/* Rating badge skeleton */}
-        <div className="absolute top-4 right-4 w-14 h-7 rounded-full bg-muted/30 backdrop-blur-sm overflow-hidden">
+        {/* Center loader */}
+        <div className="absolute inset-0 flex items-center justify-center">
           <motion.div
-            className="absolute inset-0"
-            animate={{ x: ["-100%", "100%"] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              background: "linear-gradient(90deg, transparent, hsl(var(--sage) / 0.3), transparent)",
-            }}
-          />
+            className="relative w-14 h-14"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+          >
+            <div className="absolute inset-0 rounded-full border-2 border-sage/10" />
+            <motion.div
+              className="absolute inset-0 rounded-full"
+              style={{
+                borderWidth: 2,
+                borderStyle: "solid",
+                borderColor: "transparent",
+                borderTopColor: "hsl(var(--sage) / 0.5)",
+                borderRightColor: "hsl(var(--sage) / 0.2)",
+              }}
+            />
+          </motion.div>
         </div>
       </div>
 
       {/* Content area */}
-      <div className="h-[40%] p-5 space-y-3">
+      <div className="h-[45%] p-5 space-y-4">
         {/* Name skeleton */}
-        <div className="h-6 w-[60%] rounded bg-muted/20 overflow-hidden relative">
-          <motion.div
-            className="absolute inset-0"
-            animate={{ x: ["-100%", "100%"] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.1 }}
-            style={{
-              background: "linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.1), transparent)",
-            }}
-          />
+        <div className="space-y-2">
+          <div className="h-6 w-[65%] rounded-lg bg-foreground/10 overflow-hidden relative">
+            <motion.div
+              className="absolute inset-0"
+              animate={{ x: ["-100%", "100%"] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              style={{
+                background: "linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.08), transparent)",
+              }}
+            />
+          </div>
+          <div className="h-4 w-[50%] rounded-lg bg-foreground/5" />
+          <div className="h-3 w-[35%] rounded-lg bg-foreground/5" />
         </div>
-
-        {/* Role skeleton */}
-        <div className="h-4 w-[45%] rounded bg-muted/15 overflow-hidden relative">
-          <motion.div
-            className="absolute inset-0"
-            animate={{ x: ["-100%", "100%"] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-            style={{
-              background: "linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.1), transparent)",
-            }}
-          />
-        </div>
-
-        {/* Location skeleton */}
-        <div className="h-3 w-[35%] rounded bg-muted/10" />
 
         {/* Stats row */}
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-2">
           {[0, 1].map((i) => (
-            <div key={i} className="flex-1 h-14 rounded-lg bg-muted/10 overflow-hidden relative">
+            <div key={i} className="flex-1 h-16 rounded-xl bg-foreground/5 border border-foreground/5 overflow-hidden relative">
               <motion.div
                 className="absolute inset-0"
                 animate={{ x: ["-100%", "100%"] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 + i * 0.1 }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: i * 0.15 }}
                 style={{
-                  background: "linear-gradient(90deg, transparent, hsl(var(--sage) / 0.15), transparent)",
+                  background: "linear-gradient(90deg, transparent, hsl(var(--sage) / 0.1), transparent)",
                 }}
               />
             </div>
@@ -284,24 +246,31 @@ const ProfileCardSkeleton = () => {
         </div>
 
         {/* Skills skeleton */}
-        <div className="flex gap-2 pt-1">
+        <div className="flex gap-2">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="h-5 rounded bg-muted/10" style={{ width: 50 + i * 10 }} />
+            <div 
+              key={i} 
+              className="h-6 rounded-full bg-foreground/5 border border-foreground/5" 
+              style={{ width: 55 + i * 12 }} 
+            />
           ))}
         </div>
       </div>
 
-      {/* Bottom indicator */}
+      {/* Bottom gradient line */}
       <motion.div
-        className="absolute bottom-0 left-0 h-1 bg-sage/40"
-        animate={{ width: ["0%", "100%", "0%"], left: ["0%", "0%", "100%"] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-sage/60 to-mustard/60"
+        animate={{ 
+          width: ["0%", "100%", "0%"], 
+          left: ["0%", "0%", "100%"],
+        }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       />
     </div>
   );
 };
 
-// Clean, minimal profile card
+// Modern, high-tech profile card
 const ProfileCard = ({ 
   profile, 
   isActive,
@@ -347,102 +316,154 @@ const ProfileCard = ({
         )}
       </AnimatePresence>
 
-      {/* Card */}
+      {/* Card Container */}
       <motion.div
-        className="relative w-full h-full rounded-2xl overflow-hidden bg-background"
+        className="relative w-full h-full rounded-3xl overflow-hidden"
         animate={{
-          boxShadow: isActive 
-            ? isHovered
-              ? "0 40px 100px -20px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.05)"
-              : "0 30px 80px -20px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05)"
-            : "0 10px 40px -15px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.03)",
           opacity: imageLoaded ? 1 : 0,
         }}
         transition={{ duration: 0.4 }}
+        style={{
+          background: "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.3) 100%)",
+        }}
       >
-        {/* Image section - top 60% */}
-        <div className="relative h-[60%] overflow-hidden">
+        {/* Outer border glow for active state */}
+        <motion.div
+          className="absolute inset-0 rounded-3xl pointer-events-none"
+          animate={{
+            boxShadow: isActive 
+              ? isHovered
+                ? "0 0 0 2px hsl(var(--sage) / 0.6), 0 40px 80px -20px rgba(0,0,0,0.3), inset 0 0 60px -30px hsl(var(--sage) / 0.1)"
+                : "0 0 0 1px hsl(var(--sage) / 0.4), 0 30px 60px -20px rgba(0,0,0,0.25), inset 0 0 40px -20px hsl(var(--sage) / 0.05)"
+              : "0 0 0 1px hsl(var(--foreground) / 0.08), 0 10px 30px -10px rgba(0,0,0,0.1)",
+          }}
+          transition={{ duration: 0.4 }}
+        />
+
+        {/* Image section with overlay */}
+        <div className="relative h-[55%] overflow-hidden">
+          {/* Image */}
           <motion.img
             src={profile.image}
             alt={profile.name}
             className="w-full h-full object-cover"
-            animate={{ scale: isHovered ? 1.05 : 1 }}
+            animate={{ 
+              scale: isHovered ? 1.08 : 1,
+              filter: isActive ? "brightness(1)" : "brightness(0.9) saturate(0.8)",
+            }}
             transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
             onLoad={() => setImageLoaded(true)}
           />
           
-          {/* Subtle gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+          {/* Gradient overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-sage/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           
-          {/* Rating badge - top right */}
-          <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 bg-background/90 backdrop-blur-sm rounded-full">
-            <Star className="w-3.5 h-3.5 text-foreground fill-foreground" />
-            <span className="text-sm font-semibold text-foreground">{profile.rating}</span>
+          {/* Top status bar */}
+          <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
+            {/* Live indicator */}
+            <motion.div 
+              className="flex items-center gap-2 px-3 py-1.5 bg-background/80 backdrop-blur-md rounded-full border border-foreground/10"
+              animate={{
+                borderColor: isActive ? "hsl(var(--sage) / 0.3)" : "hsl(var(--foreground) / 0.1)",
+              }}
+            >
+              <motion.div 
+                className="w-2 h-2 rounded-full bg-sage"
+                animate={{
+                  opacity: isActive ? [1, 0.4, 1] : 0.4,
+                  scale: isActive ? [1, 1.2, 1] : 1,
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: isActive ? Infinity : 0,
+                }}
+              />
+              <span className="text-xs font-medium text-foreground/80">Available</span>
+            </motion.div>
+
+            {/* Rating */}
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-background/80 backdrop-blur-md rounded-full border border-foreground/10">
+              <Star className="w-3.5 h-3.5 text-mustard fill-mustard" />
+              <span className="text-sm font-bold text-foreground">{profile.rating}</span>
+            </div>
           </div>
 
-          {/* View indicator on hover */}
+          {/* View Profile overlay */}
           <AnimatePresence>
             {isActive && isHovered && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="absolute inset-0 flex items-center justify-center bg-foreground/10 backdrop-blur-[2px]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-foreground/40 to-foreground/10 backdrop-blur-[2px]"
               >
-                <div className="flex items-center gap-2 px-4 py-2 bg-background rounded-full shadow-lg">
-                  <span className="text-sm font-medium text-foreground">View Profile</span>
-                  <ArrowUpRight className="w-4 h-4 text-foreground" />
-                </div>
+                <motion.div 
+                  initial={{ scale: 0.8, y: 10 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.8, y: 10 }}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-background rounded-full shadow-xl border border-foreground/10"
+                >
+                  <span className="text-sm font-semibold text-foreground">View Full Profile</span>
+                  <ArrowUpRight className="w-4 h-4 text-sage" />
+                </motion.div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Content section - bottom 40% */}
-        <div className="relative h-[40%] p-5 flex flex-col justify-between">
-          {/* Info */}
-          <div>
-            <h3 className="text-xl font-heading font-bold text-foreground tracking-tight">
+        {/* Content section */}
+        <div className="relative h-[45%] p-5 flex flex-col">
+          {/* Name and role */}
+          <div className="mb-auto">
+            <h3 className="text-xl font-heading font-bold text-foreground tracking-tight leading-tight">
               {profile.name}
             </h3>
-            <p className="text-sm text-muted-foreground mt-0.5">{profile.role}</p>
-            <div className="flex items-center gap-1 mt-1.5 text-xs text-muted-foreground/70">
-              <MapPin className="w-3 h-3" />
-              <span>{profile.location}</span>
+            <p className="text-sm text-muted-foreground mt-1 font-medium">{profile.role}</p>
+            <div className="flex items-center gap-1.5 mt-2">
+              <MapPin className="w-3 h-3 text-sage" />
+              <span className="text-xs text-muted-foreground">{profile.location}</span>
             </div>
           </div>
 
-          {/* Stats row */}
-          <div className="flex items-center gap-3">
-            <div className="flex-1 py-2 px-3 bg-muted/50 rounded-lg text-center">
-              <p className="text-lg font-bold text-foreground">{profile.earnings}</p>
-              <p className="text-xs text-muted-foreground">Earned</p>
+          {/* Stats - modern glass cards */}
+          <div className="flex gap-2 mb-3">
+            <div className="flex-1 py-3 px-3 bg-sage/10 border border-sage/20 rounded-xl">
+              <p className="text-lg font-bold text-foreground leading-none">{profile.earnings}</p>
+              <p className="text-[10px] uppercase tracking-wider text-sage mt-1 font-semibold">Earned</p>
             </div>
-            <div className="flex-1 py-2 px-3 bg-muted/50 rounded-lg text-center">
-              <p className="text-lg font-bold text-foreground">{profile.referrals}</p>
-              <p className="text-xs text-muted-foreground">Referrals</p>
+            <div className="flex-1 py-3 px-3 bg-foreground/5 border border-foreground/10 rounded-xl">
+              <p className="text-lg font-bold text-foreground leading-none">{profile.referrals}</p>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground mt-1 font-semibold">Referrals</p>
             </div>
           </div>
 
-          {/* Skills as minimal tags */}
-          <div className="flex flex-wrap gap-1.5 mt-3">
-            {profile.skills.slice(0, 3).map((skill) => (
-              <span 
+          {/* Skills as pills */}
+          <div className="flex flex-wrap gap-1.5">
+            {profile.skills.slice(0, 3).map((skill, i) => (
+              <motion.span 
                 key={skill} 
-                className="px-2 py-0.5 text-xs font-medium text-muted-foreground bg-muted/40 rounded"
+                className="px-2.5 py-1 text-[11px] font-semibold text-foreground/70 bg-foreground/5 rounded-full border border-foreground/10"
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 + i * 0.05 }}
               >
                 {skill}
-              </span>
+              </motion.span>
             ))}
           </div>
         </div>
 
-        {/* Active indicator line */}
+        {/* Bottom accent line */}
         <motion.div
-          className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: isActive ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
+          className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-sage via-sage to-mustard"
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ 
+            scaleX: isActive ? 1 : 0, 
+            opacity: isActive ? 1 : 0,
+          }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          style={{ transformOrigin: "left" }}
         />
       </motion.div>
     </motion.div>
