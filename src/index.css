@@ -188,7 +188,8 @@ html.theme-transitioning *::after {
   .menu-vignette {
     position: fixed;
     inset: 0;
-    z-index: 40;
+    /* Below the menu (z-40), above page content */
+    z-index: 30;
     pointer-events: none;
     opacity: 0;
     background: radial-gradient(
@@ -222,6 +223,7 @@ html.theme-transitioning *::after {
   html {
     scroll-behavior: smooth;
     scroll-snap-type: y proximity;
+    scroll-padding-top: 96px;
   }
 
   /* Only primary sections snap; others flow naturally */
