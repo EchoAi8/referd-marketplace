@@ -9,6 +9,9 @@ interface SoundEffectsContextType {
   playWhoosh: () => void;
   playSuccess: () => void;
   playToggle: () => void;
+  // Haptic pulse tracking
+  lastSoundTime: number;
+  triggerHaptic: () => void;
 }
 
 const SoundEffectsContext = createContext<SoundEffectsContextType | undefined>(undefined);
@@ -168,6 +171,9 @@ export const SoundEffectsProvider = ({ children }: SoundEffectsProviderProps) =>
     }
     return false;
   });
+  
+  // Track when sounds play for haptic feedback
+  const [lastSoundTime, setLastSoundTime] = useState(0);
 
   const soundGenerator = useRef<SoundGenerator | null>(null);
 
@@ -182,36 +188,45 @@ export const SoundEffectsProvider = ({ children }: SoundEffectsProviderProps) =>
   const toggle = useCallback(() => {
     setEnabled((prev) => !prev);
   }, []);
+  
+  const triggerHaptic = useCallback(() => {
+    setLastSoundTime(Date.now());
+  }, []);
 
   const playClick = useCallback(() => {
     if (enabled && soundGenerator.current) {
       soundGenerator.current.click();
+      triggerHaptic();
     }
-  }, [enabled]);
+  }, [enabled, triggerHaptic]);
 
   const playHover = useCallback(() => {
     if (enabled && soundGenerator.current) {
       soundGenerator.current.hover();
+      triggerHaptic();
     }
-  }, [enabled]);
+  }, [enabled, triggerHaptic]);
 
   const playWhoosh = useCallback(() => {
     if (enabled && soundGenerator.current) {
       soundGenerator.current.whoosh();
+      triggerHaptic();
     }
-  }, [enabled]);
+  }, [enabled, triggerHaptic]);
 
   const playSuccess = useCallback(() => {
     if (enabled && soundGenerator.current) {
       soundGenerator.current.success();
+      triggerHaptic();
     }
-  }, [enabled]);
+  }, [enabled, triggerHaptic]);
 
   const playToggle = useCallback(() => {
     if (enabled && soundGenerator.current) {
       soundGenerator.current.toggle();
+      triggerHaptic();
     }
-  }, [enabled]);
+  }, [enabled, triggerHaptic]);
 
   return (
     <SoundEffectsContext.Provider
@@ -224,6 +239,8 @@ export const SoundEffectsProvider = ({ children }: SoundEffectsProviderProps) =>
         playWhoosh,
         playSuccess,
         playToggle,
+        lastSoundTime,
+        triggerHaptic,
       }}
     >
       {children}
