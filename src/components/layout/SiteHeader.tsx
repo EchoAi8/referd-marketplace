@@ -210,12 +210,12 @@ const SiteHeader = () => {
               {/* Desktop Navigation - Always visible on desktop, expands smoothly */}
               <motion.nav 
                 initial={false}
-                animate={{ 
+              animate={{
                   width: isNavExpanded ? "auto" : 0,
                   opacity: isNavExpanded ? 1 : 0,
                   marginLeft: isNavExpanded ? 12 : 0
                 }}
-                transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+                transition={{ duration: 1.2, ease: [0.22, 0.03, 0.26, 1] }}
                 className="hidden lg:flex items-center gap-3 xl:gap-4 overflow-hidden"
               >
                 {navLinks.map((link) => (
@@ -263,20 +263,44 @@ const SiteHeader = () => {
               <ThemeToggle />
             </div>
             
-            {/* R Button - Visible on all screens, opens menu on mobile/tablet */}
+            {/* R Button - Visible on all screens, opens menu */}
             <motion.button
               onClick={() => {
                 playClick();
-                // Only toggle menu on mobile/tablet
-                if (window.innerWidth < 1024) {
-                  setIsMobileMenuOpen(!isMobileMenuOpen);
-                }
+                setIsMobileMenuOpen(!isMobileMenuOpen);
               }}
               className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full transition-all duration-300 flex items-center justify-center bg-sage border-2 border-sage shadow-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               aria-label="Toggle menu"
             >
+              {/* Pulsing glow effect */}
+              <motion.div
+                className="absolute inset-0 rounded-full bg-sage/50"
+                animate={{ 
+                  scale: [1, 1.4, 1],
+                  opacity: [0.6, 0, 0.6]
+                }}
+                transition={{ 
+                  duration: 2.5, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+              />
+              <motion.div
+                className="absolute inset-0 rounded-full bg-sage/30"
+                animate={{ 
+                  scale: [1, 1.6, 1],
+                  opacity: [0.4, 0, 0.4]
+                }}
+                transition={{ 
+                  duration: 2.5, 
+                  repeat: Infinity, 
+                  ease: "easeInOut",
+                  delay: 0.3
+                }}
+              />
+              
               {/* Haptic pulse ring */}
               {isPulsing && enabled && (
                 <motion.div
@@ -287,7 +311,7 @@ const SiteHeader = () => {
                 />
               )}
               
-              {/* R Logo / X toggle - always black/foreground text */}
+              {/* R Logo / X toggle */}
               <AnimatePresence mode="wait">
                 {isMobileMenuOpen ? (
                   <motion.div
@@ -296,7 +320,6 @@ const SiteHeader = () => {
                     animate={{ rotate: 0, opacity: 1 }}
                     exit={{ rotate: 90, opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="lg:hidden"
                   >
                     <X className="w-5 h-5 text-foreground" />
                   </motion.div>
@@ -307,7 +330,7 @@ const SiteHeader = () => {
                     animate={{ rotate: 0, opacity: 1 }}
                     exit={{ rotate: -90, opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="font-heading font-bold text-lg text-foreground"
+                    className="font-heading font-bold text-lg text-foreground relative z-10"
                   >
                     R
                   </motion.div>
