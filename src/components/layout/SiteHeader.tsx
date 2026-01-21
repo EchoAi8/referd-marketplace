@@ -29,12 +29,29 @@ const SiteHeader = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavExpanded, setIsNavExpanded] = useState(false);
   const [isPulsing, setIsPulsing] = useState(false);
+  const [showSwipeHint, setShowSwipeHint] = useState(false);
   
   // Swipe gesture for mobile menu
   const swipeX = useMotionValue(0);
   const menuOpacity = useTransform(swipeX, [-200, 0], [0, 1]);
   const touchStartX = useRef(0);
   const isSwipingFromEdge = useRef(false);
+  
+  // Show swipe hint on mobile after initial load
+  useEffect(() => {
+    const isMobile = window.innerWidth < 1024;
+    const hasSeenHint = sessionStorage.getItem("swipe-hint-seen");
+    
+    if (isMobile && !hasSeenHint) {
+      const timer = setTimeout(() => {
+        setShowSwipeHint(true);
+        sessionStorage.setItem("swipe-hint-seen", "true");
+        // Auto-hide after 3 seconds
+        setTimeout(() => setShowSwipeHint(false), 3000);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   // Haptic pulse feedback when sounds play
   useEffect(() => {
@@ -296,6 +313,32 @@ const SiteHeader = () => {
           </div>
         </div>
       </motion.header>
+
+      {/* Swipe Hint Indicator - Mobile only */}
+      <AnimatePresence>
+        {showSwipeHint && !isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed right-0 top-1/2 -translate-y-1/2 z-40 lg:hidden pointer-events-none"
+          >
+            <div className="flex items-center gap-2 bg-sage/90 backdrop-blur-sm rounded-l-full pl-3 pr-1 py-2 shadow-lg">
+              <span className="text-foreground text-xs font-medium whitespace-nowrap">
+                Swipe to open menu
+              </span>
+              <motion.div
+                animate={{ x: [-4, 4, -4] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+                className="w-6 h-6 rounded-full bg-foreground/20 flex items-center justify-center"
+              >
+                <span className="text-foreground text-sm">←</span>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Immersive Full-Screen Mobile Menu with swipe-to-close */}
       <AnimatePresence>

@@ -42,7 +42,7 @@ const DockNavigation = () => {
       ref={containerRef}
       initial={{ y: 100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, delay: 1, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 1.2, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
       className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50"
     >
       <div className="flex items-end gap-1 px-4 py-3 bg-background/80 backdrop-blur-xl rounded-2xl border border-foreground/10 shadow-2xl">
