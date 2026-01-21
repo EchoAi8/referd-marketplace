@@ -22,9 +22,10 @@ const Index = () => {
   const [showGrid, setShowGrid] = useState(false);
 
   const handleIntroComplete = () => {
+    // Show grid IMMEDIATELY - no delay
+    setShowGrid(true);
+    // Then mark intro as complete
     setIntroComplete(true);
-    // Small delay before showing grid overlay
-    setTimeout(() => setShowGrid(true), 100);
   };
 
   return (

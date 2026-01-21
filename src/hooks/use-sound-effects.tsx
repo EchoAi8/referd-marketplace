@@ -191,6 +191,10 @@ export const SoundEffectsProvider = ({ children }: SoundEffectsProviderProps) =>
   
   const triggerHaptic = useCallback(() => {
     setLastSoundTime(Date.now());
+    // Real haptic vibration on mobile devices
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      navigator.vibrate(15); // Short 15ms vibration
+    }
   }, []);
 
   const playClick = useCallback(() => {
