@@ -28,6 +28,7 @@ const Index = () => {
     setIntroComplete(true);
   };
 
+  // Index page has custom intro logic, so it doesn't use PageLayout
   return (
     <>
       {!introComplete && <TypewriterIntro onComplete={handleIntroComplete} />}
