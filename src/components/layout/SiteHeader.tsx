@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "framer-motion";
 import { X } from "lucide-react";
 import MagneticButton from "@/components/animations/MagneticButton";
 import ThemeToggle from "@/components/ui/ThemeToggle";
@@ -29,6 +29,12 @@ const SiteHeader = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavExpanded, setIsNavExpanded] = useState(false);
   const [isPulsing, setIsPulsing] = useState(false);
+  
+  // Swipe gesture for mobile menu
+  const swipeX = useMotionValue(0);
+  const menuOpacity = useTransform(swipeX, [-200, 0], [0, 1]);
+  const touchStartX = useRef(0);
+  const isSwipingFromEdge = useRef(false);
 
   // Haptic pulse feedback when sounds play
   useEffect(() => {
@@ -60,6 +66,48 @@ const SiteHeader = () => {
       document.body.style.overflow = "";
     };
   }, [isMobileMenuOpen]);
+
+  // Handle swipe from right edge to open menu
+  useEffect(() => {
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      touchStartX.current = touch.clientX;
+      // Detect swipe from right edge (within 30px of screen edge)
+      const screenWidth = window.innerWidth;
+      isSwipingFromEdge.current = touch.clientX > screenWidth - 30;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isSwipingFromEdge.current && !isMobileMenuOpen) return;
+      
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - touchStartX.current;
+      
+      // Swipe left from right edge to open
+      if (isSwipingFromEdge.current && deltaX < -50 && !isMobileMenuOpen) {
+        setIsMobileMenuOpen(true);
+        playClick();
+        isSwipingFromEdge.current = false;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isSwipingFromEdge.current = false;
+    };
+
+    // Only add listeners on mobile/tablet
+    if (window.innerWidth < 1024) {
+      document.addEventListener("touchstart", handleTouchStart, { passive: true });
+      document.addEventListener("touchmove", handleTouchMove, { passive: true });
+      document.addEventListener("touchend", handleTouchEnd, { passive: true });
+    }
+
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [isMobileMenuOpen, playClick]);
 
   const handleNav = (href: string) => {
     setIsMobileMenuOpen(false);
@@ -198,17 +246,13 @@ const SiteHeader = () => {
               <ThemeToggle />
             </div>
             
-            {/* Mobile/Tablet Menu Toggle - R in circle */}
+            {/* Mobile/Tablet Menu Toggle - R in sage circle */}
             <motion.button
               onClick={() => {
                 playClick();
                 setIsMobileMenuOpen(!isMobileMenuOpen);
               }}
-              className={`lg:hidden relative w-10 h-10 sm:w-11 sm:h-11 rounded-full transition-all duration-300 flex items-center justify-center ${
-                isScrolled 
-                  ? "bg-background/95 border border-border/50" 
-                  : "bg-foreground/90 border border-background/10"
-              }`}
+              className="lg:hidden relative w-10 h-10 sm:w-11 sm:h-11 rounded-full transition-all duration-300 flex items-center justify-center bg-sage border-2 border-sage"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               aria-label="Toggle menu"
@@ -216,14 +260,14 @@ const SiteHeader = () => {
               {/* Haptic pulse ring */}
               {isPulsing && enabled && (
                 <motion.div
-                  className="absolute inset-0 rounded-full border-2 border-sage/50"
+                  className="absolute inset-0 rounded-full border-2 border-sage"
                   initial={{ scale: 1, opacity: 0.8 }}
                   animate={{ scale: 1.5, opacity: 0 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 />
               )}
               
-              {/* R Logo / X toggle */}
+              {/* R Logo / X toggle - always black/foreground text */}
               <AnimatePresence mode="wait">
                 {isMobileMenuOpen ? (
                   <motion.div
@@ -233,7 +277,7 @@ const SiteHeader = () => {
                     exit={{ rotate: 90, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <X className={`w-5 h-5 ${isScrolled ? "text-foreground" : "text-background"}`} />
+                    <X className="w-5 h-5 text-foreground" />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -242,7 +286,7 @@ const SiteHeader = () => {
                     animate={{ rotate: 0, opacity: 1 }}
                     exit={{ rotate: -90, opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className={`font-heading font-bold text-lg ${isScrolled ? "text-foreground" : "text-background"}`}
+                    className="font-heading font-bold text-lg text-foreground"
                   >
                     R
                   </motion.div>
@@ -253,15 +297,25 @@ const SiteHeader = () => {
         </div>
       </motion.header>
 
-      {/* Immersive Full-Screen Mobile Menu */}
+      {/* Immersive Full-Screen Mobile Menu with swipe-to-close */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 overflow-hidden"
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={{ left: 0.1, right: 0.5 }}
+            onDragEnd={(_, info: PanInfo) => {
+              // Swipe right to close
+              if (info.velocity.x > 300 || info.offset.x > 100) {
+                playClick();
+                setIsMobileMenuOpen(false);
+              }
+            }}
+            className="fixed inset-0 z-40 overflow-hidden touch-pan-y"
           >
             {/* Animated background */}
             <div className="absolute inset-0 bg-foreground">

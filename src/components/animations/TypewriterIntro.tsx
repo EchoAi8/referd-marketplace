@@ -254,7 +254,8 @@ const TypewriterIntro = ({ onComplete }: TypewriterIntroProps) => {
   const handleComplete = useCallback(() => {
     playSuccess();
     setIsVisible(false);
-    setTimeout(onComplete, 600);
+    // Instant transition - call onComplete immediately
+    onComplete();
   }, [onComplete, playSuccess]);
 
   const handleSkip = useCallback(() => {
