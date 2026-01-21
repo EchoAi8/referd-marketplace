@@ -188,20 +188,54 @@ const SiteHeader = () => {
               <ThemeToggle />
             </div>
             
-            {/* Mobile/Tablet Menu Toggle */}
+            {/* Mobile/Tablet Menu Toggle - AI-style orb dots */}
             <button
               onClick={() => {
                 playClick();
                 setIsMobileMenuOpen(!isMobileMenuOpen);
               }}
-              className={`lg:hidden p-2 sm:p-2.5 rounded-full transition-colors ${
+              className={`lg:hidden p-2.5 sm:p-3 rounded-full transition-all duration-300 ${
                 isScrolled 
-                  ? "bg-background/95 text-foreground border border-border/50" 
-                  : "bg-foreground/90 text-background border border-background/10"
+                  ? "bg-background/95 border border-border/50" 
+                  : "bg-foreground/90 border border-background/10"
               }`}
               aria-label="Toggle menu"
             >
-              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              <div className="relative w-5 h-5 flex items-center justify-center">
+                {/* AI-style morphing dots */}
+                <motion.div
+                  animate={isMobileMenuOpen ? { rotate: 45, scale: 1.1 } : { rotate: 0, scale: 1 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-0 flex items-center justify-center"
+                >
+                  <motion.span
+                    animate={isMobileMenuOpen ? { x: 0, y: 0 } : { x: -4, y: -4 }}
+                    className={`absolute w-1.5 h-1.5 rounded-full ${isScrolled ? "bg-foreground" : "bg-background"}`}
+                  />
+                  <motion.span
+                    animate={isMobileMenuOpen ? { x: 0, y: 0 } : { x: 4, y: -4 }}
+                    className={`absolute w-1.5 h-1.5 rounded-full ${isScrolled ? "bg-foreground" : "bg-background"}`}
+                  />
+                  <motion.span
+                    animate={isMobileMenuOpen ? { x: 0, y: 0 } : { x: -4, y: 4 }}
+                    className={`absolute w-1.5 h-1.5 rounded-full ${isScrolled ? "bg-foreground" : "bg-background"}`}
+                  />
+                  <motion.span
+                    animate={isMobileMenuOpen ? { x: 0, y: 0 } : { x: 4, y: 4 }}
+                    className={`absolute w-1.5 h-1.5 rounded-full ${isScrolled ? "bg-foreground" : "bg-background"}`}
+                  />
+                </motion.div>
+                {/* X indicator when open */}
+                {isMobileMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="absolute inset-0 flex items-center justify-center"
+                  >
+                    <X className={`w-4 h-4 ${isScrolled ? "text-foreground" : "text-background"}`} />
+                  </motion.div>
+                )}
+              </div>
             </button>
           </div>
         </div>

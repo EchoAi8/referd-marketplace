@@ -105,7 +105,7 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-background/95 font-heading font-bold leading-tight"
             >
-              The People Powered Marketplace
+              The People Powered Recruitment Marketplace
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 30 }}
