@@ -48,8 +48,8 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/20 via-transparent to-foreground/20 pointer-events-none" />
       </motion.div>
 
-      {/* Large Logo Overlay with parallax */}
-      <div className="relative z-10 h-screen flex flex-col justify-between p-6 md:p-12 pointer-events-none">
+      {/* Main Content Container */}
+      <div className="relative z-10 min-h-screen flex flex-col pt-24 md:pt-28 pb-8 px-4 sm:px-6 md:px-12 pointer-events-none">
         {/* Top - Logo with character animation and parallax */}
         <motion.div 
           style={{ y: logoY, scale: logoScale }} 
@@ -87,10 +87,10 @@ const HeroSection = () => {
           </motion.h1>
         </motion.div>
 
-        {/* Bottom Content with parallax */}
+        {/* Bottom Content */}
         <motion.div 
           style={{ y: contentY }}
-          className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8"
+          className="flex-1 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 lg:gap-8 mt-auto pb-16 lg:pb-8"
         >
           {/* Left - Tagline */}
           <motion.div

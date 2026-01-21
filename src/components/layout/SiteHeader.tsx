@@ -111,104 +111,76 @@ const SiteHeader = () => {
       >
         <motion.div
           layout
-          className={`mx-auto transition-all duration-500 ease-out ${
+          className={`mx-auto transition-all duration-500 ease-out rounded-full ${
             isScrolled
-              ? "bg-background/80 backdrop-blur-xl shadow-lg shadow-foreground/5 border border-foreground/5 rounded-full"
-              : "bg-transparent"
+              ? "bg-background/90 backdrop-blur-xl shadow-lg shadow-foreground/5 border border-foreground/5"
+              : "bg-foreground/80 backdrop-blur-md border border-background/10"
           }`}
           style={{
             maxWidth: isNavExpanded ? "1200px" : "fit-content",
           }}
         >
           <div className={`flex items-center justify-between ${isScrolled ? "px-4 py-2" : "px-4 py-3"}`}>
-            {/* Logo - Always visible, prominent */}
+            {/* Logo - Always visible */}
             <MagneticButton
               onClick={handleLogoClick}
               className="text-2xl md:text-3xl font-heading font-bold tracking-tight bg-transparent border-none"
               strength={0.2}
             >
-              <span className="text-foreground transition-colors duration-300">
+              <span className={`transition-colors duration-300 ${isScrolled ? "text-foreground" : "text-background"}`}>
                 Referd
               </span>
               <span className="text-sage text-lg align-super">®</span>
             </MagneticButton>
 
-            {/* Desktop Navigation - Expands on scroll */}
-            <AnimatePresence>
-              {isNavExpanded && (
-                <motion.nav
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: "auto" }}
-                  exit={{ opacity: 0, width: 0 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  className="hidden md:flex items-center gap-6 overflow-hidden"
+            {/* Desktop Navigation - Always visible */}
+            <nav className="hidden md:flex items-center gap-4 lg:gap-6">
+              {navLinks.map((link) => (
+                <MagneticButton
+                  key={link.label}
+                  onClick={() => handleNav(link.href)}
+                  className={`relative text-sm font-medium transition-colors duration-200 group bg-transparent border-none whitespace-nowrap ${
+                    location.pathname === link.href
+                      ? "text-sage"
+                      : isScrolled 
+                        ? "text-muted-foreground hover:text-foreground"
+                        : "text-background/70 hover:text-background"
+                  }`}
+                  strength={0.4}
                 >
-                  {navLinks.map((link, index) => (
-                    <motion.div
-                      key={link.label}
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
-                      <MagneticButton
-                        onClick={() => handleNav(link.href)}
-                        className={`relative text-sm font-medium transition-colors duration-200 group bg-transparent border-none whitespace-nowrap ${
-                          location.pathname === link.href
-                            ? "text-sage"
-                            : "text-muted-foreground hover:text-foreground"
-                        }`}
-                        strength={0.4}
-                      >
-                        {link.label}
-                        <span
-                          className={`absolute -bottom-1 left-0 h-px bg-sage transition-all duration-300 ${
-                            location.pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
-                          }`}
-                        />
-                      </MagneticButton>
-                    </motion.div>
-                  ))}
-                </motion.nav>
-              )}
-            </AnimatePresence>
+                  {link.label}
+                  <span
+                    className={`absolute -bottom-1 left-0 h-px bg-sage transition-all duration-300 ${
+                      location.pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                  />
+                </MagneticButton>
+              ))}
+            </nav>
 
-            {/* Right Side Actions */}
-            <AnimatePresence>
-              {isNavExpanded && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="hidden md:flex items-center gap-2"
-                >
-                  <SoundToggle />
-                  <ThemeToggle />
-                  <MagneticButton
-                    onClick={() => handleNav("/opportunities")}
-                    className="ml-2 px-5 py-2.5 bg-sage text-foreground rounded-full text-sm font-semibold hover:bg-sage/90 transition-colors"
-                    strength={0.3}
-                  >
-                    Get Started
-                  </MagneticButton>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Right Side Actions - Always visible */}
+            <div className="hidden md:flex items-center gap-2">
+              <SoundToggle />
+              <ThemeToggle />
+              <MagneticButton
+                onClick={() => handleNav("/opportunities")}
+                className="ml-2 px-5 py-2.5 bg-sage text-foreground rounded-full text-sm font-semibold hover:bg-sage/90 transition-colors"
+                strength={0.3}
+              >
+                Get Started
+              </MagneticButton>
+            </div>
 
-            {/* Mobile Menu Toggle */}
+            {/* Mobile Menu Toggle - Always visible */}
             <div className="md:hidden flex items-center gap-2">
-              {isNavExpanded && (
-                <>
-                  <SoundToggle />
-                  <ThemeToggle />
-                </>
-              )}
+              <SoundToggle />
+              <ThemeToggle />
               <button
                 onClick={() => {
                   playClick();
                   setIsMobileMenuOpen(!isMobileMenuOpen);
                 }}
-                className="p-2 transition-colors text-foreground"
+                className={`p-2 transition-colors ${isScrolled ? "text-foreground" : "text-background"}`}
                 aria-label="Toggle menu"
               >
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
