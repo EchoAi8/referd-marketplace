@@ -99,21 +99,50 @@ const WordAnimation = ({
         };
       case "rotate":
         return {
-          initial: { opacity: 0, rotate: -180, scale: 0.5 },
-          animate: { opacity: 1, rotate: 0, scale: 1 },
-          exit: { opacity: 0, rotate: 180, scale: 0.5 },
+          initial: { opacity: 0, rotate: -15, scale: 0.8 },
+          animate: { opacity: 1, rotate: 3, scale: 1 },
+          exit: { opacity: 0, rotate: 15, scale: 0.8 },
         };
       case "slide":
         return {
-          initial: { opacity: 0, x: -100 },
+          initial: { opacity: 0, x: -80 },
           animate: { opacity: 1, x: 0 },
-          exit: { opacity: 0, x: 100 },
+          exit: { opacity: 0, x: 80 },
         };
       case "scale":
         return {
           initial: { opacity: 0, scale: 0.3 },
           animate: { opacity: 1, scale: 1 },
           exit: { opacity: 0, scale: 1.5 },
+        };
+      case "shake":
+        return {
+          initial: { opacity: 0, x: -20 },
+          animate: { 
+            opacity: 1, 
+            x: [0, -8, 8, -6, 6, -3, 3, 0],
+          },
+          exit: { opacity: 0, scale: 0.9 },
+        };
+      case "bounce":
+        return {
+          initial: { opacity: 0, y: -100, scale: 0.5 },
+          animate: { 
+            opacity: 1, 
+            y: [0, -30, 0, -15, 0, -5, 0],
+            scale: 1,
+          },
+          exit: { opacity: 0, y: 50 },
+        };
+      case "glitch":
+        return {
+          initial: { opacity: 0, skewX: 20 },
+          animate: { 
+            opacity: 1,
+            skewX: [20, -5, 3, 0],
+            x: [10, -5, 3, 0],
+          },
+          exit: { opacity: 0, skewX: -20 },
         };
       case "fade":
       default:
@@ -153,11 +182,19 @@ const TypewriterIntro = ({ onComplete }: TypewriterIntroProps) => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [typewriterComplete, setTypewriterComplete] = useState(false);
 
-  const { playClick, playHover, playWhoosh, playSuccess, playToggle, enabled: soundEnabled } = useSoundEffects();
+  const { playClick, playHover, playWhoosh, playSuccess, playToggle, enabled: soundEnabled, setEnabled } = useSoundEffects();
 
-  // Sound effect mapper
+  // Enable sound for intro experience (Apple keynote style)
+  useEffect(() => {
+    // Auto-enable sound for the intro if not explicitly disabled
+    const stored = localStorage.getItem("sound-effects");
+    if (stored === null) {
+      setEnabled(true);
+    }
+  }, [setEnabled]);
+
+  // Sound effect mapper - always play during intro for impact
   const playSequenceSound = useCallback((sound: SequenceConfig["sound"]) => {
-    if (!soundEnabled) return;
     switch (sound) {
       case "whoosh":
         playWhoosh();
@@ -172,7 +209,7 @@ const TypewriterIntro = ({ onComplete }: TypewriterIntroProps) => {
         playSuccess();
         break;
     }
-  }, [soundEnabled, playWhoosh, playToggle, playClick, playSuccess]);
+  }, [playWhoosh, playToggle, playClick, playSuccess]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
