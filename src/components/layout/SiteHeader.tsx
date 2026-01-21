@@ -394,14 +394,28 @@ const SiteHeader = () => {
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
-            // Slower, smoother slide-in/out
-            transition={{ duration: 0.9, ease: [0.22, 0.03, 0.26, 1] }}
+            // iOS-style spring physics for native feel
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
+              mass: 0.8,
+            }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={{ left: 0.08, right: 0.25 }}
+            // Rubber-banding: resist left swipe, allow right swipe with bounce
+            dragElastic={{ left: 0.05, right: 0.4 }}
+            dragTransition={{
+              // Momentum + spring snap-back
+              bounceStiffness: 400,
+              bounceDamping: 25,
+              power: 0.3,
+              timeConstant: 200,
+            }}
             onDragEnd={(_, info: PanInfo) => {
-              // Swipe right to close
-              if (info.velocity.x > 300 || info.offset.x > 100) {
+              // Velocity-sensitive close threshold (feels more native)
+              const shouldClose = info.velocity.x > 200 || info.offset.x > 80;
+              if (shouldClose) {
                 playClick();
                 setIsMobileMenuOpen(false);
               }
