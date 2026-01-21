@@ -107,10 +107,10 @@ const SiteHeader = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-4 left-4 right-4 z-50"
+        className="fixed top-3 sm:top-4 left-3 sm:left-4 right-3 sm:right-4 z-50"
       >
-        <div className="flex items-center justify-between">
-          {/* Left: Logo Pill that expands to include nav */}
+        <div className="flex items-center justify-between gap-2">
+          {/* Left: Logo Pill with nav that expands on scroll */}
           <motion.div
             layout
             className={`flex items-center rounded-full transition-all duration-500 ease-out ${
@@ -119,29 +119,29 @@ const SiteHeader = () => {
                 : "bg-foreground/90 backdrop-blur-md border border-background/10"
             }`}
           >
-            <div className={`flex items-center ${isNavExpanded ? "px-3 py-2 md:px-4" : "px-4 py-3"}`}>
+            <div className="flex items-center px-3 py-2 sm:px-4 sm:py-2.5">
               {/* Logo */}
               <MagneticButton
                 onClick={handleLogoClick}
-                className="text-xl md:text-2xl font-heading font-bold tracking-tight bg-transparent border-none"
+                className="text-lg sm:text-xl md:text-2xl font-heading font-bold tracking-tight bg-transparent border-none"
                 strength={0.2}
               >
                 <span className={`transition-colors duration-300 ${isScrolled ? "text-foreground" : "text-background"}`}>
                   Referd
                 </span>
-                <span className="text-sage text-sm align-super">®</span>
+                <span className="text-sage text-xs sm:text-sm align-super">®</span>
               </MagneticButton>
 
-              {/* Desktop Navigation - Slides out from logo */}
+              {/* Desktop Navigation - Always visible on desktop, expands smoothly */}
               <motion.nav 
                 initial={false}
                 animate={{ 
                   width: isNavExpanded ? "auto" : 0,
                   opacity: isNavExpanded ? 1 : 0,
-                  marginLeft: isNavExpanded ? 16 : 0
+                  marginLeft: isNavExpanded ? 12 : 0
                 }}
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                className="hidden md:flex items-center gap-4 lg:gap-5 overflow-hidden"
+                className="hidden lg:flex items-center gap-3 xl:gap-4 overflow-hidden"
               >
                 {navLinks.map((link) => (
                   <MagneticButton
@@ -168,7 +168,7 @@ const SiteHeader = () => {
                 {/* Get Started CTA inside nav pill */}
                 <MagneticButton
                   onClick={() => handleNav("/opportunities")}
-                  className="ml-2 px-4 py-2 bg-sage text-foreground rounded-full text-sm font-semibold hover:bg-sage/90 transition-colors"
+                  className="ml-1 px-3 py-1.5 bg-sage text-foreground rounded-full text-sm font-semibold hover:bg-sage/90 transition-colors"
                   strength={0.3}
                 >
                   Get Started
@@ -177,9 +177,9 @@ const SiteHeader = () => {
             </div>
           </motion.div>
 
-          {/* Right: Toggles - Separate from nav pill */}
-          <div className="flex items-center gap-1">
-            <div className={`flex items-center gap-1 rounded-full px-2 py-1.5 ${
+          {/* Right: Toggles - Separate pill */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className={`hidden sm:flex items-center gap-1 rounded-full px-2 py-1.5 ${
               isScrolled 
                 ? "bg-background/95 backdrop-blur-xl border border-border/50" 
                 : "bg-foreground/90 backdrop-blur-md border border-background/10"
@@ -188,13 +188,13 @@ const SiteHeader = () => {
               <ThemeToggle />
             </div>
             
-            {/* Mobile Menu Toggle */}
+            {/* Mobile/Tablet Menu Toggle */}
             <button
               onClick={() => {
                 playClick();
                 setIsMobileMenuOpen(!isMobileMenuOpen);
               }}
-              className={`md:hidden p-2.5 rounded-full transition-colors ${
+              className={`lg:hidden p-2 sm:p-2.5 rounded-full transition-colors ${
                 isScrolled 
                   ? "bg-background/95 text-foreground border border-border/50" 
                   : "bg-foreground/90 text-background border border-background/10"

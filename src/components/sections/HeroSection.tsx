@@ -49,7 +49,7 @@ const HeroSection = () => {
       </motion.div>
 
       {/* Main Content Container */}
-      <div className="relative z-10 min-h-screen flex flex-col pt-24 md:pt-28 pb-8 px-4 sm:px-6 md:px-12 pointer-events-none">
+      <div className="relative z-10 min-h-screen flex flex-col pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 px-4 sm:px-6 md:px-12 pointer-events-none">
         {/* Top - Logo with character animation and parallax */}
         <motion.div 
           style={{ y: logoY, scale: logoScale }} 
@@ -59,7 +59,7 @@ const HeroSection = () => {
             initial={{ y: 120 }}
             animate={{ y: 0 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[18vw] md:text-[14vw] font-heading font-bold text-background leading-none tracking-tight"
+            className="text-[16vw] sm:text-[14vw] md:text-[12vw] lg:text-[10vw] font-heading font-bold text-background leading-none tracking-tight"
           >
             {"Referd".split("").map((char, i) => (
               <motion.span
@@ -90,7 +90,7 @@ const HeroSection = () => {
         {/* Bottom Content - Text on Left */}
         <motion.div 
           style={{ y: contentY }}
-          className="flex-1 flex flex-col justify-end mt-auto pb-20 md:pb-12"
+          className="flex-1 flex flex-col justify-end mt-auto pb-24 sm:pb-20 md:pb-12"
         >
           {/* Tagline & CTAs */}
           <motion.div
@@ -156,43 +156,43 @@ const HeroSection = () => {
           </motion.div>
         </motion.div>
 
-        {/* Credit Card - Fixed to bottom right corner */}
+        {/* Credit Card - Fixed to bottom right corner, hidden on very small screens */}
         <motion.div
           style={{ y: cardY, rotate: cardRotate, opacity: cardOpacity }}
           initial={{ opacity: 0, y: 50, rotate: 5 }}
           animate={{ opacity: 1, y: 0, rotate: 3 }}
           transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
           whileHover={{ scale: 1.05, rotate: 0 }}
-          className="absolute bottom-6 right-4 sm:bottom-8 sm:right-6 md:bottom-12 md:right-12 w-48 sm:w-56 md:w-64 pointer-events-auto cursor-pointer z-20"
+          className="hidden sm:block absolute bottom-24 sm:bottom-8 right-4 sm:right-6 md:bottom-12 md:right-8 lg:right-12 w-44 sm:w-48 md:w-56 lg:w-60 pointer-events-auto cursor-pointer z-20"
         >
-          {/* Credit Card Design - Smaller */}
+          {/* Credit Card Design - Compact */}
           <div className="relative w-full aspect-[1.586/1] rounded-xl overflow-hidden shadow-2xl">
             {/* Card Background */}
             <div className="absolute inset-0 bg-gradient-to-br from-sage via-sage/90 to-forest" />
             
             {/* Card Pattern */}
             <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-2 left-2 w-8 h-8 rounded-full border-2 border-foreground/20" />
-              <div className="absolute top-4 left-4 w-6 h-6 rounded-full border-2 border-foreground/20" />
-              <div className="absolute bottom-4 right-4 w-12 h-12 rounded-full border border-foreground/10" />
+              <div className="absolute top-2 left-2 w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-foreground/20" />
+              <div className="absolute top-3 left-3 w-4 h-4 sm:w-6 sm:h-6 rounded-full border-2 border-foreground/20" />
+              <div className="absolute bottom-3 right-3 w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-foreground/10" />
             </div>
             
             {/* Card Content */}
-            <div className="relative h-full p-3 sm:p-4 flex flex-col justify-between">
+            <div className="relative h-full p-2.5 sm:p-3 md:p-4 flex flex-col justify-between">
               {/* Top */}
               <div className="flex justify-between items-start">
-                <div className="text-foreground font-heading font-bold text-sm sm:text-base tracking-tight">
-                  Referd<span className="text-foreground/60 text-[10px] align-super">®</span>
+                <div className="text-foreground font-heading font-bold text-xs sm:text-sm md:text-base tracking-tight">
+                  Referd<span className="text-foreground/60 text-[8px] sm:text-[10px] align-super">®</span>
                 </div>
-                <div className="w-6 h-5 sm:w-8 sm:h-6 rounded bg-gradient-to-br from-mustard/80 to-mustard/50 border border-foreground/10" />
+                <div className="w-5 h-4 sm:w-6 sm:h-5 md:w-7 md:h-5 rounded bg-gradient-to-br from-mustard/80 to-mustard/50 border border-foreground/10" />
               </div>
               
               {/* Balance */}
               <div>
-                <p className="text-[8px] sm:text-[10px] uppercase tracking-widest text-foreground/60">
+                <p className="text-[7px] sm:text-[8px] md:text-[10px] uppercase tracking-widest text-foreground/60">
                   Referral Balance
                 </p>
-                <p className="text-lg sm:text-xl font-heading font-bold text-foreground tracking-tight">
+                <p className="text-base sm:text-lg md:text-xl font-heading font-bold text-foreground tracking-tight">
                   £24,000
                 </p>
               </div>
@@ -200,12 +200,12 @@ const HeroSection = () => {
               {/* Bottom */}
               <div className="flex justify-between items-end">
                 <div>
-                  <p className="text-[6px] sm:text-[8px] uppercase tracking-wider text-foreground/50">Since</p>
-                  <p className="text-[10px] sm:text-xs font-medium text-foreground/80">2024</p>
+                  <p className="text-[5px] sm:text-[6px] md:text-[8px] uppercase tracking-wider text-foreground/50">Since</p>
+                  <p className="text-[9px] sm:text-[10px] md:text-xs font-medium text-foreground/80">2024</p>
                 </div>
                 <div className="flex">
-                  <div className="w-4 h-4 sm:w-6 sm:h-6 rounded-full bg-rose/80" />
-                  <div className="w-4 h-4 sm:w-6 sm:h-6 rounded-full bg-mustard/80 -ml-2" />
+                  <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 rounded-full bg-rose/80" />
+                  <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 rounded-full bg-mustard/80 -ml-1.5 sm:-ml-2" />
                 </div>
               </div>
             </div>

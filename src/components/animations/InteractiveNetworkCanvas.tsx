@@ -896,56 +896,6 @@ const InteractiveNetworkCanvas = () => {
       onClick={handleClick}
     >
       <canvas ref={canvasRef} className="w-full h-full" />
-      
-      {/* Network Value Counter */}
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1, duration: 0.8 }}
-        className="absolute top-6 right-6 md:top-8 md:right-8 bg-foreground/5 backdrop-blur-xl rounded-2xl px-5 py-4 border border-primary/20 shadow-2xl"
-      >
-        <div className="text-xs uppercase tracking-widest text-foreground/50 mb-1 font-medium">Network Value</div>
-        <motion.div
-          key={networkValue}
-          initial={{ scale: 1.15, color: "hsl(170, 100%, 70%)" }}
-          animate={{ scale: 1, color: "hsl(var(--foreground))" }}
-          transition={{ duration: 0.5 }}
-          className="font-heading font-bold text-2xl md:text-3xl"
-        >
-          £{networkValue.toLocaleString()}
-        </motion.div>
-      </motion.div>
-
-      {/* Legend */}
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
-        className="absolute bottom-6 left-6 md:bottom-8 md:left-8 bg-foreground/5 backdrop-blur-xl rounded-2xl px-5 py-4 border border-primary/20 shadow-2xl"
-      >
-        <div className="text-xs uppercase tracking-widest text-foreground/50 mb-3 font-medium">Network Legend</div>
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="w-4 h-4 rounded-full bg-gradient-to-br from-cyan-300 to-cyan-500 shadow-[0_0_15px_rgba(0,255,255,0.6)]" />
-              <div className="absolute inset-0 w-4 h-4 rounded-full bg-cyan-400 animate-ping opacity-30" />
-            </div>
-            <span className="text-sm font-medium text-foreground/80">Referrers</span>
-            <span className="text-xs text-foreground/40 ml-auto">Earn 35%</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="w-4 h-4 rounded-full bg-gradient-to-br from-fuchsia-300 to-fuchsia-500 shadow-[0_0_15px_rgba(255,0,200,0.6)]" />
-              <div className="absolute inset-0 w-4 h-4 rounded-full bg-fuchsia-400 animate-ping opacity-30" style={{ animationDelay: '0.5s' }} />
-            </div>
-            <span className="text-sm font-medium text-foreground/80">Referred</span>
-            <span className="text-xs text-foreground/40 ml-auto">Earn 35%</span>
-          </div>
-        </div>
-        <div className="mt-3 pt-3 border-t border-foreground/10">
-          <p className="text-xs text-foreground/40">Click any node for details</p>
-        </div>
-      </motion.div>
 
       {/* Tooltip */}
       <AnimatePresence>
