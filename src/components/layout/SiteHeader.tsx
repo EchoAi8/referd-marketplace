@@ -167,7 +167,8 @@ const SiteHeader = () => {
     typeof window !== "undefined" &&
     window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
-  const smoothScrollTo = (targetY: number, durationMs = 2800) => {
+  // Extra-slow, premium scroll (3.5s default)
+  const smoothScrollTo = (targetY: number, durationMs = 3500) => {
     if (typeof window === "undefined") return;
     if (prefersReducedMotion) {
       window.scrollTo({ top: targetY, behavior: "auto" });
@@ -207,14 +208,14 @@ const SiteHeader = () => {
       const headerOffset = 96; // keep section titles clear of the floating header
       const y =
         el.getBoundingClientRect().top + window.scrollY - headerOffset;
-      smoothScrollTo(Math.max(0, y), 3000);
+      smoothScrollTo(Math.max(0, y), 4000);
     }
   };
 
   const handleLogoClick = () => {
     playClick();
     if (location.pathname === "/") {
-      smoothScrollTo(0, 2500);
+      smoothScrollTo(0, 3500);
     } else {
       playWhoosh();
       navigateWithTransition("/");
@@ -466,10 +467,20 @@ const SiteHeader = () => {
             }}
             className="fixed inset-0 z-40 overflow-hidden touch-pan-y"
           >
-            {/* Animated background */}
+            {/* Animated background with subtle parallax drift */}
             {/* Keep menu design, but let the blurred/scaled page show through subtly */}
-            <div className="absolute inset-0 bg-foreground/85">
-              {/* Floating orbs */}
+            <motion.div
+              className="absolute inset-0 bg-foreground/85"
+              initial={{ y: 0, scale: 1 }}
+              animate={{ y: [0, 10, 0], scale: [1, 1.015, 1] }}
+              transition={{
+                duration: 12,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              style={{ willChange: "transform" }}
+            >
+              {/* Floating orbs with slower drift */}
               {[...Array(5)].map((_, i) => (
                 <motion.div
                   key={i}
@@ -482,23 +493,23 @@ const SiteHeader = () => {
                   }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ 
-                    scale: [1, 1.2, 1],
-                    opacity: [0.3, 0.5, 0.3],
-                    x: [0, Math.random() * 50 - 25, 0],
-                    y: [0, Math.random() * 50 - 25, 0],
+                    scale: [1, 1.15, 1],
+                    opacity: [0.25, 0.45, 0.25],
+                    x: [0, Math.random() * 40 - 20, 0],
+                    y: [0, Math.random() * 40 - 20, 0],
                   }}
                   transition={{
-                    duration: 8 + Math.random() * 4,
+                    duration: 14 + Math.random() * 6,
                     repeat: Infinity,
                     ease: "easeInOut",
-                    delay: i * 0.2,
+                    delay: i * 0.25,
                   }}
                 />
               ))}
               
               {/* Gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-b from-foreground/80 via-foreground/90 to-foreground" />
-            </div>
+            </motion.div>
 
             {/* Content */}
             <div className="relative z-10 h-full flex flex-col">
@@ -553,8 +564,8 @@ const SiteHeader = () => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 50 }}
                     transition={{
-                      delay: 0.2 + index * 0.09,
-                      duration: 0.65,
+                      delay: 0.35 + index * 0.14,
+                      duration: 0.85,
                       ease: [0.22, 0.03, 0.26, 1],
                     }}
                     onClick={() => handleNav(link.href)}
@@ -592,7 +603,7 @@ const SiteHeader = () => {
               <motion.div 
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.9, duration: 0.8, ease: [0.22, 0.03, 0.26, 1] }}
                 className="p-8 sm:p-12"
               >
                 <motion.button 
