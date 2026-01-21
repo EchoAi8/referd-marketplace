@@ -394,10 +394,11 @@ const SiteHeader = () => {
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            // Slower, smoother slide-in/out
+            transition={{ duration: 0.9, ease: [0.22, 0.03, 0.26, 1] }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={{ left: 0.1, right: 0.5 }}
+            dragElastic={{ left: 0.08, right: 0.25 }}
             onDragEnd={(_, info: PanInfo) => {
               // Swipe right to close
               if (info.velocity.x > 300 || info.offset.x > 100) {
@@ -492,10 +493,10 @@ const SiteHeader = () => {
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 50 }}
-                    transition={{ 
-                      delay: 0.15 + index * 0.08,
-                      duration: 0.4,
-                      ease: [0.16, 1, 0.3, 1]
+                    transition={{
+                      delay: 0.2 + index * 0.09,
+                      duration: 0.65,
+                      ease: [0.22, 0.03, 0.26, 1],
                     }}
                     onClick={() => handleNav(link.href)}
                     className={`group text-left py-3 sm:py-4 relative overflow-hidden ${
@@ -513,7 +514,7 @@ const SiteHeader = () => {
                     <motion.div
                       className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-sage rounded-full"
                       whileHover={{ height: "60%" }}
-                      transition={{ duration: 0.2 }}
+                      transition={{ duration: 0.35, ease: [0.22, 0.03, 0.26, 1] }}
                     />
                     
                     {/* Haptic pulse on active */}
