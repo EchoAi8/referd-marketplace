@@ -159,17 +159,58 @@ const SiteHeader = () => {
     }
   };
 
+  const prefersReducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+  const smoothScrollTo = (targetY: number, durationMs = 1400) => {
+    if (typeof window === "undefined") return;
+    if (prefersReducedMotion) {
+      window.scrollTo({ top: targetY, behavior: "auto" });
+      return;
+    }
+
+    const startY = window.scrollY;
+    const delta = targetY - startY;
+    const start = performance.now();
+
+    // Premium ease: smooth acceleration/deceleration
+    const easeInOutCubic = (t: number) =>
+      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    const prev = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = "auto";
+
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const t = Math.min(1, elapsed / durationMs);
+      const eased = easeInOutCubic(t);
+      window.scrollTo(0, startY + delta * eased);
+
+      if (t < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        document.documentElement.style.scrollBehavior = prev;
+      }
+    };
+
+    requestAnimationFrame(tick);
+  };
+
   const scrollToAnchor = (anchor: string) => {
     const el = document.querySelector(anchor);
     if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
+      const headerOffset = 96; // keep section titles clear of the floating header
+      const y =
+        el.getBoundingClientRect().top + window.scrollY - headerOffset;
+      smoothScrollTo(Math.max(0, y), 1500);
     }
   };
 
   const handleLogoClick = () => {
     playClick();
     if (location.pathname === "/") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      smoothScrollTo(0, 1300);
     } else {
       playWhoosh();
       navigateWithTransition("/");
