@@ -181,6 +181,7 @@ const TypewriterIntro = ({ onComplete }: TypewriterIntroProps) => {
   const [isVisible, setIsVisible] = useState(true);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [typewriterComplete, setTypewriterComplete] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   const { playClick, playHover, playWhoosh, playSuccess, playToggle, enabled: soundEnabled, setEnabled } = useSoundEffects();
 
@@ -261,6 +262,12 @@ const TypewriterIntro = ({ onComplete }: TypewriterIntroProps) => {
     handleComplete();
   }, [handleComplete, playClick]);
 
+  // Handle initial click to enable audio context
+  const handleStart = useCallback(() => {
+    setHasInteracted(true);
+    playClick(); // Trigger audio context
+  }, [playClick, setHasInteracted]);
+
   // Reduced motion fallback
   if (prefersReducedMotion) {
     return (
@@ -288,6 +295,34 @@ const TypewriterIntro = ({ onComplete }: TypewriterIntroProps) => {
 
   const currentSeq = sequences[currentSequence];
   const hasTypewriter = currentSeq?.words.some((w) => w.animation === "typewriter");
+
+  // Start screen for audio permission
+  if (!hasInteracted) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="fixed inset-0 z-[10000] bg-background flex flex-col items-center justify-center cursor-pointer"
+        onClick={handleStart}
+      >
+        <motion.div
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="text-center"
+        >
+          <div className="font-heading text-4xl md:text-6xl text-foreground mb-4">Referd</div>
+          <div className="text-muted-foreground text-lg">Click anywhere to begin</div>
+          <motion.div
+            className="mt-8 w-16 h-16 mx-auto rounded-full border-2 border-foreground/20 flex items-center justify-center"
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <div className="w-0 h-0 border-l-[12px] border-l-foreground border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1" />
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    );
+  }
 
   return (
     <AnimatePresence>
