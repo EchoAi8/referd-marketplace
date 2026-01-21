@@ -27,10 +27,14 @@ const SiteHeader = () => {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isNavExpanded, setIsNavExpanded] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
+      const scrolled = window.scrollY > 100;
+      setIsScrolled(scrolled);
+      // Auto-expand nav after scrolling past hero
+      setIsNavExpanded(scrolled);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -103,75 +107,115 @@ const SiteHeader = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
-          isScrolled
-            ? "bg-background/70 backdrop-blur-xl shadow-lg shadow-foreground/5 py-3 border-b border-foreground/5"
-            : "bg-transparent py-6"
-        }`}
+        className="fixed top-4 left-4 right-4 z-50"
       >
-        <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
+        <motion.div
+          layout
+          className={`mx-auto transition-all duration-500 ease-out ${
+            isScrolled
+              ? "bg-background/80 backdrop-blur-xl shadow-lg shadow-foreground/5 border border-foreground/5 rounded-full"
+              : "bg-transparent"
+          }`}
+          style={{
+            maxWidth: isNavExpanded ? "1200px" : "fit-content",
+          }}
+        >
+          <div className={`flex items-center justify-between ${isScrolled ? "px-4 py-2" : "px-4 py-3"}`}>
+            {/* Logo - Always visible, prominent */}
             <MagneticButton
               onClick={handleLogoClick}
-              className="text-xl font-heading font-bold text-foreground tracking-tight bg-transparent border-none"
+              className="text-2xl md:text-3xl font-heading font-bold tracking-tight bg-transparent border-none"
               strength={0.2}
             >
-              Referd
+              <span className={`transition-colors duration-300 ${isScrolled ? "text-foreground" : "text-background"}`}>
+                Referd
+              </span>
+              <span className="text-sage text-lg align-super">®</span>
             </MagneticButton>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-10">
-              {navLinks.map((link) => (
-                <MagneticButton
-                  key={link.label}
-                  onClick={() => handleNav(link.href)}
-                  className={`relative text-sm transition-colors duration-200 group bg-transparent border-none ${
-                    location.pathname === link.href
-                      ? "text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                  strength={0.4}
+            {/* Desktop Navigation - Expands on scroll */}
+            <AnimatePresence>
+              {isNavExpanded && (
+                <motion.nav
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  className="hidden md:flex items-center gap-6 overflow-hidden"
                 >
-                  {link.label}
-                  <span
-                    className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${
-                      location.pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
-                    }`}
-                  />
-                </MagneticButton>
-              ))}
-            </nav>
+                  {navLinks.map((link, index) => (
+                    <motion.div
+                      key={link.label}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <MagneticButton
+                        onClick={() => handleNav(link.href)}
+                        className={`relative text-sm font-medium transition-colors duration-200 group bg-transparent border-none whitespace-nowrap ${
+                          location.pathname === link.href
+                            ? "text-sage"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
+                        strength={0.4}
+                      >
+                        {link.label}
+                        <span
+                          className={`absolute -bottom-1 left-0 h-px bg-sage transition-all duration-300 ${
+                            location.pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
+                          }`}
+                        />
+                      </MagneticButton>
+                    </motion.div>
+                  ))}
+                </motion.nav>
+              )}
+            </AnimatePresence>
 
             {/* Right Side Actions */}
-            <div className="hidden md:flex items-center gap-3">
-              <SoundToggle />
-              <ThemeToggle />
-              <MagneticButton
-                className="px-5 py-2.5 bg-foreground text-background rounded-full text-sm font-medium hover:bg-foreground/90 transition-colors"
-                strength={0.3}
-              >
-                Get Started
-              </MagneticButton>
-            </div>
+            <AnimatePresence>
+              {isNavExpanded && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="hidden md:flex items-center gap-2"
+                >
+                  <SoundToggle />
+                  <ThemeToggle />
+                  <MagneticButton
+                    onClick={() => handleNav("/opportunities")}
+                    className="ml-2 px-5 py-2.5 bg-sage text-foreground rounded-full text-sm font-semibold hover:bg-sage/90 transition-colors"
+                    strength={0.3}
+                  >
+                    Get Started
+                  </MagneticButton>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Mobile Menu Toggle */}
             <div className="md:hidden flex items-center gap-2">
-              <SoundToggle />
-              <ThemeToggle />
+              {isNavExpanded && (
+                <>
+                  <SoundToggle />
+                  <ThemeToggle />
+                </>
+              )}
               <button
                 onClick={() => {
                   playClick();
                   setIsMobileMenuOpen(!isMobileMenuOpen);
                 }}
-                className="p-2 text-foreground"
+                className={`p-2 transition-colors ${isScrolled ? "text-foreground" : "text-background"}`}
                 aria-label="Toggle menu"
               >
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
       </motion.header>
 
       {/* Mobile Menu */}
@@ -226,7 +270,12 @@ const SiteHeader = () => {
 
               {/* CTA */}
               <div className="p-8">
-                <button className="w-full btn-primary text-lg">Get Started</button>
+                <button 
+                  onClick={() => handleNav("/opportunities")}
+                  className="w-full btn-primary text-lg"
+                >
+                  Get Started
+                </button>
               </div>
             </motion.div>
           </>
