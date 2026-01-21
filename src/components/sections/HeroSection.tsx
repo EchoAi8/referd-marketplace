@@ -3,9 +3,11 @@ import { useRef } from "react";
 import { useSmoothScroll } from "@/hooks/useSmoothScroll";
 import MagneticButton from "@/components/animations/MagneticButton";
 import InteractiveNetworkCanvas from "@/components/animations/InteractiveNetworkCanvas";
+import { useGridNavigation } from "@/hooks/use-grid-navigation";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { navigateWithTransition } = useGridNavigation();
 
   const { smoothProgress } = useSmoothScroll({
     target: containerRef,
@@ -57,7 +59,7 @@ const HeroSection = () => {
             initial={{ y: 120 }}
             animate={{ y: 0 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[15vw] md:text-[12vw] font-heading font-bold text-background leading-none tracking-tight"
+            className="text-[18vw] md:text-[14vw] font-heading font-bold text-background leading-none tracking-tight"
           >
             {"Referd".split("").map((char, i) => (
               <motion.span
@@ -88,81 +90,133 @@ const HeroSection = () => {
         {/* Bottom Content with parallax */}
         <motion.div 
           style={{ y: contentY }}
-          className="flex flex-col md:flex-row md:items-end md:justify-between gap-8"
+          className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8"
         >
           {/* Left - Tagline */}
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-xl"
+            className="max-w-2xl"
           >
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="text-2xl md:text-3xl text-background/90 font-heading font-medium leading-relaxed"
+              className="text-3xl md:text-4xl lg:text-5xl text-background/95 font-heading font-bold leading-tight"
             >
-              Great hires begin here.
+              The People Powered Marketplace
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-4 text-background/60 text-lg"
+              className="mt-4 text-xl md:text-2xl text-sage font-heading font-medium"
             >
-              Turn your network into income. Get paid for every successful referral.
+              Gather your Herd — Get paid with Referd.
             </motion.p>
-
-            <motion.div
+            <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col sm:flex-row gap-4 mt-8 pointer-events-auto"
+              className="mt-4 text-background/60 text-base md:text-lg max-w-xl"
             >
-              <MagneticButton className="btn-primary" strength={0.4}>
-                Start Earning
+              Find out your market value. Turn your network into income. AI and Machine learning intelligence.
+            </motion.p>
+
+            {/* 3 Big CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col sm:flex-row flex-wrap gap-4 mt-8 pointer-events-auto"
+            >
+              <MagneticButton 
+                className="btn-primary text-base md:text-lg px-6 py-4" 
+                strength={0.4}
+                onClick={() => navigateWithTransition("/salary-intelligence")}
+              >
+                Find out how much you're worth
               </MagneticButton>
               <MagneticButton
-                className="px-8 py-4 border border-background/30 text-background rounded-full font-semibold hover:bg-white/10 transition-colors"
+                className="px-6 py-4 bg-mustard text-foreground rounded-full font-semibold hover:bg-mustard/90 transition-colors text-base md:text-lg"
                 strength={0.4}
+                onClick={() => navigateWithTransition("/opportunities")}
               >
-                See How It Works
+                Refer & Earn
+              </MagneticButton>
+              <MagneticButton
+                className="px-6 py-4 border-2 border-background/40 text-background rounded-full font-semibold hover:bg-background/10 transition-colors text-base md:text-lg"
+                strength={0.4}
+                onClick={() => navigateWithTransition("/how-it-works")}
+              >
+                How the marketplace works
               </MagneticButton>
             </motion.div>
           </motion.div>
 
-          {/* Right - Stats Card with parallax */}
+          {/* Right - Credit Card Visual with parallax */}
           <motion.div
             style={{ y: cardY, rotate: cardRotate, opacity: cardOpacity }}
             initial={{ opacity: 0, y: 100, rotate: 5 }}
             animate={{ opacity: 1, y: 0, rotate: 3 }}
             transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            whileHover={{ scale: 1.03, rotate: 0 }}
-            className="hidden lg:block w-72 bg-background/95 backdrop-blur-sm rounded-2xl overflow-hidden shadow-2xl cursor-pointer border border-foreground/5 pointer-events-auto"
+            whileHover={{ scale: 1.05, rotate: 0 }}
+            className="hidden lg:block w-80 pointer-events-auto cursor-pointer"
           >
-            <div className="p-6">
-              <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground mb-4">
-                Network Stats
-              </p>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Connections</span>
-                  <span className="font-heading font-bold text-sage">2,847</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Referrals</span>
-                  <span className="font-heading font-bold text-mustard">156</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Earnings</span>
-                  <span className="font-heading font-bold text-rose">£15,420</span>
-                </div>
-                <div className="h-px bg-foreground/10 my-2" />
-                <p className="text-xs text-muted-foreground">
-                  Your network is growing. Keep referring!
-                </p>
+            {/* Credit Card Design */}
+            <div className="relative w-full aspect-[1.586/1] rounded-2xl overflow-hidden shadow-2xl">
+              {/* Card Background with gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-sage via-sage/90 to-sage-dark" />
+              
+              {/* Card Pattern Overlay */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-4 left-4 w-16 h-16 rounded-full border-2 border-foreground/20" />
+                <div className="absolute top-8 left-8 w-12 h-12 rounded-full border-2 border-foreground/20" />
+                <div className="absolute bottom-8 right-8 w-24 h-24 rounded-full border border-foreground/10" />
               </div>
+              
+              {/* Card Content */}
+              <div className="relative h-full p-6 flex flex-col justify-between">
+                {/* Top - Logo & Chip */}
+                <div className="flex justify-between items-start">
+                  <div className="text-foreground font-heading font-bold text-xl tracking-tight">
+                    Referd<span className="text-foreground/60 text-sm align-super">®</span>
+                  </div>
+                  {/* Card Chip */}
+                  <div className="w-10 h-8 rounded-md bg-gradient-to-br from-mustard/80 to-mustard/50 border border-foreground/10" />
+                </div>
+                
+                {/* Middle - Balance Label */}
+                <div>
+                  <p className="text-xs uppercase tracking-[0.15em] text-foreground/60 mb-1">
+                    Referral Balance
+                  </p>
+                  <p className="text-3xl font-heading font-bold text-foreground tracking-tight">
+                    £24,000
+                  </p>
+                </div>
+                
+                {/* Bottom - Card Details */}
+                <div className="flex justify-between items-end">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-foreground/50 mb-1">Member Since</p>
+                    <p className="text-sm font-medium text-foreground/80">2024</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="w-8 h-8 rounded-full bg-rose/80" />
+                    <div className="w-8 h-8 rounded-full bg-mustard/80 -ml-4" />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Shine Effect */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-background/20 to-transparent"
+                initial={{ x: "-100%" }}
+                animate={{ x: "200%" }}
+                transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
+              />
             </div>
           </motion.div>
         </motion.div>
