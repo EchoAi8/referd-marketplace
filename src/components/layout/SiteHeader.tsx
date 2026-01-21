@@ -215,7 +215,7 @@ const SiteHeader = () => {
                   opacity: isNavExpanded ? 1 : 0,
                   marginLeft: isNavExpanded ? 12 : 0
                 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
                 className="hidden lg:flex items-center gap-3 xl:gap-4 overflow-hidden"
               >
                 {navLinks.map((link) => (
@@ -263,13 +263,16 @@ const SiteHeader = () => {
               <ThemeToggle />
             </div>
             
-            {/* Mobile/Tablet Menu Toggle - R in sage circle */}
+            {/* R Button - Visible on all screens, opens menu on mobile/tablet */}
             <motion.button
               onClick={() => {
                 playClick();
-                setIsMobileMenuOpen(!isMobileMenuOpen);
+                // Only toggle menu on mobile/tablet
+                if (window.innerWidth < 1024) {
+                  setIsMobileMenuOpen(!isMobileMenuOpen);
+                }
               }}
-              className="lg:hidden relative w-10 h-10 sm:w-11 sm:h-11 rounded-full transition-all duration-300 flex items-center justify-center bg-sage border-2 border-sage"
+              className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full transition-all duration-300 flex items-center justify-center bg-sage border-2 border-sage shadow-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               aria-label="Toggle menu"
@@ -293,6 +296,7 @@ const SiteHeader = () => {
                     animate={{ rotate: 0, opacity: 1 }}
                     exit={{ rotate: 90, opacity: 0 }}
                     transition={{ duration: 0.2 }}
+                    className="lg:hidden"
                   >
                     <X className="w-5 h-5 text-foreground" />
                   </motion.div>
@@ -314,23 +318,43 @@ const SiteHeader = () => {
         </div>
       </motion.header>
 
-      {/* Swipe Hint Indicator - Mobile only */}
+      {/* Swipe Hint Indicator - Mobile only with ripple effect */}
       <AnimatePresence>
         {showSwipeHint && !isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
             className="fixed right-0 top-1/2 -translate-y-1/2 z-40 lg:hidden pointer-events-none"
           >
-            <div className="flex items-center gap-2 bg-sage/90 backdrop-blur-sm rounded-l-full pl-3 pr-1 py-2 shadow-lg">
+            {/* Ripple effects radiating from hint */}
+            <motion.div
+              className="absolute -left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-sage/40"
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: [0.5, 2, 2.5], opacity: [0, 0.6, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+            />
+            <motion.div
+              className="absolute -left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-sage/30"
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: [0.5, 2, 2.5], opacity: [0, 0.4, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
+            />
+            <motion.div
+              className="absolute -left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-sage/20"
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: [0.5, 2, 2.5], opacity: [0, 0.3, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 1 }}
+            />
+            
+            <div className="relative flex items-center gap-2 bg-sage/90 backdrop-blur-sm rounded-l-full pl-3 pr-1 py-2 shadow-lg">
               <span className="text-foreground text-xs font-medium whitespace-nowrap">
                 Swipe to open menu
               </span>
               <motion.div
                 animate={{ x: [-4, 4, -4] }}
-                transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: [0.25, 0.1, 0.25, 1] }}
                 className="w-6 h-6 rounded-full bg-foreground/20 flex items-center justify-center"
               >
                 <span className="text-foreground text-sm">←</span>
