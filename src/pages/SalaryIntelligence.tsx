@@ -101,6 +101,12 @@ const SalaryIntelligence = () => {
       <PageTransition>
         <div className="min-h-screen bg-background">
           <SiteHeader />
+
+          {/* Dim vignette layer for immersive menu effect */}
+          <div className="menu-vignette" aria-hidden="true" />
+
+          {/* Shell for blur/scale effect when menu opens */}
+          <div className="site-shell">
           <main>
             {/* Hero Section */}
             <section className="pt-32 pb-16 px-6 bg-gradient-to-b from-foreground to-foreground/95 relative overflow-hidden">
@@ -542,6 +548,7 @@ const SalaryIntelligence = () => {
             )}
           </main>
           <SiteFooter />
+          </div>
         </div>
       </PageTransition>
     </>

@@ -35,8 +35,8 @@ const HeroSection = () => {
         style={{ opacity: heroOpacity, scale: heroScale, y: canvasY }} 
         className="absolute inset-0 pointer-events-auto"
       >
-        {/* Subtle, faded profile-grid depth layer */}
-        <HeroProfileGridBackdrop className="opacity-60" />
+        {/* Animated profile-grid depth layer – more visible with slow horizontal scroll */}
+        <HeroProfileGridBackdrop className="opacity-80" />
 
         <motion.div
           initial={{ opacity: 0 }}
