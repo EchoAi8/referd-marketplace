@@ -439,12 +439,11 @@ const SiteHeader = () => {
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
-            // iOS-style spring physics for native feel
+            // Slower, premium slide-in (less aggressive than spring)
             transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 30,
-              mass: 0.8,
+              type: "tween",
+              duration: 0.9,
+              ease: [0.22, 0.03, 0.26, 1],
             }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
@@ -468,7 +467,8 @@ const SiteHeader = () => {
             className="fixed inset-0 z-40 overflow-hidden touch-pan-y"
           >
             {/* Animated background */}
-            <div className="absolute inset-0 bg-foreground">
+            {/* Keep menu design, but let the blurred/scaled page show through subtly */}
+            <div className="absolute inset-0 bg-foreground/85">
               {/* Floating orbs */}
               {[...Array(5)].map((_, i) => (
                 <motion.div
@@ -497,7 +497,7 @@ const SiteHeader = () => {
               ))}
               
               {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-foreground via-foreground/95 to-foreground" />
+              <div className="absolute inset-0 bg-gradient-to-b from-foreground/80 via-foreground/90 to-foreground" />
             </div>
 
             {/* Content */}

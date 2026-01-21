@@ -4,6 +4,7 @@ import { useSmoothScroll } from "@/hooks/useSmoothScroll";
 import MagneticButton from "@/components/animations/MagneticButton";
 import InteractiveNetworkCanvas from "@/components/animations/InteractiveNetworkCanvas";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
+import HeroProfileGridBackdrop from "@/components/sections/hero/HeroProfileGridBackdrop";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -34,6 +35,9 @@ const HeroSection = () => {
         style={{ opacity: heroOpacity, scale: heroScale, y: canvasY }} 
         className="absolute inset-0 pointer-events-auto"
       >
+        {/* Subtle, faded profile-grid depth layer */}
+        <HeroProfileGridBackdrop className="opacity-60" />
+
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
