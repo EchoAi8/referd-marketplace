@@ -11,12 +11,19 @@ const About = () => {
       <PageTransition>
         <div className="min-h-screen bg-background">
           <SiteHeader />
-          <main>
-            <section className="pt-28">
-              <AboutSection />
-            </section>
-          </main>
-          <SiteFooter />
+
+          {/* Dim vignette layer for immersive menu effect */}
+          <div className="menu-vignette" aria-hidden="true" />
+
+          {/* Shell for blur/scale effect when menu opens */}
+          <div className="site-shell">
+            <main>
+              <section className="pt-28">
+                <AboutSection />
+              </section>
+            </main>
+            <SiteFooter />
+          </div>
         </div>
       </PageTransition>
     </>
