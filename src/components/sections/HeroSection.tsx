@@ -124,29 +124,29 @@ const HeroSection = () => {
               Find out your market value. Turn your network into income. AI and Machine learning intelligence.
             </motion.p>
 
-            {/* 3 Big CTA Buttons */}
+            {/* 3 Big CTA Buttons with Glow */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col sm:flex-row flex-wrap gap-4 mt-8 pointer-events-auto"
+              className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8 pointer-events-auto"
             >
               <MagneticButton 
-                className="btn-primary text-base md:text-lg px-6 py-4" 
+                className="btn-primary text-sm sm:text-base md:text-lg px-4 sm:px-6 py-3 sm:py-4 shadow-[0_0_30px_rgba(139,164,133,0.5)] hover:shadow-[0_0_40px_rgba(139,164,133,0.7)] transition-shadow" 
                 strength={0.4}
                 onClick={() => navigateWithTransition("/salary-intelligence")}
               >
                 Find out how much you're worth
               </MagneticButton>
               <MagneticButton
-                className="px-6 py-4 bg-mustard text-foreground rounded-full font-semibold hover:bg-mustard/90 transition-colors text-base md:text-lg"
+                className="px-4 sm:px-6 py-3 sm:py-4 bg-mustard text-foreground rounded-full font-semibold hover:bg-mustard/90 transition-all text-sm sm:text-base md:text-lg shadow-[0_0_30px_rgba(226,195,104,0.5)] hover:shadow-[0_0_40px_rgba(226,195,104,0.7)]"
                 strength={0.4}
                 onClick={() => navigateWithTransition("/opportunities")}
               >
                 Refer & Earn
               </MagneticButton>
               <MagneticButton
-                className="px-6 py-4 border-2 border-background/40 text-background rounded-full font-semibold hover:bg-background/10 transition-colors text-base md:text-lg"
+                className="px-4 sm:px-6 py-3 sm:py-4 border-2 border-background/40 text-background rounded-full font-semibold hover:bg-background/10 transition-all text-sm sm:text-base md:text-lg shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.25)]"
                 strength={0.4}
                 onClick={() => navigateWithTransition("/how-it-works")}
               >
@@ -155,44 +155,44 @@ const HeroSection = () => {
             </motion.div>
           </motion.div>
 
-          {/* Right - Credit Card Visual with parallax */}
+          {/* Credit Card Visual - Responsive for all screen sizes */}
           <motion.div
             style={{ y: cardY, rotate: cardRotate, opacity: cardOpacity }}
             initial={{ opacity: 0, y: 100, rotate: 5 }}
             animate={{ opacity: 1, y: 0, rotate: 3 }}
             transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ scale: 1.05, rotate: 0 }}
-            className="hidden lg:block w-80 pointer-events-auto cursor-pointer"
+            className="w-full sm:w-72 md:w-80 lg:w-80 mt-8 lg:mt-0 pointer-events-auto cursor-pointer mx-auto lg:mx-0"
           >
             {/* Credit Card Design */}
-            <div className="relative w-full aspect-[1.586/1] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative w-full aspect-[1.586/1] rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl">
               {/* Card Background with gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-sage via-sage/90 to-sage-dark" />
+              <div className="absolute inset-0 bg-gradient-to-br from-sage via-sage/90 to-forest" />
               
               {/* Card Pattern Overlay */}
               <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-4 left-4 w-16 h-16 rounded-full border-2 border-foreground/20" />
-                <div className="absolute top-8 left-8 w-12 h-12 rounded-full border-2 border-foreground/20" />
-                <div className="absolute bottom-8 right-8 w-24 h-24 rounded-full border border-foreground/10" />
+                <div className="absolute top-2 sm:top-4 left-2 sm:left-4 w-10 sm:w-16 h-10 sm:h-16 rounded-full border-2 border-foreground/20" />
+                <div className="absolute top-4 sm:top-8 left-4 sm:left-8 w-8 sm:w-12 h-8 sm:h-12 rounded-full border-2 border-foreground/20" />
+                <div className="absolute bottom-4 sm:bottom-8 right-4 sm:right-8 w-16 sm:w-24 h-16 sm:h-24 rounded-full border border-foreground/10" />
               </div>
               
               {/* Card Content */}
-              <div className="relative h-full p-6 flex flex-col justify-between">
+              <div className="relative h-full p-4 sm:p-6 flex flex-col justify-between">
                 {/* Top - Logo & Chip */}
                 <div className="flex justify-between items-start">
-                  <div className="text-foreground font-heading font-bold text-xl tracking-tight">
-                    Referd<span className="text-foreground/60 text-sm align-super">®</span>
+                  <div className="text-foreground font-heading font-bold text-base sm:text-xl tracking-tight">
+                    Referd<span className="text-foreground/60 text-xs sm:text-sm align-super">®</span>
                   </div>
                   {/* Card Chip */}
-                  <div className="w-10 h-8 rounded-md bg-gradient-to-br from-mustard/80 to-mustard/50 border border-foreground/10" />
+                  <div className="w-8 sm:w-10 h-6 sm:h-8 rounded-md bg-gradient-to-br from-mustard/80 to-mustard/50 border border-foreground/10" />
                 </div>
                 
                 {/* Middle - Balance Label */}
                 <div>
-                  <p className="text-xs uppercase tracking-[0.15em] text-foreground/60 mb-1">
+                  <p className="text-[10px] sm:text-xs uppercase tracking-[0.15em] text-foreground/60 mb-1">
                     Referral Balance
                   </p>
-                  <p className="text-3xl font-heading font-bold text-foreground tracking-tight">
+                  <p className="text-2xl sm:text-3xl font-heading font-bold text-foreground tracking-tight">
                     £24,000
                   </p>
                 </div>
@@ -200,12 +200,12 @@ const HeroSection = () => {
                 {/* Bottom - Card Details */}
                 <div className="flex justify-between items-end">
                   <div>
-                    <p className="text-[10px] uppercase tracking-wider text-foreground/50 mb-1">Member Since</p>
-                    <p className="text-sm font-medium text-foreground/80">2024</p>
+                    <p className="text-[8px] sm:text-[10px] uppercase tracking-wider text-foreground/50 mb-1">Member Since</p>
+                    <p className="text-xs sm:text-sm font-medium text-foreground/80">2024</p>
                   </div>
-                  <div className="flex gap-2">
-                    <div className="w-8 h-8 rounded-full bg-rose/80" />
-                    <div className="w-8 h-8 rounded-full bg-mustard/80 -ml-4" />
+                  <div className="flex gap-1 sm:gap-2">
+                    <div className="w-6 sm:w-8 h-6 sm:h-8 rounded-full bg-rose/80" />
+                    <div className="w-6 sm:w-8 h-6 sm:h-8 rounded-full bg-mustard/80 -ml-3 sm:-ml-4" />
                   </div>
                 </div>
               </div>
@@ -244,21 +244,6 @@ const HeroSection = () => {
         </motion.div>
       </motion.div>
 
-      {/* Interaction hint */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.5, duration: 1 }}
-        className="absolute bottom-8 right-8 hidden md:block"
-      >
-        <motion.p
-          animate={{ opacity: [0.4, 0.7, 0.4] }}
-          transition={{ duration: 3, repeat: Infinity }}
-          className="text-xs text-background/40 tracking-wide"
-        >
-          Click anywhere for ripple effect
-        </motion.p>
-      </motion.div>
     </section>
   );
 };

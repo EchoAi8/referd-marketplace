@@ -127,7 +127,7 @@ const SiteHeader = () => {
               className="text-2xl md:text-3xl font-heading font-bold tracking-tight bg-transparent border-none"
               strength={0.2}
             >
-              <span className={`transition-colors duration-300 ${isScrolled ? "text-foreground" : "text-background"}`}>
+              <span className="text-foreground transition-colors duration-300">
                 Referd
               </span>
               <span className="text-sage text-lg align-super">®</span>
@@ -208,7 +208,7 @@ const SiteHeader = () => {
                   playClick();
                   setIsMobileMenuOpen(!isMobileMenuOpen);
                 }}
-                className={`p-2 transition-colors ${isScrolled ? "text-foreground" : "text-background"}`}
+                className="p-2 transition-colors text-foreground"
                 aria-label="Toggle menu"
               >
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
