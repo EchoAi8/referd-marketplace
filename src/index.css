@@ -184,6 +184,26 @@ html.theme-transitioning *::after {
     opacity: 0.92;
   }
 
+  /* Dim + vignette layer behind menu */
+  .menu-vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 0%,
+      hsl(var(--foreground) / 0.15) 60%,
+      hsl(var(--foreground) / 0.4) 100%
+    );
+    transition: opacity 600ms cubic-bezier(0.22, 0.03, 0.26, 1);
+  }
+
+  body[data-menu-open="true"] .menu-vignette {
+    opacity: 1;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .site-shell {
       transition: none;
@@ -193,12 +213,28 @@ html.theme-transitioning *::after {
       filter: none;
       opacity: 1;
     }
+    .menu-vignette {
+      transition: none;
+    }
   }
 
-  /* Scroll snap for major sections */
-  section {
+  /* Scroll snap - softer snapping for premium feel */
+  html {
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
+  }
+
+  /* Only primary sections snap; others flow naturally */
+  section[id="about"],
+  section[id="projects"],
+  section[id="contact"] {
     scroll-snap-align: start;
     scroll-snap-stop: normal;
+  }
+
+  /* Secondary sections - no snapping for fluid scrolling */
+  section:not([id="about"]):not([id="projects"]):not([id="contact"]) {
+    scroll-snap-align: none;
   }
 
   /* Reset cursor for inputs and textareas */

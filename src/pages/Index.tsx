@@ -37,6 +37,9 @@ const Index = () => {
         <div className="min-h-screen bg-background">
           <SiteHeader />
 
+          {/* Dim vignette layer for immersive menu effect */}
+          <div className="menu-vignette" aria-hidden="true" />
+
           {/* Shell is used for the immersive blur/scale effect when the menu opens */}
           <div className="site-shell">
             <main>

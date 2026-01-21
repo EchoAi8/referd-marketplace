@@ -167,7 +167,7 @@ const SiteHeader = () => {
     typeof window !== "undefined" &&
     window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
-  const smoothScrollTo = (targetY: number, durationMs = 2000) => {
+  const smoothScrollTo = (targetY: number, durationMs = 2800) => {
     if (typeof window === "undefined") return;
     if (prefersReducedMotion) {
       window.scrollTo({ top: targetY, behavior: "auto" });
@@ -178,7 +178,7 @@ const SiteHeader = () => {
     const delta = targetY - startY;
     const start = performance.now();
 
-    // Premium ease: smooth acceleration/deceleration
+    // Ultra-premium ease: very smooth acceleration/deceleration
     const easeInOutCubic = (t: number) =>
       t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
@@ -207,14 +207,14 @@ const SiteHeader = () => {
       const headerOffset = 96; // keep section titles clear of the floating header
       const y =
         el.getBoundingClientRect().top + window.scrollY - headerOffset;
-      smoothScrollTo(Math.max(0, y), 2200);
+      smoothScrollTo(Math.max(0, y), 3000);
     }
   };
 
   const handleLogoClick = () => {
     playClick();
     if (location.pathname === "/") {
-      smoothScrollTo(0, 1800);
+      smoothScrollTo(0, 2500);
     } else {
       playWhoosh();
       navigateWithTransition("/");
