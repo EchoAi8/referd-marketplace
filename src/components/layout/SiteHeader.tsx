@@ -109,85 +109,102 @@ const SiteHeader = () => {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="fixed top-4 left-4 right-4 z-50"
       >
-        <motion.div
-          layout
-          className={`mx-auto transition-all duration-500 ease-out rounded-full ${
-            isScrolled
-              ? "bg-background/90 backdrop-blur-xl shadow-lg shadow-foreground/5 border border-foreground/5"
-              : "bg-foreground/80 backdrop-blur-md border border-background/10"
-          }`}
-          style={{
-            maxWidth: isNavExpanded ? "1200px" : "fit-content",
-          }}
-        >
-          <div className={`flex items-center justify-between ${isScrolled ? "px-4 py-2" : "px-4 py-3"}`}>
-            {/* Logo - Always visible */}
-            <MagneticButton
-              onClick={handleLogoClick}
-              className="text-2xl md:text-3xl font-heading font-bold tracking-tight bg-transparent border-none"
-              strength={0.2}
-            >
-              <span className={`transition-colors duration-300 ${isScrolled ? "text-foreground" : "text-background"}`}>
-                Referd
-              </span>
-              <span className="text-sage text-lg align-super">®</span>
-            </MagneticButton>
-
-            {/* Desktop Navigation - Always visible */}
-            <nav className="hidden md:flex items-center gap-4 lg:gap-6">
-              {navLinks.map((link) => (
-                <MagneticButton
-                  key={link.label}
-                  onClick={() => handleNav(link.href)}
-                  className={`relative text-sm font-medium transition-colors duration-200 group bg-transparent border-none whitespace-nowrap ${
-                    location.pathname === link.href
-                      ? "text-sage"
-                      : isScrolled 
-                        ? "text-muted-foreground hover:text-foreground"
-                        : "text-background/70 hover:text-background"
-                  }`}
-                  strength={0.4}
-                >
-                  {link.label}
-                  <span
-                    className={`absolute -bottom-1 left-0 h-px bg-sage transition-all duration-300 ${
-                      location.pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
-                    }`}
-                  />
-                </MagneticButton>
-              ))}
-            </nav>
-
-            {/* Right Side Actions - Always visible */}
-            <div className="hidden md:flex items-center gap-2">
-              <SoundToggle />
-              <ThemeToggle />
+        <div className="flex items-center justify-between">
+          {/* Left: Logo Pill that expands to include nav */}
+          <motion.div
+            layout
+            className={`flex items-center rounded-full transition-all duration-500 ease-out ${
+              isScrolled
+                ? "bg-background/95 backdrop-blur-xl shadow-lg border border-border/50"
+                : "bg-foreground/90 backdrop-blur-md border border-background/10"
+            }`}
+          >
+            <div className={`flex items-center ${isNavExpanded ? "px-3 py-2 md:px-4" : "px-4 py-3"}`}>
+              {/* Logo */}
               <MagneticButton
-                onClick={() => handleNav("/opportunities")}
-                className="ml-2 px-5 py-2.5 bg-sage text-foreground rounded-full text-sm font-semibold hover:bg-sage/90 transition-colors"
-                strength={0.3}
+                onClick={handleLogoClick}
+                className="text-xl md:text-2xl font-heading font-bold tracking-tight bg-transparent border-none"
+                strength={0.2}
               >
-                Get Started
+                <span className={`transition-colors duration-300 ${isScrolled ? "text-foreground" : "text-background"}`}>
+                  Referd
+                </span>
+                <span className="text-sage text-sm align-super">®</span>
               </MagneticButton>
-            </div>
 
-            {/* Mobile Menu Toggle - Always visible */}
-            <div className="md:hidden flex items-center gap-2">
+              {/* Desktop Navigation - Slides out from logo */}
+              <motion.nav 
+                initial={false}
+                animate={{ 
+                  width: isNavExpanded ? "auto" : 0,
+                  opacity: isNavExpanded ? 1 : 0,
+                  marginLeft: isNavExpanded ? 16 : 0
+                }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="hidden md:flex items-center gap-4 lg:gap-5 overflow-hidden"
+              >
+                {navLinks.map((link) => (
+                  <MagneticButton
+                    key={link.label}
+                    onClick={() => handleNav(link.href)}
+                    className={`relative text-sm font-medium transition-colors duration-200 group bg-transparent border-none whitespace-nowrap ${
+                      location.pathname === link.href
+                        ? "text-sage"
+                        : isScrolled 
+                          ? "text-muted-foreground hover:text-foreground"
+                          : "text-background/70 hover:text-background"
+                    }`}
+                    strength={0.4}
+                  >
+                    {link.label}
+                    <span
+                      className={`absolute -bottom-1 left-0 h-px bg-sage transition-all duration-300 ${
+                        location.pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
+                      }`}
+                    />
+                  </MagneticButton>
+                ))}
+                
+                {/* Get Started CTA inside nav pill */}
+                <MagneticButton
+                  onClick={() => handleNav("/opportunities")}
+                  className="ml-2 px-4 py-2 bg-sage text-foreground rounded-full text-sm font-semibold hover:bg-sage/90 transition-colors"
+                  strength={0.3}
+                >
+                  Get Started
+                </MagneticButton>
+              </motion.nav>
+            </div>
+          </motion.div>
+
+          {/* Right: Toggles - Separate from nav pill */}
+          <div className="flex items-center gap-1">
+            <div className={`flex items-center gap-1 rounded-full px-2 py-1.5 ${
+              isScrolled 
+                ? "bg-background/95 backdrop-blur-xl border border-border/50" 
+                : "bg-foreground/90 backdrop-blur-md border border-background/10"
+            }`}>
               <SoundToggle />
               <ThemeToggle />
-              <button
-                onClick={() => {
-                  playClick();
-                  setIsMobileMenuOpen(!isMobileMenuOpen);
-                }}
-                className={`p-2 transition-colors ${isScrolled ? "text-foreground" : "text-background"}`}
-                aria-label="Toggle menu"
-              >
-                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
             </div>
+            
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => {
+                playClick();
+                setIsMobileMenuOpen(!isMobileMenuOpen);
+              }}
+              className={`md:hidden p-2.5 rounded-full transition-colors ${
+                isScrolled 
+                  ? "bg-background/95 text-foreground border border-border/50" 
+                  : "bg-foreground/90 text-background border border-background/10"
+              }`}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
-        </motion.div>
+        </div>
       </motion.header>
 
       {/* Mobile Menu */}
