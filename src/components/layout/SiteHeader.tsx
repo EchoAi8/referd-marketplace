@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { X } from "lucide-react";
 import MagneticButton from "@/components/animations/MagneticButton";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import SoundToggle from "@/components/ui/SoundToggle";
@@ -23,11 +23,21 @@ const navLinks: NavLink[] = [
 
 const SiteHeader = () => {
   const { navigateWithTransition } = useGridNavigation();
-  const { playClick, playWhoosh } = useSoundEffects();
+  const { playClick, playWhoosh, enabled, lastSoundTime } = useSoundEffects();
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavExpanded, setIsNavExpanded] = useState(false);
+  const [isPulsing, setIsPulsing] = useState(false);
+
+  // Haptic pulse feedback when sounds play
+  useEffect(() => {
+    if (enabled && lastSoundTime > 0) {
+      setIsPulsing(true);
+      const timer = setTimeout(() => setIsPulsing(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [lastSoundTime, enabled]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -188,120 +198,216 @@ const SiteHeader = () => {
               <ThemeToggle />
             </div>
             
-            {/* Mobile/Tablet Menu Toggle - AI-style orb dots */}
-            <button
+            {/* Mobile/Tablet Menu Toggle - R in circle */}
+            <motion.button
               onClick={() => {
                 playClick();
                 setIsMobileMenuOpen(!isMobileMenuOpen);
               }}
-              className={`lg:hidden p-2.5 sm:p-3 rounded-full transition-all duration-300 ${
+              className={`lg:hidden relative w-10 h-10 sm:w-11 sm:h-11 rounded-full transition-all duration-300 flex items-center justify-center ${
                 isScrolled 
                   ? "bg-background/95 border border-border/50" 
                   : "bg-foreground/90 border border-background/10"
               }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               aria-label="Toggle menu"
             >
-              <div className="relative w-5 h-5 flex items-center justify-center">
-                {/* AI-style morphing dots */}
+              {/* Haptic pulse ring */}
+              {isPulsing && enabled && (
                 <motion.div
-                  animate={isMobileMenuOpen ? { rotate: 45, scale: 1.1 } : { rotate: 0, scale: 1 }}
-                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute inset-0 flex items-center justify-center"
-                >
-                  <motion.span
-                    animate={isMobileMenuOpen ? { x: 0, y: 0 } : { x: -4, y: -4 }}
-                    className={`absolute w-1.5 h-1.5 rounded-full ${isScrolled ? "bg-foreground" : "bg-background"}`}
-                  />
-                  <motion.span
-                    animate={isMobileMenuOpen ? { x: 0, y: 0 } : { x: 4, y: -4 }}
-                    className={`absolute w-1.5 h-1.5 rounded-full ${isScrolled ? "bg-foreground" : "bg-background"}`}
-                  />
-                  <motion.span
-                    animate={isMobileMenuOpen ? { x: 0, y: 0 } : { x: -4, y: 4 }}
-                    className={`absolute w-1.5 h-1.5 rounded-full ${isScrolled ? "bg-foreground" : "bg-background"}`}
-                  />
-                  <motion.span
-                    animate={isMobileMenuOpen ? { x: 0, y: 0 } : { x: 4, y: 4 }}
-                    className={`absolute w-1.5 h-1.5 rounded-full ${isScrolled ? "bg-foreground" : "bg-background"}`}
-                  />
-                </motion.div>
-                {/* X indicator when open */}
-                {isMobileMenuOpen && (
+                  className="absolute inset-0 rounded-full border-2 border-sage/50"
+                  initial={{ scale: 1, opacity: 0.8 }}
+                  animate={{ scale: 1.5, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                />
+              )}
+              
+              {/* R Logo / X toggle */}
+              <AnimatePresence mode="wait">
+                {isMobileMenuOpen ? (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="absolute inset-0 flex items-center justify-center"
+                    key="close"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    <X className={`w-4 h-4 ${isScrolled ? "text-foreground" : "text-background"}`} />
+                    <X className={`w-5 h-5 ${isScrolled ? "text-foreground" : "text-background"}`} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="logo"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className={`font-heading font-bold text-lg ${isScrolled ? "text-foreground" : "text-background"}`}
+                  >
+                    R
                   </motion.div>
                 )}
-              </div>
-            </button>
+              </AnimatePresence>
+            </motion.button>
           </div>
         </div>
       </motion.header>
 
-      {/* Mobile Menu */}
+      {/* Immersive Full-Screen Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-foreground/60 backdrop-blur-sm z-40"
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-background z-50 flex flex-col"
-            >
-              {/* Close Button */}
-              <div className="flex justify-end p-6">
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 text-foreground"
-                  aria-label="Close menu"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-40 overflow-hidden"
+          >
+            {/* Animated background */}
+            <div className="absolute inset-0 bg-foreground">
+              {/* Floating orbs */}
+              {[...Array(5)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute rounded-full bg-sage/10"
+                  style={{
+                    width: Math.random() * 300 + 100,
+                    height: Math.random() * 300 + 100,
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                  }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    opacity: [0.3, 0.5, 0.3],
+                    x: [0, Math.random() * 50 - 25, 0],
+                    y: [0, Math.random() * 50 - 25, 0],
+                  }}
+                  transition={{
+                    duration: 8 + Math.random() * 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: i * 0.2,
+                  }}
+                />
+              ))}
+              
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-b from-foreground via-foreground/95 to-foreground" />
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10 h-full flex flex-col">
+              {/* Header with close and toggles */}
+              <div className="flex items-center justify-between p-4 sm:p-6">
+                {/* Logo */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="text-2xl font-heading font-bold text-background"
                 >
-                  <X className="w-6 h-6" />
-                </button>
+                  Referd<span className="text-sage text-sm align-super">®</span>
+                </motion.div>
+                
+                <div className="flex items-center gap-2">
+                  {/* Mobile toggles */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="flex items-center gap-1 bg-background/10 rounded-full px-2 py-1"
+                  >
+                    <SoundToggle />
+                    <ThemeToggle />
+                  </motion.div>
+                  
+                  {/* Close button */}
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.3 }}
+                    onClick={() => {
+                      playClick();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center text-background"
+                    whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.2)" }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <X className="w-5 h-5" />
+                  </motion.button>
+                </div>
               </div>
 
-              {/* Nav Links */}
-              <nav className="flex flex-col gap-2 px-8 flex-1">
+              {/* Nav Links - Staggered animation */}
+              <nav className="flex-1 flex flex-col justify-center px-8 sm:px-12 gap-2">
                 {navLinks.map((link, index) => (
                   <motion.button
                     key={link.label}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
+                    exit={{ opacity: 0, x: 50 }}
+                    transition={{ 
+                      delay: 0.15 + index * 0.08,
+                      duration: 0.4,
+                      ease: [0.16, 1, 0.3, 1]
+                    }}
                     onClick={() => handleNav(link.href)}
-                    className={`text-3xl font-heading font-semibold transition-colors text-left py-3 ${
+                    className={`group text-left py-3 sm:py-4 relative overflow-hidden ${
                       location.pathname === link.href
                         ? "text-sage"
-                        : "text-foreground hover:text-sage"
+                        : "text-background/80 hover:text-background"
                     }`}
                   >
-                    {link.label}
+                    {/* Link text with hover effect */}
+                    <span className="relative z-10 text-3xl sm:text-4xl md:text-5xl font-heading font-bold tracking-tight transition-transform duration-300 group-hover:translate-x-4 inline-block">
+                      {link.label}
+                    </span>
+                    
+                    {/* Hover highlight bar */}
+                    <motion.div
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-sage rounded-full"
+                      whileHover={{ height: "60%" }}
+                      transition={{ duration: 0.2 }}
+                    />
+                    
+                    {/* Haptic pulse on active */}
+                    {location.pathname === link.href && (
+                      <motion.div
+                        className="absolute -left-2 top-1/2 -translate-y-1/2 w-2 h-2 bg-sage rounded-full"
+                        animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      />
+                    )}
                   </motion.button>
                 ))}
               </nav>
 
-              {/* CTA */}
-              <div className="p-8">
-                <button 
+              {/* Bottom CTA */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="p-8 sm:p-12"
+              >
+                <motion.button 
                   onClick={() => handleNav("/opportunities")}
-                  className="w-full btn-primary text-lg"
+                  className="w-full py-4 sm:py-5 bg-sage text-foreground rounded-full text-lg sm:text-xl font-heading font-bold relative overflow-hidden group"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  Get Started
-                </button>
-              </div>
-            </motion.div>
-          </>
+                  <span className="relative z-10">Get Started</span>
+                  {/* Shine effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full"
+                    animate={{ translateX: ["100%", "-100%"] }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                  />
+                </motion.button>
+              </motion.div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </>
