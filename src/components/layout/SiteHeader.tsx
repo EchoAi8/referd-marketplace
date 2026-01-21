@@ -76,11 +76,14 @@ const SiteHeader = () => {
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
+      document.body.dataset.menuOpen = "true";
     } else {
       document.body.style.overflow = "";
+      document.body.dataset.menuOpen = "false";
     }
     return () => {
       document.body.style.overflow = "";
+      delete document.body.dataset.menuOpen;
     };
   }, [isMobileMenuOpen]);
 
@@ -141,7 +144,8 @@ const SiteHeader = () => {
       } else {
         playWhoosh();
         navigateWithTransition(targetRoute);
-        setTimeout(() => scrollToAnchor(`#${anchor}`), 900);
+         // Match the slower, premium page transition cadence
+         setTimeout(() => scrollToAnchor(`#${anchor}`), 1200);
       }
       return;
     }
@@ -163,7 +167,7 @@ const SiteHeader = () => {
     typeof window !== "undefined" &&
     window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
-  const smoothScrollTo = (targetY: number, durationMs = 1400) => {
+  const smoothScrollTo = (targetY: number, durationMs = 2000) => {
     if (typeof window === "undefined") return;
     if (prefersReducedMotion) {
       window.scrollTo({ top: targetY, behavior: "auto" });
@@ -203,14 +207,14 @@ const SiteHeader = () => {
       const headerOffset = 96; // keep section titles clear of the floating header
       const y =
         el.getBoundingClientRect().top + window.scrollY - headerOffset;
-      smoothScrollTo(Math.max(0, y), 1500);
+      smoothScrollTo(Math.max(0, y), 2200);
     }
   };
 
   const handleLogoClick = () => {
     playClick();
     if (location.pathname === "/") {
-      smoothScrollTo(0, 1300);
+      smoothScrollTo(0, 1800);
     } else {
       playWhoosh();
       navigateWithTransition("/");

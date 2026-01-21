@@ -36,34 +36,37 @@ const Index = () => {
       <PageTransition>
         <div className="min-h-screen bg-background">
           <SiteHeader />
-          
-          <main>
-            <HeroSection />
-            <section id="about">
-              <AboutSection />
-            </section>
-            <StickyHowItWorks />
-            <StatsSection />
-            <section id="projects">
-              <ProjectsSection />
-            </section>
-            <HorizontalGallery />
-            <section id="faq">
-              <FAQSection />
-            </section>
-            <NewsletterSection />
-            <section id="pricing">
-              <PricingSection />
-            </section>
-            <section id="articles">
-              <ArticlesSection />
-            </section>
-            <section id="contact">
-              <ContactSection />
-            </section>
-          </main>
 
-          <SiteFooter />
+          {/* Shell is used for the immersive blur/scale effect when the menu opens */}
+          <div className="site-shell">
+            <main>
+              <HeroSection />
+              <section id="about">
+                <AboutSection />
+              </section>
+              <StickyHowItWorks />
+              <StatsSection />
+              <section id="projects">
+                <ProjectsSection />
+              </section>
+              <HorizontalGallery />
+              <section id="faq">
+                <FAQSection />
+              </section>
+              <NewsletterSection />
+              <section id="pricing">
+                <PricingSection />
+              </section>
+              <section id="articles">
+                <ArticlesSection />
+              </section>
+              <section id="contact">
+                <ContactSection />
+              </section>
+            </main>
+
+            <SiteFooter />
+          </div>
         </div>
       </PageTransition>
     </>
