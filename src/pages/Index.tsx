@@ -18,20 +18,14 @@ import ContactSection from "@/components/sections/ContactSection";
 import { useState } from "react";
 
 const Index = () => {
-  const [introComplete, setIntroComplete] = useState(false);
-  const [showGrid, setShowGrid] = useState(false);
-
-  const handleIntroComplete = () => {
-    // Show grid IMMEDIATELY - no delay
-    setShowGrid(true);
-    // Then mark intro as complete
-    setIntroComplete(true);
-  };
+  // Intro temporarily disabled for development
+  const [introComplete] = useState(true);
+  const [showGrid] = useState(true);
 
   // Index page has custom intro logic, so it doesn't use PageLayout
   return (
     <>
-      {!introComplete && <TypewriterIntro onComplete={handleIntroComplete} />}
+      {/* TypewriterIntro temporarily disabled */}
       {showGrid && <GridOverlay key="home-grid" />}
       <CursorFollower />
       <PageTransition>
