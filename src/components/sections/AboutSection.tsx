@@ -58,46 +58,46 @@ const AboutSection = () => {
   ];
 
   return (
-    <section ref={containerRef} className="py-32 md:py-48 bg-background overflow-hidden">
+    <section ref={containerRef} className="pt-8 md:pt-12 pb-32 md:pb-48 -mt-16 md:-mt-24 bg-background overflow-hidden relative z-10">
       <div className="container mx-auto px-6">
-        {/* Word-by-Word Reveal Headline */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-24"
+        {/* About Us Label - Higher and closer to hero */}
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-6"
         >
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-8"
-          >
-            About Us
-          </motion.p>
-          
-          <h2 className="text-fluid-4xl md:text-fluid-5xl lg:text-fluid-6xl font-heading font-bold leading-[1.1] text-foreground">
-            <WordReveal text="Refer'd is for brands" />
-            <span className="block mt-2">
-              <WordReveal text="and referrers" className="text-muted-foreground/40" />
+          About Us
+        </motion.p>
+
+        {/* Epic Star Wars Style Word Reveal Paragraph */}
+        <div className="min-h-[80vh] md:min-h-[100vh] flex flex-col justify-center mb-16">
+          <h2 className="text-fluid-3xl md:text-fluid-4xl lg:text-fluid-5xl font-heading font-bold leading-[1.15] text-foreground max-w-6xl">
+            <WordReveal text="We believe the best hires don't come from job boards." />
+            <span className="block mt-4">
+              <WordReveal text="They come from people." delay={0.1} />
+            </span>
+            <span className="block mt-4">
+              <WordReveal text="Every great team was built on trust, connections, and someone willing to vouch." delay={0.2} />
+            </span>
+            <span className="block mt-4">
+              <WordReveal text="Refer'd turns your network into a recruitment powerhouse—" delay={0.3} />
+            </span>
+            <span className="block mt-4">
+              <WordReveal text="rewarding everyone who helps build extraordinary teams." delay={0.4} />
             </span>
           </h2>
-        </motion.div>
 
-        {/* Intro Text Block */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-4xl mb-20"
-        >
-          <p className="text-xl md:text-2xl text-foreground/80 leading-relaxed mb-6">
-            Refer'd is revolutionizing recruitment by turning networks into opportunities. For brands, this means faster hiring, reduced turnover, and access to top talent through trusted connections.
-          </p>
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            Using smart technology and social networks, we bring recruitment into the modern era—efficient, cost-effective, and community-driven.
-          </p>
-        </motion.div>
+          {/* Tagline after the reveal */}
+          <div className="mt-16">
+            <h3 className="text-2xl md:text-3xl lg:text-4xl font-heading font-semibold leading-tight">
+              <WordReveal text="Refer'd is for brands" delay={0.5} />
+              <span className="block mt-2 text-muted-foreground/50">
+                <WordReveal text="and referrers alike." delay={0.6} />
+              </span>
+            </h3>
+          </div>
+        </div>
 
         {/* Research-backed Stats Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">

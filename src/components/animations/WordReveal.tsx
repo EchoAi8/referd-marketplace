@@ -10,9 +10,10 @@ interface WordRevealProps {
 const WordReveal = ({ text, className = "", delay = 0 }: WordRevealProps) => {
   const containerRef = useRef<HTMLSpanElement>(null);
   
+  // Extended scroll range for slower, more cinematic reveal
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 0.9", "start 0.4"]
+    offset: ["start 0.95", "start 0.25"]
   });
 
   const words = text.split(" ");
@@ -20,14 +21,16 @@ const WordReveal = ({ text, className = "", delay = 0 }: WordRevealProps) => {
   return (
     <span ref={containerRef} className={`inline ${className}`}>
       {words.map((word, index) => {
-        const start = index / words.length;
-        const end = start + (1 / words.length);
+        // Staggered timing with delay support
+        const totalWords = words.length;
+        const start = (index / totalWords) * 0.7 + delay * 0.1;
+        const end = start + (0.7 / totalWords);
         
         return (
           <Word 
             key={index} 
             word={word} 
-            range={[start, end]} 
+            range={[Math.min(start, 0.95), Math.min(end, 1)]} 
             progress={scrollYProgress}
           />
         );
@@ -43,13 +46,21 @@ interface WordProps {
 }
 
 const Word = ({ word, range, progress }: WordProps) => {
-  const opacity = useTransform(progress, range, [0.15, 1]);
-  const y = useTransform(progress, range, [20, 0]);
+  // More dramatic opacity transition - start very dim
+  const opacity = useTransform(progress, range, [0.08, 1]);
+  // Subtle vertical movement for depth
+  const y = useTransform(progress, range, [12, 0]);
+  // Slight blur for that cinematic reveal
+  const blur = useTransform(progress, range, [2, 0]);
   
   return (
     <motion.span
-      style={{ opacity, y }}
-      className="inline-block mr-[0.25em] will-change-transform"
+      style={{ 
+        opacity, 
+        y,
+        filter: blur.get() > 0.5 ? `blur(${blur.get()}px)` : 'none'
+      }}
+      className="inline-block mr-[0.25em] will-change-transform transition-[filter] duration-100"
     >
       {word}
     </motion.span>
