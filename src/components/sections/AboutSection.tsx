@@ -73,46 +73,71 @@ const AboutSection = () => {
         {/* Epic Star Wars Style Word Reveal Paragraph */}
         <div className="min-h-[80vh] md:min-h-[100vh] flex flex-col justify-center mb-16">
           <h2 className="text-fluid-3xl md:text-fluid-4xl lg:text-fluid-5xl font-heading font-bold leading-[1.15] text-foreground max-w-6xl">
-            <WordReveal text="We believe the best hires don't come from job boards." />
+            <WordReveal text="Like Uber for transport, Airbnb for hospitality, or Spotify for the music industry —" />
             <span className="block mt-4">
-              <WordReveal text="They come from people." delay={0.1} />
+              <WordReveal text="Refer'd is here to disrupt." delay={0.1} />
             </span>
             <span className="block mt-4">
-              <WordReveal text="Every great team was built on trust, connections, and someone willing to vouch." delay={0.2} />
-            </span>
-            <span className="block mt-4">
-              <WordReveal text="Refer'd turns your network into a recruitment powerhouse—" delay={0.3} />
-            </span>
-            <span className="block mt-4">
-              <WordReveal text="rewarding everyone who helps build extraordinary teams." delay={0.4} />
+              <WordReveal text="Redefining the recruitment industry one referral at a time." delay={0.2} />
             </span>
           </h2>
 
-          {/* Tagline after the reveal */}
-          <div className="mt-16">
-            <h3 className="text-2xl md:text-3xl lg:text-4xl font-heading font-semibold leading-tight">
-              <WordReveal text="Refer'd is for brands" delay={0.5} />
-              <span className="block mt-2 text-muted-foreground/50">
-                <WordReveal text="and referrers alike." delay={0.6} />
+          {/* Subtext after the reveal */}
+          <div className="mt-16 max-w-4xl">
+            <p className="text-xl md:text-2xl lg:text-3xl font-heading leading-relaxed">
+              <WordReveal text="The once corporate-owned 'Recruitment Fee' is now redistributed fairly" delay={0.3} />
+              <span className="block mt-3">
+                <WordReveal text="to the people who deserve it most." delay={0.35} />
               </span>
-            </h3>
+            </p>
+            <p className="mt-8 text-lg md:text-xl text-muted-foreground leading-relaxed">
+              <WordReveal text="Connect your network, refer friends and family — get paid." delay={0.4} />
+              <span className="block mt-2">
+                <WordReveal text="It's that simple." delay={0.45} />
+              </span>
+              <span className="block mt-4 text-base md:text-lg">
+                <WordReveal text="Modern. Transparent. Automated. Supercharged with AI & Machine Learning —" delay={0.5} />
+              </span>
+              <span className="block mt-1 text-base md:text-lg">
+                <WordReveal text="so it gets smarter over time." delay={0.55} />
+              </span>
+            </p>
           </div>
         </div>
 
-        {/* Research-backed Stats Bento Grid */}
+        {/* Research-backed Stats Bento Grid with Dramatic Pop-in */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {researchStats.map((item, index) => {
             const IconComponent = item.icon;
+            // Alternate rotation directions for visual interest
+            const rotateDirection = index % 2 === 0 ? -8 : 8;
+            
             return (
               <motion.div
                 key={item.label}
-                initial={{ opacity: 0, y: 80, scale: 0.95 }}
-                animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-                transition={{ 
-                  duration: 1, 
-                  delay: 0.1 + (index * 0.1), 
-                  ease: [0.16, 1, 0.3, 1] 
+                initial={{ 
+                  opacity: 0, 
+                  y: 120, 
+                  scale: 0.6, 
+                  rotateX: 25,
+                  rotateY: rotateDirection,
+                  rotateZ: rotateDirection / 2
                 }}
+                animate={isInView ? { 
+                  opacity: 1, 
+                  y: 0, 
+                  scale: 1,
+                  rotateX: 0,
+                  rotateY: 0,
+                  rotateZ: 0
+                } : {}}
+                transition={{ 
+                  duration: 1.2, 
+                  delay: 0.2 + (index * 0.15), 
+                  ease: [0.16, 1, 0.3, 1],
+                  scale: { type: "spring", stiffness: 200, damping: 20 }
+                }}
+                style={{ transformPerspective: 1200 }}
               >
                 <TiltCard 
                   intensity={10} 
@@ -120,24 +145,44 @@ const AboutSection = () => {
                   className="bg-foreground text-background p-8 rounded-3xl h-full"
                 >
                   <div className="flex items-center justify-between mb-6">
-                    <div className="w-12 h-12 rounded-full bg-sage/20 flex items-center justify-center">
+                    <motion.div 
+                      className="w-12 h-12 rounded-full bg-sage/20 flex items-center justify-center"
+                      initial={{ scale: 0, rotate: -180 }}
+                      animate={isInView ? { scale: 1, rotate: 0 } : {}}
+                      transition={{ delay: 0.5 + (index * 0.15), duration: 0.6, type: "spring" }}
+                    >
                       <IconComponent className="w-6 h-6 text-sage" />
-                    </div>
-                    <span className="text-xs text-background/40 uppercase tracking-wider">
+                    </motion.div>
+                    <motion.span 
+                      className="text-xs text-background/40 uppercase tracking-wider"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={isInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ delay: 0.6 + (index * 0.15), duration: 0.5 }}
+                    >
                       {item.source}
-                    </span>
+                    </motion.span>
                   </div>
                   <motion.p 
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 0.3 + (index * 0.1), duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    initial={{ opacity: 0, scale: 0.3, y: 30 }}
+                    animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
+                    transition={{ 
+                      delay: 0.4 + (index * 0.15), 
+                      duration: 0.8, 
+                      type: "spring",
+                      stiffness: 150
+                    }}
                     className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold text-sage mb-2"
                   >
                     {item.stat}
                   </motion.p>
-                  <p className="text-lg text-background/70">
+                  <motion.p 
+                    className="text-lg text-background/70"
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: 0.55 + (index * 0.15), duration: 0.5 }}
+                  >
                     {item.label}
-                  </p>
+                  </motion.p>
                 </TiltCard>
               </motion.div>
             );
