@@ -6,16 +6,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import MagneticButton from "@/components/animations/MagneticButton";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { X, Play } from "lucide-react";
+import { X, Play, Pause, Volume2, VolumeX } from "lucide-react";
 import salaryDashboardImage from "@/assets/salary-intelligence-dashboard.jpg";
+import demoVideo from "@/assets/market-value-xray-demo.mp4";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, Flip);
 
 const SalaryIntelligenceZoom = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const { navigateWithTransition } = useGridNavigation();
   const [showVideoModal, setShowVideoModal] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -311,40 +315,90 @@ const SalaryIntelligenceZoom = () => {
             {/* Close button */}
             <button
               onClick={() => setShowVideoModal(false)}
-              className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-background/10 hover:bg-background/20 transition-colors"
+              className="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-background/10 hover:bg-background/20 transition-colors"
             >
               <X className="w-5 h-5 text-background" />
             </button>
 
-            {/* Video placeholder - replace with actual video when available */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-background">
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="text-center"
-              >
-                <div className="w-24 h-24 rounded-full bg-sage/20 flex items-center justify-center mx-auto mb-6">
-                  <Play className="w-12 h-12 text-sage ml-1" fill="currentColor" />
+            {/* Actual Demo Video */}
+            <video
+              ref={videoRef}
+              src={demoVideo}
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              loop
+              muted={isMuted}
+              playsInline
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+            />
+
+            {/* Video Controls Overlay */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-foreground/80 to-transparent">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {/* Play/Pause */}
+                  <button
+                    onClick={() => {
+                      if (videoRef.current) {
+                        if (isPlaying) {
+                          videoRef.current.pause();
+                        } else {
+                          videoRef.current.play();
+                        }
+                      }
+                    }}
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-background/20 hover:bg-background/30 transition-colors"
+                  >
+                    {isPlaying ? (
+                      <Pause className="w-5 h-5 text-background" fill="currentColor" />
+                    ) : (
+                      <Play className="w-5 h-5 text-background ml-0.5" fill="currentColor" />
+                    )}
+                  </button>
+
+                  {/* Mute/Unmute */}
+                  <button
+                    onClick={() => setIsMuted(!isMuted)}
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-background/20 hover:bg-background/30 transition-colors"
+                  >
+                    {isMuted ? (
+                      <VolumeX className="w-5 h-5 text-background" />
+                    ) : (
+                      <Volume2 className="w-5 h-5 text-background" />
+                    )}
+                  </button>
                 </div>
-                <h3 className="text-2xl font-heading font-bold mb-2">
-                  Market Value X-Ray™ Demo
-                </h3>
-                <p className="text-background/60 max-w-md">
-                  See how our AI-powered salary intelligence works in real-time
-                </p>
-                <MagneticButton
-                  className="mt-6 px-6 py-3 bg-sage text-foreground rounded-full font-semibold"
-                  strength={0.3}
-                  onClick={() => {
-                    setShowVideoModal(false);
-                    navigateWithTransition("/salary-intelligence");
-                  }}
-                >
-                  Try It Now — It's Free
-                </MagneticButton>
-              </motion.div>
+
+                <div className="text-right">
+                  <h3 className="text-background font-heading font-bold text-lg">
+                    Market Value X-Ray™ Demo
+                  </h3>
+                  <p className="text-background/60 text-sm">
+                    See your salary intelligence in action
+                  </p>
+                </div>
+              </div>
             </div>
+
+            {/* CTA Overlay */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2, duration: 0.5 }}
+              className="absolute top-4 left-4 z-10"
+            >
+              <MagneticButton
+                className="px-4 py-2 bg-sage text-foreground rounded-full font-semibold text-sm shadow-lg"
+                strength={0.3}
+                onClick={() => {
+                  setShowVideoModal(false);
+                  navigateWithTransition("/salary-intelligence");
+                }}
+              >
+                🔥 Try It Free
+              </MagneticButton>
+            </motion.div>
           </div>
         </DialogContent>
       </Dialog>
