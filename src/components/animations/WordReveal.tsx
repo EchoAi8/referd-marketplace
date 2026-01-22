@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import { useRef } from "react";
 
 interface WordRevealProps {
@@ -13,7 +13,7 @@ const WordReveal = ({ text, className = "", delay = 0 }: WordRevealProps) => {
   // Extended scroll range for slower, more cinematic reveal
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 0.95", "start 0.25"]
+    offset: ["start 0.9", "start 0.35"]
   });
 
   const words = text.split(" ");
@@ -23,14 +23,14 @@ const WordReveal = ({ text, className = "", delay = 0 }: WordRevealProps) => {
       {words.map((word, index) => {
         // Staggered timing with delay support
         const totalWords = words.length;
-        const start = (index / totalWords) * 0.7 + delay * 0.1;
-        const end = start + (0.7 / totalWords);
+        const start = (index / totalWords) * 0.6 + delay * 0.08;
+        const end = start + (0.6 / totalWords);
         
         return (
           <Word 
             key={index} 
             word={word} 
-            range={[Math.min(start, 0.95), Math.min(end, 1)]} 
+            range={[Math.min(start, 0.9), Math.min(end, 1)]} 
             progress={scrollYProgress}
           />
         );
@@ -42,25 +42,25 @@ const WordReveal = ({ text, className = "", delay = 0 }: WordRevealProps) => {
 interface WordProps {
   word: string;
   range: [number, number];
-  progress: any;
+  progress: MotionValue<number>;
 }
 
 const Word = ({ word, range, progress }: WordProps) => {
-  // More dramatic opacity transition - start very dim
-  const opacity = useTransform(progress, range, [0.08, 1]);
+  // Smooth opacity transition from muted grey to solid black
+  const opacity = useTransform(progress, range, [0.15, 1]);
   // Subtle vertical movement for depth
-  const y = useTransform(progress, range, [12, 0]);
-  // Slight blur for that cinematic reveal
-  const blur = useTransform(progress, range, [2, 0]);
+  const y = useTransform(progress, range, [8, 0]);
+  // Color transition from grey to black
+  const color = useTransform(progress, range, ["hsl(0 0% 60%)", "hsl(0 0% 0%)"]);
   
   return (
     <motion.span
       style={{ 
         opacity, 
         y,
-        filter: blur.get() > 0.5 ? `blur(${blur.get()}px)` : 'none'
+        color
       }}
-      className="inline-block mr-[0.25em] will-change-transform transition-[filter] duration-100"
+      className="inline-block mr-[0.25em] will-change-transform"
     >
       {word}
     </motion.span>
