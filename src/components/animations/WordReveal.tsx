@@ -1,5 +1,5 @@
-import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
-import { useRef } from "react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { useRef, useMemo } from "react";
 
 interface WordRevealProps {
   text: string;
@@ -10,28 +10,36 @@ interface WordRevealProps {
 const WordReveal = ({ text, className = "", delay = 0 }: WordRevealProps) => {
   const containerRef = useRef<HTMLSpanElement>(null);
   
-  // Extended scroll range for slower, more cinematic reveal
+  // Single scroll hook for the entire paragraph - not per word
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 0.9", "start 0.35"]
+    offset: ["start 0.85", "start 0.3"]
   });
 
-  const words = text.split(" ");
+  // Smooth the progress with a spring to eliminate jitter
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  const words = useMemo(() => text.split(" "), [text]);
 
   return (
     <span ref={containerRef} className={`inline ${className}`}>
       {words.map((word, index) => {
-        // Staggered timing with delay support
         const totalWords = words.length;
-        const start = (index / totalWords) * 0.6 + delay * 0.08;
-        const end = start + (0.6 / totalWords);
+        // Each word reveals based on its position + the delay prop
+        const wordStart = (index / totalWords) * 0.5 + delay * 0.06;
+        const wordEnd = wordStart + 0.2;
         
         return (
           <Word 
             key={index} 
             word={word} 
-            range={[Math.min(start, 0.9), Math.min(end, 1)]} 
-            progress={scrollYProgress}
+            start={Math.min(wordStart, 0.85)}
+            end={Math.min(wordEnd, 1)}
+            progress={smoothProgress}
           />
         );
       })}
@@ -41,26 +49,20 @@ const WordReveal = ({ text, className = "", delay = 0 }: WordRevealProps) => {
 
 interface WordProps {
   word: string;
-  range: [number, number];
-  progress: MotionValue<number>;
+  start: number;
+  end: number;
+  progress: ReturnType<typeof useSpring>;
 }
 
-const Word = ({ word, range, progress }: WordProps) => {
-  // Smooth opacity transition from muted grey to solid black
-  const opacity = useTransform(progress, range, [0.15, 1]);
-  // Subtle vertical movement for depth
-  const y = useTransform(progress, range, [8, 0]);
-  // Color transition from grey to black
-  const color = useTransform(progress, range, ["hsl(0 0% 60%)", "hsl(0 0% 0%)"]);
+const Word = ({ word, start, end, progress }: WordProps) => {
+  // Simple opacity and y transform - GPU friendly
+  const opacity = useTransform(progress, [start, end], [0.15, 1]);
+  const y = useTransform(progress, [start, end], [6, 0]);
   
   return (
     <motion.span
-      style={{ 
-        opacity, 
-        y,
-        color
-      }}
-      className="inline-block mr-[0.25em] will-change-transform"
+      style={{ opacity, y }}
+      className="inline-block mr-[0.25em] will-change-[opacity,transform]"
     >
       {word}
     </motion.span>
