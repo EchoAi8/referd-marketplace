@@ -2,7 +2,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import { motion, AnimatePresence } from "framer-motion";
 import MagneticButton from "@/components/animations/MagneticButton";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { 
   TrendingUp, 
@@ -92,6 +92,24 @@ const SalaryIntelligence = () => {
     toast.success("Full report unlocked!");
   };
 
+  // SEO Meta tags
+  useEffect(() => {
+    document.title = "Market Value X-Ray™ | Free Salary Intelligence Report | Referd";
+    
+    // Update meta description
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement('meta');
+      metaDesc.setAttribute('name', 'description');
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.setAttribute('content', 'Discover your true market value in seconds. Our AI-powered Market Value X-Ray analyzes millions of salary data points to reveal if you\'re being underpaid. Free report for limited time.');
+    
+    return () => {
+      document.title = "Referd";
+    };
+  }, []);
+
   return (
     <PageLayout>
       {/* Hero Section */}
@@ -122,10 +140,10 @@ const SalaryIntelligence = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-sage/10 border border-sage/20 rounded-full mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-rose/20 border border-rose/30 rounded-full mb-6"
             >
-              <Sparkles className="w-4 h-4 text-sage" />
-              <span className="text-sage text-sm font-medium">AI-Powered Salary Intelligence</span>
+              <Sparkles className="w-4 h-4 text-rose" />
+              <span className="text-rose text-sm font-bold">🔥 LIMITED TIME: FREE ACCESS</span>
             </motion.div>
             
             <motion.h1
@@ -134,19 +152,27 @@ const SalaryIntelligence = () => {
               transition={{ duration: 0.8, delay: 0.1 }}
               className="text-5xl md:text-7xl font-heading font-bold text-background leading-tight mb-6"
             >
-              Are You Being
+              Market Value
               <br />
-              <span className="text-sage">Paid What You're Worth?</span>
+              <span className="text-sage">X-Ray™</span>
             </motion.h1>
             
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl text-background/60 max-w-2xl mx-auto mb-8"
+              className="text-xl text-background/60 max-w-2xl mx-auto mb-4"
             >
-              Our intelligent algorithm scrapes <strong className="text-background">100s of data points</strong> in real-time 
-              to show exactly where you stand in today's market.
+              Discover if you're being <strong className="text-rose">underpaid</strong> in seconds.
+              Our AI scans <strong className="text-background">millions of data points</strong> in real-time.
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.25 }}
+              className="text-background/40 text-sm mb-8"
+            >
+              Join 50,000+ professionals who discovered their true worth
             </motion.p>
 
             {/* Trust Badges */}
