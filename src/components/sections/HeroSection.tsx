@@ -53,7 +53,7 @@ const HeroSection = () => {
       </motion.div>
 
       {/* Main Content Container */}
-      <div className="relative z-10 min-h-screen flex flex-col pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 px-4 sm:px-6 md:px-12 pointer-events-none">
+      <div className="relative z-10 min-h-screen flex flex-col pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12 md:pb-16 px-4 sm:px-6 md:px-12 pointer-events-none">
         {/* Top - Logo with character animation and parallax */}
         <motion.div 
           style={{ y: logoY, scale: logoScale }} 
@@ -94,7 +94,7 @@ const HeroSection = () => {
         {/* Bottom Content - Text on Left */}
         <motion.div 
           style={{ y: contentY }}
-          className="flex-1 flex flex-col justify-end mt-auto pb-24 sm:pb-20 md:pb-12"
+          className="flex-1 flex flex-col justify-end mt-auto pb-32 sm:pb-28 md:pb-20"
         >
           {/* Tagline & CTAs */}
           <motion.div
@@ -167,7 +167,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0, rotate: 3 }}
           transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
           whileHover={{ scale: 1.05, rotate: 0 }}
-          className="hidden sm:block absolute bottom-24 sm:bottom-8 right-4 sm:right-6 md:bottom-12 md:right-8 lg:right-12 w-44 sm:w-48 md:w-56 lg:w-60 pointer-events-auto cursor-pointer z-20"
+          className="hidden sm:block absolute bottom-36 sm:bottom-24 md:bottom-28 lg:bottom-32 right-4 sm:right-6 md:right-8 lg:right-12 w-48 sm:w-52 md:w-60 lg:w-72 pointer-events-auto cursor-pointer z-20"
         >
           {/* Credit Card Design - Compact */}
           <div className="relative w-full aspect-[1.586/1] rounded-xl overflow-hidden shadow-2xl">
