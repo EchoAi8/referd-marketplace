@@ -164,87 +164,40 @@ const AboutSection = () => {
         <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
           {researchStats.map((item, index) => {
             const IconComponent = item.icon;
-            const rotateDirection = index % 2 === 0 ? -8 : 8;
             
             return (
               <motion.div
                 key={item.label}
-                initial={{ 
-                  opacity: 0, 
-                  y: 120, 
-                  scale: 0.6, 
-                  rotateX: 25,
-                  rotateY: rotateDirection,
-                  rotateZ: rotateDirection / 2
-                }}
-                animate={statsInView ? { 
-                  opacity: 1, 
-                  y: 0, 
-                  scale: 1,
-                  rotateX: 0,
-                  rotateY: 0,
-                  rotateZ: 0
-                } : {}}
+                initial={{ opacity: 0, y: 60, scale: 0.9 }}
+                animate={statsInView ? { opacity: 1, y: 0, scale: 1 } : {}}
                 transition={{ 
-                  duration: 1.2, 
-                  delay: 0.1 + (index * 0.12), 
-                  ease: [0.16, 1, 0.3, 1],
-                  scale: { type: "spring", stiffness: 200, damping: 20 }
+                  duration: 0.8, 
+                  delay: 0.1 + (index * 0.1), 
+                  ease: [0.16, 1, 0.3, 1]
                 }}
-                style={{ transformPerspective: 1200 }}
               >
                 <TiltCard 
-                  intensity={10} 
+                  intensity={8} 
                   glare={true} 
                   className="bg-foreground text-background p-8 rounded-3xl h-full"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <motion.div 
-                      className="w-12 h-12 rounded-full bg-background/10 flex items-center justify-center"
-                      initial={{ scale: 0, rotate: -180 }}
-                      animate={statsInView ? { scale: 1, rotate: 0 } : {}}
-                      transition={{ delay: 0.4 + (index * 0.12), duration: 0.6, type: "spring" }}
-                    >
+                    <div className="w-12 h-12 rounded-full bg-background/10 flex items-center justify-center">
                       <IconComponent className={`w-6 h-6 ${item.color}`} />
-                    </motion.div>
-                    <motion.span 
-                      className="text-[10px] text-background/50 uppercase tracking-wider bg-background/10 px-2 py-1 rounded-full"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={statsInView ? { opacity: 1, x: 0 } : {}}
-                      transition={{ delay: 0.5 + (index * 0.12), duration: 0.5 }}
-                    >
+                    </div>
+                    <span className="text-[10px] text-background/50 uppercase tracking-wider bg-background/10 px-2 py-1 rounded-full">
                       {item.source}
-                    </motion.span>
+                    </span>
                   </div>
-                  <motion.p 
-                    initial={{ opacity: 0, scale: 0.3, y: 30 }}
-                    animate={statsInView ? { opacity: 1, scale: 1, y: 0 } : {}}
-                    transition={{ 
-                      delay: 0.3 + (index * 0.12), 
-                      duration: 0.8, 
-                      type: "spring",
-                      stiffness: 150
-                    }}
-                    className={`text-fluid-4xl md:text-fluid-5xl font-heading font-bold ${item.color} mb-1`}
-                  >
+                  <p className={`text-fluid-4xl md:text-fluid-5xl font-heading font-bold ${item.color} mb-1`}>
                     {item.stat}
-                  </motion.p>
-                  <motion.p 
-                    className="text-lg font-semibold text-background mb-1"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={statsInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ delay: 0.45 + (index * 0.12), duration: 0.5 }}
-                  >
+                  </p>
+                  <p className="text-lg font-semibold text-background mb-1">
                     {item.label}
-                  </motion.p>
-                  <motion.p 
-                    className="text-sm text-background/50"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={statsInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ delay: 0.5 + (index * 0.12), duration: 0.5 }}
-                  >
+                  </p>
+                  <p className="text-sm text-background/50">
                     {item.sublabel}
-                  </motion.p>
+                  </p>
                 </TiltCard>
               </motion.div>
             );
@@ -274,12 +227,11 @@ const AboutSection = () => {
               return (
                 <motion.div
                   key={item.title}
-                  initial={{ opacity: 0, y: 60, rotateY: -15 }}
-                  animate={isInView ? { opacity: 1, y: 0, rotateY: 0 } : {}}
-                  transition={{ duration: 0.8, delay: 0.4 + (index * 0.1) }}
-                  style={{ transformPerspective: 1000 }}
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.3 + (index * 0.08) }}
                 >
-                  <TiltCard intensity={12} glare={true} className="bg-muted/30 p-6 rounded-2xl h-full border border-border/50 hover:border-sage/30 transition-colors">
+                  <TiltCard intensity={10} glare={true} className="bg-muted/30 p-6 rounded-2xl h-full border border-border/50 hover:border-sage/30 transition-colors">
                     <div className={`w-12 h-12 rounded-xl ${item.color} flex items-center justify-center mb-4`}>
                       <IconComponent className="w-6 h-6 text-foreground" />
                     </div>
@@ -316,28 +268,23 @@ const AboutSection = () => {
               return (
                 <motion.div
                   key={card.title}
-                  initial={{ opacity: 0, y: 80, scale: 0.9, rotateX: 15 }}
-                  animate={isInView ? { opacity: 1, y: 0, scale: 1, rotateX: 0 } : {}}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ 
-                    duration: 1.2, 
-                    delay: 0.6 + (index * 0.15), 
+                    duration: 0.7, 
+                    delay: 0.4 + (index * 0.1), 
                     ease: [0.16, 1, 0.3, 1] 
                   }}
-                  style={{ transformPerspective: 1200 }}
                 >
                   <TiltCard 
-                    intensity={14} 
+                    intensity={10} 
                     glare={true} 
-                    className={`group bg-gradient-to-br ${card.gradient} p-8 rounded-3xl h-full border border-border/30 hover:border-sage/40 transition-all duration-500`}
+                    className={`group bg-gradient-to-br ${card.gradient} p-8 rounded-3xl h-full border border-border/30 hover:border-sage/40 transition-all duration-300`}
                   >
                     <div className="flex items-center gap-4 mb-6">
-                      <motion.div 
-                        className="w-16 h-16 rounded-2xl bg-foreground flex items-center justify-center"
-                        whileHover={{ rotate: 10, scale: 1.1 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                      >
+                      <div className="w-16 h-16 rounded-2xl bg-foreground flex items-center justify-center">
                         <IconComponent className="w-8 h-8 text-background" />
-                      </motion.div>
+                      </div>
                       <div>
                         <h4 className="text-2xl font-heading font-bold text-foreground">{card.title}</h4>
                         <p className="text-sm text-sage font-medium">{card.tagline}</p>
