@@ -128,7 +128,7 @@ const HeroSection = () => {
               Find out your market value. Turn your network into income. AI and Machine learning intelligence.
             </motion.p>
 
-            {/* CTA Buttons with Glow */}
+            {/* CTA Buttons with Enhanced Glow */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -136,21 +136,23 @@ const HeroSection = () => {
               className="flex flex-col sm:flex-row flex-wrap gap-3 mt-6 pointer-events-auto"
             >
               <MagneticButton 
-                className="btn-primary text-sm sm:text-base px-5 py-3 shadow-[0_0_25px_rgba(139,164,133,0.6)] hover:shadow-[0_0_35px_rgba(139,164,133,0.8)] transition-shadow" 
+                className="relative overflow-hidden px-6 py-3.5 bg-gradient-to-r from-sage via-sage to-forest text-foreground rounded-full font-bold text-sm sm:text-base shadow-[0_0_30px_rgba(139,164,133,0.7),0_0_60px_rgba(139,164,133,0.4)] hover:shadow-[0_0_40px_rgba(139,164,133,0.9),0_0_80px_rgba(139,164,133,0.5)] transition-all duration-300 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:-translate-x-full hover:before:translate-x-full before:transition-transform before:duration-700" 
                 strength={0.4}
                 onClick={() => navigateWithTransition("/salary-intelligence")}
               >
-                Find out how much you're worth
+                <span className="relative z-10 flex items-center gap-2">
+                  🔥 Find Out How Much You're Worth
+                </span>
               </MagneticButton>
               <MagneticButton
-                className="px-5 py-3 bg-mustard text-foreground rounded-full font-semibold hover:bg-mustard/90 transition-all text-sm sm:text-base shadow-[0_0_25px_rgba(226,195,104,0.6)] hover:shadow-[0_0_35px_rgba(226,195,104,0.8)]"
+                className="relative overflow-hidden px-5 py-3 bg-gradient-to-r from-mustard via-mustard to-mustard/80 text-foreground rounded-full font-semibold hover:scale-105 transition-all text-sm sm:text-base shadow-[0_0_25px_rgba(226,195,104,0.7)] hover:shadow-[0_0_40px_rgba(226,195,104,0.9)]"
                 strength={0.4}
                 onClick={() => navigateWithTransition("/opportunities")}
               >
-                Refer & Earn
+                💰 Refer & Earn
               </MagneticButton>
               <MagneticButton
-                className="px-5 py-3 border-2 border-background/40 text-background rounded-full font-semibold hover:bg-background/10 transition-all text-sm sm:text-base shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)]"
+                className="px-5 py-3 border-2 border-background/50 text-background rounded-full font-semibold hover:bg-background/15 hover:border-background/70 transition-all text-sm sm:text-base shadow-[0_0_20px_rgba(255,255,255,0.25)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
                 strength={0.4}
                 onClick={() => navigateWithTransition("/how-it-works")}
               >

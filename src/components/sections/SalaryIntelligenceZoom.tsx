@@ -1,9 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion, AnimatePresence } from "framer-motion";
 import MagneticButton from "@/components/animations/MagneticButton";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { X, Play } from "lucide-react";
+import salaryDashboardImage from "@/assets/salary-intelligence-dashboard.jpg";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, Flip);
@@ -11,6 +15,7 @@ gsap.registerPlugin(ScrollTrigger, Flip);
 const SalaryIntelligenceZoom = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { navigateWithTransition } = useGridNavigation();
+  const [showVideoModal, setShowVideoModal] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -170,10 +175,21 @@ const SalaryIntelligenceZoom = () => {
       >
         {/* Title */}
         <div className="text-center mb-8">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold leading-[0.95] tracking-tight max-w-[7em] mx-auto">
-            Salary Intelligence
-            <span className="text-sage"> Portal</span>
+          <motion.span
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-rose/20 border border-rose/30 rounded-full mb-4 text-rose text-sm font-bold"
+          >
+            🔥 LIMITED ACCESS
+          </motion.span>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold leading-[0.95] tracking-tight max-w-[10em] mx-auto">
+            Market Value
+            <span className="text-sage"> X-Ray™</span>
           </h2>
+          <p className="mt-4 text-background/60 text-lg max-w-xl mx-auto">
+            The #1 salary intelligence tool used by 50,000+ professionals
+          </p>
         </div>
 
         {/* Start Element - The Circle */}
@@ -186,34 +202,33 @@ const SalaryIntelligenceZoom = () => {
             data-bg-zoom-content=""
             className="absolute inset-0 rounded-[inherit] bg-sage will-change-transform overflow-hidden"
           >
-            {/* Image */}
+            {/* AI Generated Dashboard Image */}
             <img
               data-bg-zoom-img=""
-              src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1200&auto=format&fit=crop"
-              alt="Salary Intelligence Analytics"
+              src={salaryDashboardImage}
+              alt="Salary Intelligence Dashboard Analytics"
               className="absolute inset-0 w-full h-full object-cover"
             />
 
             {/* Badge */}
-            <p className="absolute top-5 w-full text-center text-mustard text-lg font-black tracking-tight">
+            <p className="absolute top-5 w-full text-center text-mustard text-lg font-black tracking-tight drop-shadow-lg">
               REFERD®
             </p>
 
-            {/* Play Button */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="100%"
-                viewBox="0 0 66 66"
-                fill="none"
-              >
-                <circle cx="33" cy="33" r="33" fill="hsl(var(--background))" />
-                <path
-                  d="M25.5 33V26.0785C25.5 24.1544 27.5826 22.9515 29.2493 23.9131L35.25 27.375L41.2465 30.8345C42.9141 31.7966 42.9141 34.2034 41.2465 35.1655L35.25 38.625L29.2493 42.0869C27.5826 43.0485 25.5 41.8456 25.5 39.9215V33Z"
-                  fill="hsl(var(--foreground))"
-                />
-              </svg>
-            </div>
+            {/* Interactive Play Button */}
+            <button
+              onClick={() => setShowVideoModal(true)}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 group cursor-pointer z-10"
+            >
+              {/* Pulsing ring */}
+              <span className="absolute inset-0 rounded-full bg-background/20 animate-ping" />
+              <span className="absolute inset-2 rounded-full bg-background/30 animate-pulse" />
+              
+              {/* Button */}
+              <span className="relative flex items-center justify-center w-full h-full rounded-full bg-background shadow-2xl group-hover:scale-110 transition-transform duration-300">
+                <Play className="w-8 h-8 text-foreground ml-1" fill="currentColor" />
+              </span>
+            </button>
 
             {/* Dark Overlay */}
             <div
@@ -255,20 +270,28 @@ const SalaryIntelligenceZoom = () => {
         </p>
 
         <div className="text-center max-w-4xl">
+          <motion.span
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-mustard/20 border border-mustard/30 rounded-full mb-6 text-mustard text-sm font-bold"
+          >
+            ⚡ FREE FOR A LIMITED TIME
+          </motion.span>
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold leading-tight tracking-tight mb-6">
-            Ready to Discover Your Worth?
+            Stop Leaving Money On The Table
           </h2>
           <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-            Our AI-powered intelligence engine analyzes millions of data points
-            to give you the most accurate salary benchmarks in the industry.
+            Join 50,000+ professionals who discovered they were being underpaid.
+            Our AI analyzes millions of data points to reveal your true worth.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <MagneticButton
-              className="btn-primary shadow-[0_0_25px_rgba(139,164,133,0.6)] hover:shadow-[0_0_35px_rgba(139,164,133,0.8)]"
+              className="relative overflow-hidden px-8 py-4 bg-gradient-to-r from-sage via-sage to-forest text-foreground rounded-full font-bold text-lg shadow-[0_0_30px_rgba(139,164,133,0.7),0_0_60px_rgba(139,164,133,0.4)] hover:shadow-[0_0_40px_rgba(139,164,133,0.9),0_0_80px_rgba(139,164,133,0.5)] transition-all duration-300"
               strength={0.4}
               onClick={() => navigateWithTransition("/salary-intelligence")}
             >
-              Get Your Free Report
+              🔥 Get Your Free X-Ray Report
             </MagneticButton>
             <MagneticButton
               className="px-8 py-4 border-2 border-foreground/20 text-foreground rounded-full font-semibold hover:bg-foreground/5 transition-all"
@@ -280,6 +303,51 @@ const SalaryIntelligenceZoom = () => {
           </div>
         </div>
       </section>
+
+      {/* Video Demo Modal */}
+      <Dialog open={showVideoModal} onOpenChange={setShowVideoModal}>
+        <DialogContent className="max-w-4xl p-0 bg-foreground border-foreground/20 overflow-hidden">
+          <div className="relative aspect-video bg-foreground">
+            {/* Close button */}
+            <button
+              onClick={() => setShowVideoModal(false)}
+              className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-background/10 hover:bg-background/20 transition-colors"
+            >
+              <X className="w-5 h-5 text-background" />
+            </button>
+
+            {/* Video placeholder - replace with actual video when available */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-background">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="text-center"
+              >
+                <div className="w-24 h-24 rounded-full bg-sage/20 flex items-center justify-center mx-auto mb-6">
+                  <Play className="w-12 h-12 text-sage ml-1" fill="currentColor" />
+                </div>
+                <h3 className="text-2xl font-heading font-bold mb-2">
+                  Market Value X-Ray™ Demo
+                </h3>
+                <p className="text-background/60 max-w-md">
+                  See how our AI-powered salary intelligence works in real-time
+                </p>
+                <MagneticButton
+                  className="mt-6 px-6 py-3 bg-sage text-foreground rounded-full font-semibold"
+                  strength={0.3}
+                  onClick={() => {
+                    setShowVideoModal(false);
+                    navigateWithTransition("/salary-intelligence");
+                  }}
+                >
+                  Try It Now — It's Free
+                </MagneticButton>
+              </motion.div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
