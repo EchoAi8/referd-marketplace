@@ -47,8 +47,8 @@ const Index = () => {
               </section>
               <StickyHowItWorks />
               <StatsSection />
-              <UserJourneyVisualization />
               <FeaturePills />
+              <UserJourneyVisualization />
               <section id="projects">
                 <ProjectsSection />
               </section>
