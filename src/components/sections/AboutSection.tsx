@@ -100,7 +100,7 @@ const AboutSection = () => {
   ];
 
   return (
-    <section ref={containerRef} className="pt-4 md:pt-8 pb-32 md:pb-48 -mt-20 md:-mt-28 bg-background overflow-hidden relative z-10">
+    <section ref={containerRef} className="pt-16 md:pt-24 pb-32 md:pb-48 bg-background overflow-hidden relative z-10">
       <div className="container mx-auto px-6">
         {/* About Us Label - Higher and closer to hero */}
         <motion.p 
