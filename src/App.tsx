@@ -19,6 +19,7 @@ import HowItWorks from "./pages/HowItWorks";
 import Brands from "./pages/Brands";
 import Opportunities from "./pages/Opportunities";
 import SalaryIntelligence from "./pages/SalaryIntelligence";
+import CareerIntelligence from "./pages/CareerIntelligence";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import ReferrerDashboard from "./pages/ReferrerDashboard";
@@ -40,6 +41,7 @@ const AnimatedRoutes = () => {
         <Route path="/brands" element={<Brands />} />
         <Route path="/opportunities" element={<Opportunities />} />
         <Route path="/salary-intelligence" element={<SalaryIntelligence />} />
+        <Route path="/career-intelligence" element={<CareerIntelligence />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/referrer" element={<ProtectedRoute><ReferrerDashboard /></ProtectedRoute>} />
