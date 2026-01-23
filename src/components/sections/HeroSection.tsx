@@ -128,51 +128,54 @@ const HeroSection = () => {
               Find out your market value. Turn your network into income. AI and Machine learning intelligence.
             </motion.p>
 
-            {/* Bold Directional CTA Buttons */}
+            {/* Bold Directional CTA Buttons with User-Type Colors */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col sm:flex-row flex-wrap gap-4 mt-8 pointer-events-auto"
             >
+              {/* Talent CTA - Pastel Green */}
               <DirectionalButton 
-                theme="sage"
+                theme="talent"
                 size="xl"
                 onClick={() => navigateWithTransition("/career-intelligence")}
-                className="shadow-[0_0_40px_rgba(139,164,133,0.5)] hover:shadow-[0_0_60px_rgba(139,164,133,0.7)]"
+                className="shadow-[0_0_40px_hsl(140,60%,75%,0.5)] hover:shadow-[0_0_60px_hsl(140,60%,75%,0.7)]"
               >
                 Find Out How Much You're Worth
               </DirectionalButton>
               
+              {/* Referrer CTA - Pastel Blue */}
               <DirectionalButton
-                theme="mustard"
+                theme="referrer"
                 size="xl"
                 onClick={() => navigateWithTransition("/opportunities")}
-                className="shadow-[0_0_40px_rgba(226,195,104,0.5)] hover:shadow-[0_0_60px_rgba(226,195,104,0.7)]"
+                className="shadow-[0_0_40px_hsl(210,70%,78%,0.5)] hover:shadow-[0_0_60px_hsl(210,70%,78%,0.7)]"
               >
                 Refer & Earn
               </DirectionalButton>
               
+              {/* Brand CTA - Pastel Pink */}
               <DirectionalButton
-                theme="dark"
+                theme="brand"
                 size="xl"
                 onClick={() => navigateWithTransition("/how-it-works")}
-                className="border-2 border-background/30 shadow-[0_0_30px_rgba(255,255,255,0.15)] hover:shadow-[0_0_50px_rgba(255,255,255,0.25)]"
+                className="shadow-[0_0_40px_hsl(340,80%,85%,0.5)] hover:shadow-[0_0_60px_hsl(340,80%,85%,0.7)]"
               >
-                How The Marketplace Works
+                Post Opportunities
               </DirectionalButton>
             </motion.div>
           </motion.div>
         </motion.div>
 
-        {/* Credit Card - Fixed to bottom right corner */}
+        {/* Credit Card - Visible on all screen sizes */}
         <motion.div
           style={{ y: cardY, rotate: cardRotate, opacity: cardOpacity }}
           initial={{ opacity: 0, y: 50, rotate: 5 }}
           animate={{ opacity: 1, y: 0, rotate: 3 }}
           transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
           whileHover={{ scale: 1.05, rotate: 0 }}
-          className="hidden lg:block absolute bottom-20 right-8 lg:right-12 w-64 lg:w-80 pointer-events-auto cursor-pointer z-20"
+          className="absolute bottom-24 sm:bottom-20 right-4 sm:right-8 lg:right-12 w-48 sm:w-56 md:w-64 lg:w-80 pointer-events-auto cursor-pointer z-20"
         >
           {/* Credit Card Design */}
           <div className="relative w-full aspect-[1.586/1] rounded-2xl overflow-hidden shadow-2xl">

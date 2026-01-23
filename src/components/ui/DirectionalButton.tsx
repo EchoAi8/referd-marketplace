@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 interface DirectionalButtonProps {
   children: ReactNode;
   onClick?: () => void;
-  theme?: "dark" | "light" | "primary" | "sage" | "mustard";
+  theme?: "dark" | "light" | "primary" | "sage" | "mustard" | "talent" | "referrer" | "brand";
   className?: string;
   size?: "default" | "lg" | "xl";
 }
@@ -67,32 +67,52 @@ const DirectionalButton = ({
       bg: "bg-[hsl(180,30%,8%)]",
       text: "text-[hsl(48,60%,96%)]",
       textHover: "group-hover:text-[hsl(180,30%,8%)]",
-      circle: "bg-[hsl(80,100%,55%)]",
+      circle: "bg-talent",
     },
     light: {
       bg: "bg-[hsl(48,30%,96%)]",
       text: "text-[hsl(180,30%,8%)]",
       textHover: "group-hover:text-[hsl(180,30%,8%)]",
-      circle: "bg-[hsl(80,100%,55%)]",
+      circle: "bg-talent",
     },
     primary: {
-      bg: "bg-[hsl(80,100%,55%)]",
+      bg: "bg-talent",
       text: "text-[hsl(180,30%,8%)]",
       textHover: "group-hover:text-[hsl(180,30%,8%)]",
-      circle: "bg-[hsl(90,100%,65%)]",
+      circle: "bg-talent-light",
     },
     sage: {
-      // Vibrant lime green
-      bg: "bg-[hsl(80,100%,55%)]",
+      bg: "bg-sage",
       text: "text-[hsl(180,30%,8%)]",
-      textHover: "group-hover:text-[hsl(80,100%,55%)]",
+      textHover: "group-hover:text-sage",
       circle: "bg-[hsl(180,30%,8%)]",
     },
     mustard: {
-      // Bold warm yellow/gold
-      bg: "bg-[hsl(45,100%,55%)]",
+      bg: "bg-mustard",
       text: "text-[hsl(180,30%,8%)]",
-      textHover: "group-hover:text-[hsl(45,100%,55%)]",
+      textHover: "group-hover:text-mustard",
+      circle: "bg-[hsl(180,30%,8%)]",
+    },
+    // User type themed buttons
+    talent: {
+      // Pastel Green for Talent
+      bg: "bg-talent",
+      text: "text-[hsl(180,30%,8%)]",
+      textHover: "group-hover:text-talent",
+      circle: "bg-[hsl(180,30%,8%)]",
+    },
+    referrer: {
+      // Pastel Blue for Referrers
+      bg: "bg-referrer",
+      text: "text-[hsl(180,30%,8%)]",
+      textHover: "group-hover:text-referrer",
+      circle: "bg-[hsl(180,30%,8%)]",
+    },
+    brand: {
+      // Pastel Pink for Brands
+      bg: "bg-brand",
+      text: "text-[hsl(180,30%,8%)]",
+      textHover: "group-hover:text-brand",
       circle: "bg-[hsl(180,30%,8%)]",
     },
   };
