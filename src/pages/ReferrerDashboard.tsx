@@ -8,7 +8,6 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import {
   LogOut,
-  Zap,
   Users,
   DollarSign,
   TrendingUp,
@@ -16,13 +15,10 @@ import {
   CheckCircle2,
   XCircle,
   UserPlus,
-  ArrowUpRight,
   Briefcase,
-  ChevronRight,
   Send,
   Mail,
-  Phone,
-  Building2
+  BarChart3
 } from 'lucide-react';
 import {
   Table,
@@ -47,6 +43,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ReferrerAnalyticsChart from '@/components/dashboard/ReferrerAnalyticsChart';
 
 interface Referral {
   id: string;
@@ -279,31 +276,18 @@ const ReferrerDashboard = () => {
           ))}
         </div>
 
-        {/* Earnings Distribution (35/35/30 model) */}
+        {/* Analytics Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mb-8 p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl"
+          className="mb-8"
         >
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Zap className="w-5 h-5 text-mustard" />
-            Fee Distribution Model
-          </h3>
-          <div className="flex gap-4">
-            <div className="flex-1 p-4 rounded-xl bg-sage/10 border border-sage/20 text-center">
-              <p className="text-3xl font-heading font-bold text-sage">35%</p>
-              <p className="text-sm text-muted-foreground">To You (Referrer)</p>
-            </div>
-            <div className="flex-1 p-4 rounded-xl bg-rose/10 border border-rose/20 text-center">
-              <p className="text-3xl font-heading font-bold text-rose">35%</p>
-              <p className="text-sm text-muted-foreground">To Talent</p>
-            </div>
-            <div className="flex-1 p-4 rounded-xl bg-muted border border-border text-center">
-              <p className="text-3xl font-heading font-bold text-foreground/70">30%</p>
-              <p className="text-sm text-muted-foreground">Platform</p>
-            </div>
+          <div className="flex items-center gap-2 mb-4">
+            <BarChart3 className="w-5 h-5 text-sage" />
+            <h2 className="text-xl font-semibold">Performance Analytics</h2>
           </div>
+          <ReferrerAnalyticsChart referrals={referrals} />
         </motion.div>
 
         {/* Referrals Table */}
