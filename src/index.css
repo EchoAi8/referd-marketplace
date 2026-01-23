@@ -28,6 +28,17 @@
     --color-rose-dark: 330 100% 77%;
     --color-forest: 73 25% 8%;
 
+    /* User Type Colors - Pastel palette for consistency */
+    --color-talent: 140 60% 75%; /* Pastel Green */
+    --color-talent-light: 140 60% 85%;
+    --color-talent-dark: 140 50% 60%;
+    --color-referrer: 210 70% 78%; /* Pastel Blue */
+    --color-referrer-light: 210 70% 88%;
+    --color-referrer-dark: 210 60% 65%;
+    --color-brand: 340 80% 85%; /* Pastel Pink */
+    --color-brand-light: 340 80% 92%;
+    --color-brand-dark: 340 70% 75%;
+
     /* Semantic mappings */
     --background: var(--color-white);
     --foreground: var(--color-black);

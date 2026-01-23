@@ -7,6 +7,7 @@ import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 import StickyHowItWorks from "@/components/sections/StickyHowItWorks";
 import StatsSection from "@/components/sections/StatsSection";
+import FeaturePills from "@/components/sections/FeaturePills";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import HorizontalGallery from "@/components/sections/HorizontalGallery";
 import FAQSection from "@/components/sections/FAQSection";
@@ -45,6 +46,7 @@ const Index = () => {
               </section>
               <StickyHowItWorks />
               <StatsSection />
+              <FeaturePills />
               <section id="projects">
                 <ProjectsSection />
               </section>

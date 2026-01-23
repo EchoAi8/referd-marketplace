@@ -54,6 +54,23 @@ export default {
           dark: "hsl(var(--color-rose-dark))",
         },
         
+        // User Type Colors
+        talent: {
+          DEFAULT: "hsl(var(--color-talent))",
+          light: "hsl(var(--color-talent-light))",
+          dark: "hsl(var(--color-talent-dark))",
+        },
+        referrer: {
+          DEFAULT: "hsl(var(--color-referrer))",
+          light: "hsl(var(--color-referrer-light))",
+          dark: "hsl(var(--color-referrer-dark))",
+        },
+        brand: {
+          DEFAULT: "hsl(var(--color-brand))",
+          light: "hsl(var(--color-brand-light))",
+          dark: "hsl(var(--color-brand-dark))",
+        },
+        
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
