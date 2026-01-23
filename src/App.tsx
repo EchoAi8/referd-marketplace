@@ -7,8 +7,10 @@ import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { SoundEffectsProvider } from "@/hooks/use-sound-effects";
 import { NavigationProvider } from "@/hooks/use-grid-navigation";
+import { AuthProvider } from "@/hooks/use-auth";
 import CursorFollower from "@/components/animations/CursorFollower";
 import ScrollProgress from "@/components/animations/ScrollProgress";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Work from "./pages/Work";
@@ -17,6 +19,8 @@ import HowItWorks from "./pages/HowItWorks";
 import Brands from "./pages/Brands";
 import Opportunities from "./pages/Opportunities";
 import SalaryIntelligence from "./pages/SalaryIntelligence";
+import Auth from "./pages/Auth";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +39,8 @@ const AnimatedRoutes = () => {
         <Route path="/brands" element={<Brands />} />
         <Route path="/opportunities" element={<Opportunities />} />
         <Route path="/salary-intelligence" element={<SalaryIntelligence />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -47,15 +53,17 @@ const App = () => (
     <ThemeProvider>
       <SoundEffectsProvider>
         <TooltipProvider>
-          <CursorFollower />
-          <ScrollProgress />
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <NavigationProvider>
-              <AnimatedRoutes />
-            </NavigationProvider>
-          </BrowserRouter>
+          <AuthProvider>
+            <CursorFollower />
+            <ScrollProgress />
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <NavigationProvider>
+                <AnimatedRoutes />
+              </NavigationProvider>
+            </BrowserRouter>
+          </AuthProvider>
         </TooltipProvider>
       </SoundEffectsProvider>
     </ThemeProvider>
