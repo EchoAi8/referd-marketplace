@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
@@ -15,8 +15,20 @@ const Auth = () => {
   const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  
+  const redirectTo = searchParams.get('redirect') || '/dashboard';
+  const hasPendingAnalysis = searchParams.get('analysis') === 'pending';
+
+  // If user is already logged in, redirect
+  useEffect(() => {
+    if (user) {
+      const targetUrl = hasPendingAnalysis ? `${redirectTo}?analysis=pending` : redirectTo;
+      navigate(targetUrl);
+    }
+  }, [user, navigate, redirectTo, hasPendingAnalysis]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +41,8 @@ const Auth = () => {
           toast.error(error.message);
         } else {
           toast.success('Welcome back!');
-          navigate('/dashboard');
+          const targetUrl = hasPendingAnalysis ? `${redirectTo}?analysis=pending` : redirectTo;
+          navigate(targetUrl);
         }
       } else {
         if (!fullName.trim()) {
@@ -41,8 +54,9 @@ const Auth = () => {
         if (error) {
           toast.error(error.message);
         } else {
-          toast.success('Account created! Redirecting to dashboard...');
-          navigate('/dashboard');
+          toast.success('Account created! Redirecting...');
+          const targetUrl = hasPendingAnalysis ? `${redirectTo}?analysis=pending` : redirectTo;
+          navigate(targetUrl);
         }
       }
     } catch (err) {

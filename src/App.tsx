@@ -21,6 +21,7 @@ import Opportunities from "./pages/Opportunities";
 import SalaryIntelligence from "./pages/SalaryIntelligence";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import ReferrerDashboard from "./pages/ReferrerDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const AnimatedRoutes = () => {
         <Route path="/salary-intelligence" element={<SalaryIntelligence />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/referrer" element={<ProtectedRoute><ReferrerDashboard /></ProtectedRoute>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
