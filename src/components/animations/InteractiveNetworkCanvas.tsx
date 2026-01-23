@@ -79,17 +79,17 @@ const PHOTO_URLS = [
   "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face",
 ];
 
-// Vibrant color palette - Cyan/Electric for referrers, Magenta/Violet for referred
+// UNIFIED color palette matching CSS tokens - Pastel Blue for referrers, Pastel Pink for referred
 const REFERRER_COLORS = {
-  primary: { r: 0, g: 245, b: 255 },    // Cyan
-  secondary: { r: 100, g: 200, b: 255 }, // Light blue
-  glow: { r: 0, g: 255, b: 200 },       // Teal glow
+  primary: { r: 153, g: 204, b: 230 },    // Pastel Blue hsl(200, 75%, 75%)
+  secondary: { r: 179, g: 217, b: 240 }, // Lighter blue
+  glow: { r: 128, g: 191, b: 225 },       // Blue glow
 };
 
 const REFERRED_COLORS = {
-  primary: { r: 255, g: 50, b: 200 },   // Magenta
-  secondary: { r: 200, g: 100, b: 255 }, // Violet
-  glow: { r: 255, g: 100, b: 150 },     // Pink glow
+  primary: { r: 240, g: 166, b: 196 },   // Pastel Pink hsl(330, 75%, 80%)
+  secondary: { r: 245, g: 194, b: 214 }, // Lighter pink
+  glow: { r: 235, g: 143, b: 178 },     // Pink glow
 };
 
 const InteractiveNetworkCanvas = () => {

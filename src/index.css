@@ -28,16 +28,16 @@
     --color-rose-dark: 330 100% 77%;
     --color-forest: 73 25% 8%;
 
-    /* User Type Colors - Pastel palette for consistency */
-    --color-talent: 140 60% 75%; /* Pastel Green */
-    --color-talent-light: 140 60% 85%;
-    --color-talent-dark: 140 50% 60%;
-    --color-referrer: 210 70% 78%; /* Pastel Blue */
-    --color-referrer-light: 210 70% 88%;
-    --color-referrer-dark: 210 60% 65%;
-    --color-brand: 340 80% 85%; /* Pastel Pink */
-    --color-brand-light: 340 80% 92%;
-    --color-brand-dark: 340 70% 75%;
+    /* User Type Colors - UNIFIED pastel palette across ALL components */
+    --color-talent: 150 60% 70%; /* Pastel Green - UNIFIED across CTAs, R button, credit card */
+    --color-talent-light: 150 60% 80%;
+    --color-talent-dark: 150 50% 55%;
+    --color-referrer: 200 75% 75%; /* Pastel Blue - UNIFIED across CTAs, network nodes */
+    --color-referrer-light: 200 75% 85%;
+    --color-referrer-dark: 200 65% 60%;
+    --color-brand: 330 75% 80%; /* Pastel Pink - UNIFIED across CTAs, network nodes */
+    --color-brand-light: 330 75% 88%;
+    --color-brand-dark: 330 65% 70%;
 
     /* Semantic mappings */
     --background: var(--color-white);
