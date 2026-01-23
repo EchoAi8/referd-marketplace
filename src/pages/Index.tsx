@@ -7,7 +7,7 @@ import { GridOverlay } from "@/components/animations/GridTransition";
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 import StickyHowItWorks from "@/components/sections/StickyHowItWorks";
-import SalaryIntelligenceZoom from "@/components/sections/SalaryIntelligenceZoom";
+import MarketPulseZoom from "@/components/sections/MarketPulseZoom";
 import StatsSection from "@/components/sections/StatsSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import HorizontalGallery from "@/components/sections/HorizontalGallery";
@@ -44,8 +44,8 @@ const Index = () => {
                 <AboutSection />
               </section>
               <StickyHowItWorks />
-              <section id="salary-intelligence">
-                <SalaryIntelligenceZoom />
+              <section id="market-pulse">
+                <MarketPulseZoom />
               </section>
               <StatsSection />
               <section id="projects">
