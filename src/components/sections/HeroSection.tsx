@@ -128,42 +128,63 @@ const HeroSection = () => {
               Find out your market value. Turn your network into income. AI and Machine learning intelligence.
             </motion.p>
 
-            {/* Bold Directional CTA Buttons with User-Type Colors */}
+            {/* Bold Directional CTA Buttons with User-Type Colors + Pulsing Glow */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col sm:flex-row flex-wrap gap-4 mt-8 pointer-events-auto"
             >
-              {/* Talent CTA - Pastel Green */}
-              <DirectionalButton 
-                theme="talent"
-                size="xl"
-                onClick={() => navigateWithTransition("/career-intelligence")}
-                className="shadow-[0_0_40px_hsl(140,60%,75%,0.5)] hover:shadow-[0_0_60px_hsl(140,60%,75%,0.7)]"
-              >
-                Find Out How Much You're Worth
-              </DirectionalButton>
+              {/* Talent CTA - Pastel Green with pulsing glow */}
+              <div className="relative">
+                <motion.div
+                  className="absolute inset-0 rounded-full bg-talent/40"
+                  animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <DirectionalButton 
+                  theme="talent"
+                  size="xl"
+                  onClick={() => navigateWithTransition("/career-intelligence")}
+                  className="relative z-10 shadow-[0_0_40px_hsl(var(--color-talent)/0.5)] hover:shadow-[0_0_60px_hsl(var(--color-talent)/0.7)]"
+                >
+                  Find Out How Much You're Worth
+                </DirectionalButton>
+              </div>
               
-              {/* Referrer CTA - Pastel Blue */}
-              <DirectionalButton
-                theme="referrer"
-                size="xl"
-                onClick={() => navigateWithTransition("/opportunities")}
-                className="shadow-[0_0_40px_hsl(210,70%,78%,0.5)] hover:shadow-[0_0_60px_hsl(210,70%,78%,0.7)]"
-              >
-                Refer & Earn
-              </DirectionalButton>
+              {/* Referrer CTA - Pastel Blue with pulsing glow */}
+              <div className="relative">
+                <motion.div
+                  className="absolute inset-0 rounded-full bg-referrer/40"
+                  animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                />
+                <DirectionalButton
+                  theme="referrer"
+                  size="xl"
+                  onClick={() => navigateWithTransition("/opportunities")}
+                  className="relative z-10 shadow-[0_0_40px_hsl(var(--color-referrer)/0.5)] hover:shadow-[0_0_60px_hsl(var(--color-referrer)/0.7)]"
+                >
+                  Refer & Earn
+                </DirectionalButton>
+              </div>
               
-              {/* Brand CTA - Pastel Pink */}
-              <DirectionalButton
-                theme="brand"
-                size="xl"
-                onClick={() => navigateWithTransition("/how-it-works")}
-                className="shadow-[0_0_40px_hsl(340,80%,85%,0.5)] hover:shadow-[0_0_60px_hsl(340,80%,85%,0.7)]"
-              >
-                Post Opportunities
-              </DirectionalButton>
+              {/* Brand CTA - Pastel Pink with pulsing glow */}
+              <div className="relative">
+                <motion.div
+                  className="absolute inset-0 rounded-full bg-brand/40"
+                  animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+                />
+                <DirectionalButton
+                  theme="brand"
+                  size="xl"
+                  onClick={() => navigateWithTransition("/how-it-works")}
+                  className="relative z-10 shadow-[0_0_40px_hsl(var(--color-brand)/0.5)] hover:shadow-[0_0_60px_hsl(var(--color-brand)/0.7)]"
+                >
+                  Post Opportunities
+                </DirectionalButton>
+              </div>
             </motion.div>
           </motion.div>
         </motion.div>
@@ -177,10 +198,10 @@ const HeroSection = () => {
           whileHover={{ scale: 1.05, rotate: 0 }}
           className="absolute bottom-24 sm:bottom-20 right-4 sm:right-8 lg:right-12 w-48 sm:w-56 md:w-64 lg:w-80 pointer-events-auto cursor-pointer z-20"
         >
-          {/* Credit Card Design */}
+          {/* Credit Card Design - Using UNIFIED talent green */}
           <div className="relative w-full aspect-[1.586/1] rounded-2xl overflow-hidden shadow-2xl">
-            {/* Card Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-sage via-sage/90 to-forest" />
+            {/* Card Background - Talent green to match R button and CTAs */}
+            <div className="absolute inset-0 bg-gradient-to-br from-talent via-talent/90 to-talent-dark" />
             
             {/* Card Pattern */}
             <div className="absolute inset-0 opacity-10">
@@ -196,7 +217,8 @@ const HeroSection = () => {
                 <div className="text-foreground font-heading font-bold text-sm lg:text-base tracking-tight">
                   Referd<span className="text-foreground/60 text-[10px] lg:text-xs align-super">®</span>
                 </div>
-                <div className="w-7 h-5 lg:w-8 lg:h-6 rounded bg-gradient-to-br from-mustard/80 to-mustard/50 border border-foreground/10" />
+                {/* Chip using referrer blue */}
+                <div className="w-7 h-5 lg:w-8 lg:h-6 rounded bg-gradient-to-br from-referrer/80 to-referrer/50 border border-foreground/10" />
               </div>
               
               {/* Balance */}
@@ -209,15 +231,15 @@ const HeroSection = () => {
                 </p>
               </div>
               
-              {/* Bottom */}
+              {/* Bottom - Using referrer blue and brand pink */}
               <div className="flex justify-between items-end">
                 <div>
                   <p className="text-[8px] lg:text-[10px] uppercase tracking-wider text-foreground/50">Since</p>
                   <p className="text-xs lg:text-sm font-medium text-foreground/80">2024</p>
                 </div>
                 <div className="flex">
-                  <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-rose/80" />
-                  <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-mustard/80 -ml-2" />
+                  <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-brand/80" />
+                  <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-referrer/80 -ml-2" />
                 </div>
               </div>
             </div>

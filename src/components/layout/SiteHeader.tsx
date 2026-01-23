@@ -316,14 +316,14 @@ const SiteHeader = () => {
                 playClick();
                 setIsMobileMenuOpen(!isMobileMenuOpen);
               }}
-              className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full transition-all duration-300 flex items-center justify-center bg-sage border-2 border-sage shadow-lg"
+              className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full transition-all duration-300 flex items-center justify-center bg-talent border-2 border-talent shadow-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               aria-label="Toggle menu"
             >
-              {/* Pulsing glow effect */}
+              {/* Pulsing glow effect - using talent green to match CTAs and credit card */}
               <motion.div
-                className="absolute inset-0 rounded-full bg-sage/50"
+                className="absolute inset-0 rounded-full bg-talent/50"
                 animate={{ 
                   scale: [1, 1.4, 1],
                   opacity: [0.6, 0, 0.6]
@@ -335,7 +335,7 @@ const SiteHeader = () => {
                 }}
               />
               <motion.div
-                className="absolute inset-0 rounded-full bg-sage/30"
+                className="absolute inset-0 rounded-full bg-talent/30"
                 animate={{ 
                   scale: [1, 1.6, 1],
                   opacity: [0.4, 0, 0.4]
@@ -351,7 +351,7 @@ const SiteHeader = () => {
               {/* Haptic pulse ring */}
               {isPulsing && enabled && (
                 <motion.div
-                  className="absolute inset-0 rounded-full border-2 border-sage"
+                  className="absolute inset-0 rounded-full border-2 border-talent"
                   initial={{ scale: 1, opacity: 0.8 }}
                   animate={{ scale: 1.5, opacity: 0 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
