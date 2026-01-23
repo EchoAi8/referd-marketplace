@@ -167,6 +167,71 @@ export type Database = {
         }
         Relationships: []
       }
+      referrals: {
+        Row: {
+          created_at: string
+          hired_at: string | null
+          id: string
+          job_match_id: string | null
+          notes: string | null
+          paid_at: string | null
+          platform_earnings: number | null
+          referral_fee: number | null
+          referred_email: string
+          referred_name: string | null
+          referred_user_id: string | null
+          referrer_earnings: number | null
+          referrer_id: string
+          status: string
+          talent_earnings: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          hired_at?: string | null
+          id?: string
+          job_match_id?: string | null
+          notes?: string | null
+          paid_at?: string | null
+          platform_earnings?: number | null
+          referral_fee?: number | null
+          referred_email: string
+          referred_name?: string | null
+          referred_user_id?: string | null
+          referrer_earnings?: number | null
+          referrer_id: string
+          status?: string
+          talent_earnings?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          hired_at?: string | null
+          id?: string
+          job_match_id?: string | null
+          notes?: string | null
+          paid_at?: string | null
+          platform_earnings?: number | null
+          referral_fee?: number | null
+          referred_email?: string
+          referred_name?: string | null
+          referred_user_id?: string | null
+          referrer_earnings?: number | null
+          referrer_id?: string
+          status?: string
+          talent_earnings?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_job_match_id_fkey"
+            columns: ["job_match_id"]
+            isOneToOne: false
+            referencedRelation: "job_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       resumes: {
         Row: {
           compensation_expectations: Json | null

@@ -108,39 +108,29 @@ const SalaryIntelligence = () => {
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("salary-intelligence", {
-        body: {
-          jobTitle: formData.jobTitle,
-          location: formData.location || "United Kingdom",
-          yearsExperience: parseInt(formData.yearsExperience) || 3,
-          industry: formData.industry,
-          currentSalary: totalComp || parseInt(formData.baseSalary.replace(/[^0-9]/g, "")),
-          companySize: formData.companySize || "51-200"
-        }
-      });
-
-      if (error) throw error;
-
-      setResult(data);
-      setStep(2);
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Analysis failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+    // Store form data in sessionStorage for use after auth
+    const analysisData = {
+      jobTitle: formData.jobTitle,
+      location: formData.location || "United Kingdom",
+      yearsExperience: parseInt(formData.yearsExperience) || 3,
+      industry: formData.industry,
+      currentSalary: totalComp || parseInt(formData.baseSalary.replace(/[^0-9]/g, "")),
+      companySize: formData.companySize || "51-200"
+    };
+    
+    sessionStorage.setItem('pendingMarketPulseAnalysis', JSON.stringify(analysisData));
+    
+    // Redirect to auth page - analysis will complete after login
+    navigateWithTransition("/auth?redirect=/dashboard&analysis=pending");
+    toast.info("Please sign in to view your personalized Market Pulse report");
   };
 
   const handleUnlockReport = async () => {
-    if (!formData.email || !formData.name) {
-      toast.error("Please enter your name and email to unlock the full report");
-      return;
+    // Store current result in session and redirect to auth
+    if (result) {
+      sessionStorage.setItem('pendingMarketPulseResult', JSON.stringify(result));
     }
-    // In production, this would trigger auth flow
-    setShowFullReport(true);
-    toast.success("Full report unlocked! Check your dashboard for complete insights.");
+    navigateWithTransition("/auth?redirect=/dashboard");
   };
 
   // SEO Meta tags

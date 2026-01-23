@@ -4,12 +4,14 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Users, DollarSign, ArrowRight, CheckCircle2, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Users, DollarSign, ArrowRight, CheckCircle2, X, Sparkles } from 'lucide-react';
 
 const ReferrerOnboardingPrompt = () => {
   const [dismissed, setDismissed] = useState(false);
   const [joining, setJoining] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleJoinAsReferrer = async () => {
     if (!user) return;
@@ -23,13 +25,14 @@ const ReferrerOnboardingPrompt = () => {
       if (error) {
         if (error.code === '23505') {
           toast.info('You\'re already registered as a Referrer!');
+          navigate('/referrer');
         } else {
           throw error;
         }
       } else {
         toast.success('Welcome to the Referrer network! 🎉');
+        navigate('/referrer');
       }
-      setDismissed(true);
     } catch (err) {
       console.error('Join error:', err);
       toast.error('Failed to join. Please try again.');
@@ -46,10 +49,11 @@ const ReferrerOnboardingPrompt = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-2xl p-6 overflow-hidden"
+        className="relative rounded-2xl border border-border/50 bg-gradient-to-br from-sage/10 via-sage/5 to-transparent backdrop-blur-xl p-6 overflow-hidden"
       >
         {/* Background decoration */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-sage/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-mustard/5 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
         
         {/* Dismiss button */}
         <button
@@ -62,26 +66,29 @@ const ReferrerOnboardingPrompt = () => {
         <div className="relative">
           {/* Header */}
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Users className="w-6 h-6 text-primary" />
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sage/20 to-sage/10 flex items-center justify-center shadow-lg shadow-sage/10">
+              <Users className="w-6 h-6 text-sage" />
             </div>
             <div>
-              <h3 className="font-semibold text-lg">Become a Referrer</h3>
-              <p className="text-sm text-muted-foreground">Earn from your network</p>
+              <h3 className="font-heading font-semibold text-lg flex items-center gap-2">
+                Become a Referrer
+                <Sparkles className="w-4 h-4 text-mustard" />
+              </h3>
+              <p className="text-sm text-muted-foreground">Earn 35% of every placement</p>
             </div>
           </div>
 
           {/* Benefits */}
-          <div className="grid sm:grid-cols-2 gap-3 mb-6">
-            <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50">
-              <DollarSign className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+          <div className="space-y-2 mb-6">
+            <div className="flex items-start gap-3 p-3 rounded-xl bg-card/50 border border-border/30">
+              <DollarSign className="w-5 h-5 text-sage shrink-0 mt-0.5" />
               <div>
                 <p className="font-medium text-sm">Earn Referral Bonuses</p>
-                <p className="text-xs text-muted-foreground">Up to $5,000 per successful placement</p>
+                <p className="text-xs text-muted-foreground">Up to £5,000+ per successful placement</p>
               </div>
             </div>
-            <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50">
-              <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-3 rounded-xl bg-card/50 border border-border/30">
+              <CheckCircle2 className="w-5 h-5 text-sage shrink-0 mt-0.5" />
               <div>
                 <p className="font-medium text-sm">Exclusive Access</p>
                 <p className="text-xs text-muted-foreground">See jobs before they're public</p>
@@ -90,11 +97,11 @@ const ReferrerOnboardingPrompt = () => {
           </div>
 
           {/* CTA */}
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col gap-2">
             <Button
               onClick={handleJoinAsReferrer}
               disabled={joining}
-              className="flex-1"
+              className="w-full bg-gradient-to-r from-sage to-forest text-foreground shadow-lg shadow-sage/20 hover:shadow-sage/30 transition-shadow"
               size="lg"
             >
               {joining ? (
@@ -112,7 +119,8 @@ const ReferrerOnboardingPrompt = () => {
             <Button
               variant="ghost"
               onClick={() => setDismissed(true)}
-              className="sm:w-auto"
+              className="text-muted-foreground hover:text-foreground"
+              size="sm"
             >
               Maybe later
             </Button>
