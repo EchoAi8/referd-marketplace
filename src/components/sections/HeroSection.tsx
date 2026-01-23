@@ -29,7 +29,7 @@ const HeroSection = () => {
   const cardOpacity = useTransform(smoothProgress, [0, 0.4], [1, 0]);
 
   return (
-    <section ref={containerRef} className="relative h-screen bg-foreground overflow-hidden">
+    <section ref={containerRef} className="relative min-h-screen h-screen max-h-screen bg-foreground overflow-hidden flex-shrink-0">
       {/* Interactive Network Canvas Background with parallax */}
       <motion.div 
         style={{ opacity: heroOpacity, scale: heroScale, y: canvasY }} 
@@ -53,7 +53,7 @@ const HeroSection = () => {
       </motion.div>
 
       {/* Main Content Container - Full height with flexbox */}
-      <div className="relative z-10 h-full flex flex-col justify-between pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12 md:pb-16 px-4 sm:px-6 md:px-12 pointer-events-none">
+      <div className="relative z-10 h-full flex flex-col justify-between pt-20 sm:pt-24 md:pt-28 pb-20 sm:pb-24 md:pb-28 px-4 sm:px-6 md:px-12 pointer-events-none">
         {/* Top - Logo with character animation and parallax */}
         <motion.div 
           style={{ y: logoY, scale: logoScale }} 
@@ -236,7 +236,7 @@ const HeroSection = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.8, duration: 0.8 }}
         style={{ opacity: useTransform(smoothProgress, [0, 0.2], [1, 0]) }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}
