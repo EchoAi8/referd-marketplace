@@ -1,10 +1,10 @@
 import { motion, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useSmoothScroll } from "@/hooks/useSmoothScroll";
-import MagneticButton from "@/components/animations/MagneticButton";
 import InteractiveNetworkCanvas from "@/components/animations/InteractiveNetworkCanvas";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
 import HeroProfileGridBackdrop from "@/components/sections/hero/HeroProfileGridBackdrop";
+import DirectionalButton from "@/components/ui/DirectionalButton";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -29,7 +29,7 @@ const HeroSection = () => {
   const cardOpacity = useTransform(smoothProgress, [0, 0.4], [1, 0]);
 
   return (
-    <section ref={containerRef} className="relative min-h-screen bg-foreground overflow-hidden">
+    <section ref={containerRef} className="relative h-screen bg-foreground overflow-hidden">
       {/* Interactive Network Canvas Background with parallax */}
       <motion.div 
         style={{ opacity: heroOpacity, scale: heroScale, y: canvasY }} 
@@ -52,8 +52,8 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/20 via-transparent to-foreground/20 pointer-events-none" />
       </motion.div>
 
-      {/* Main Content Container */}
-      <div className="relative z-10 min-h-screen flex flex-col pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12 md:pb-16 px-4 sm:px-6 md:px-12 pointer-events-none">
+      {/* Main Content Container - Full height with flexbox */}
+      <div className="relative z-10 h-full flex flex-col justify-between pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12 md:pb-16 px-4 sm:px-6 md:px-12 pointer-events-none">
         {/* Top - Logo with character animation and parallax */}
         <motion.div 
           style={{ y: logoY, scale: logoScale }} 
@@ -91,23 +91,23 @@ const HeroSection = () => {
           </motion.h1>
         </motion.div>
 
-        {/* Bottom Content - Text on Left */}
+        {/* Center/Bottom Content - Text on Left */}
         <motion.div 
           style={{ y: contentY }}
-          className="flex-1 flex flex-col justify-end mt-auto pb-32 sm:pb-28 md:pb-20"
+          className="flex-1 flex flex-col justify-end"
         >
           {/* Tagline & CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-2xl"
+            className="max-w-3xl"
           >
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-background/95 font-heading font-bold leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-background/95 font-heading font-bold leading-tight"
             >
               The People Powered Recruitment Marketplace
             </motion.p>
@@ -115,7 +115,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-3 text-lg sm:text-xl md:text-2xl text-sage font-heading font-medium"
+              className="mt-4 text-xl sm:text-2xl md:text-3xl text-sage font-heading font-medium"
             >
               Gather your Herd — Get paid with Referd.
             </motion.p>
@@ -123,82 +123,85 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-3 text-background/60 text-sm sm:text-base md:text-lg max-w-xl"
+              className="mt-4 text-background/60 text-base sm:text-lg md:text-xl max-w-2xl"
             >
               Find out your market value. Turn your network into income. AI and Machine learning intelligence.
             </motion.p>
 
-            {/* CTA Buttons with Enhanced Glow */}
+            {/* Bold Directional CTA Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col sm:flex-row flex-wrap gap-3 mt-6 pointer-events-auto"
+              className="flex flex-col sm:flex-row flex-wrap gap-4 mt-8 pointer-events-auto"
             >
-              <MagneticButton 
-                className="relative overflow-hidden px-6 py-3.5 bg-gradient-to-r from-sage via-sage to-forest text-foreground rounded-full font-bold text-sm sm:text-base shadow-[0_0_30px_rgba(139,164,133,0.7),0_0_60px_rgba(139,164,133,0.4)] hover:shadow-[0_0_40px_rgba(139,164,133,0.9),0_0_80px_rgba(139,164,133,0.5)] transition-all duration-300 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:-translate-x-full hover:before:translate-x-full before:transition-transform before:duration-700" 
-                strength={0.4}
-                onClick={() => navigateWithTransition("/salary-intelligence")}
+              <DirectionalButton 
+                theme="sage"
+                size="xl"
+                onClick={() => navigateWithTransition("/career-intelligence")}
+                className="shadow-[0_0_40px_rgba(139,164,133,0.5)] hover:shadow-[0_0_60px_rgba(139,164,133,0.7)]"
               >
-                <span className="relative z-10 flex items-center gap-2">
-                  🔥 Find Out How Much You're Worth
-                </span>
-              </MagneticButton>
-              <MagneticButton
-                className="relative overflow-hidden px-5 py-3 bg-gradient-to-r from-mustard via-mustard to-mustard/80 text-foreground rounded-full font-semibold hover:scale-105 transition-all text-sm sm:text-base shadow-[0_0_25px_rgba(226,195,104,0.7)] hover:shadow-[0_0_40px_rgba(226,195,104,0.9)]"
-                strength={0.4}
+                Find Out How Much You're Worth
+              </DirectionalButton>
+              
+              <DirectionalButton
+                theme="mustard"
+                size="xl"
                 onClick={() => navigateWithTransition("/opportunities")}
+                className="shadow-[0_0_40px_rgba(226,195,104,0.5)] hover:shadow-[0_0_60px_rgba(226,195,104,0.7)]"
               >
-                💰 Refer & Earn
-              </MagneticButton>
-              <MagneticButton
-                className="px-5 py-3 border-2 border-background/50 text-background rounded-full font-semibold hover:bg-background/15 hover:border-background/70 transition-all text-sm sm:text-base shadow-[0_0_20px_rgba(255,255,255,0.25)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
-                strength={0.4}
+                Refer & Earn
+              </DirectionalButton>
+              
+              <DirectionalButton
+                theme="dark"
+                size="xl"
                 onClick={() => navigateWithTransition("/how-it-works")}
+                className="border-2 border-background/30 shadow-[0_0_30px_rgba(255,255,255,0.15)] hover:shadow-[0_0_50px_rgba(255,255,255,0.25)]"
               >
-                How the marketplace works
-              </MagneticButton>
+                How The Marketplace Works
+              </DirectionalButton>
             </motion.div>
           </motion.div>
         </motion.div>
 
-        {/* Credit Card - Fixed to bottom right corner, hidden on very small screens */}
+        {/* Credit Card - Fixed to bottom right corner */}
         <motion.div
           style={{ y: cardY, rotate: cardRotate, opacity: cardOpacity }}
           initial={{ opacity: 0, y: 50, rotate: 5 }}
           animate={{ opacity: 1, y: 0, rotate: 3 }}
           transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
           whileHover={{ scale: 1.05, rotate: 0 }}
-          className="hidden sm:block absolute bottom-36 sm:bottom-24 md:bottom-28 lg:bottom-32 right-4 sm:right-6 md:right-8 lg:right-12 w-48 sm:w-52 md:w-60 lg:w-72 pointer-events-auto cursor-pointer z-20"
+          className="hidden lg:block absolute bottom-20 right-8 lg:right-12 w-64 lg:w-80 pointer-events-auto cursor-pointer z-20"
         >
-          {/* Credit Card Design - Compact */}
-          <div className="relative w-full aspect-[1.586/1] rounded-xl overflow-hidden shadow-2xl">
+          {/* Credit Card Design */}
+          <div className="relative w-full aspect-[1.586/1] rounded-2xl overflow-hidden shadow-2xl">
             {/* Card Background */}
             <div className="absolute inset-0 bg-gradient-to-br from-sage via-sage/90 to-forest" />
             
             {/* Card Pattern */}
             <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-2 left-2 w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-foreground/20" />
-              <div className="absolute top-3 left-3 w-4 h-4 sm:w-6 sm:h-6 rounded-full border-2 border-foreground/20" />
-              <div className="absolute bottom-3 right-3 w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-foreground/10" />
+              <div className="absolute top-3 left-3 w-8 h-8 lg:w-10 lg:h-10 rounded-full border-2 border-foreground/20" />
+              <div className="absolute top-4 left-4 w-5 h-5 lg:w-7 lg:h-7 rounded-full border-2 border-foreground/20" />
+              <div className="absolute bottom-4 right-4 w-10 h-10 lg:w-12 lg:h-12 rounded-full border border-foreground/10" />
             </div>
             
             {/* Card Content */}
-            <div className="relative h-full p-2.5 sm:p-3 md:p-4 flex flex-col justify-between">
+            <div className="relative h-full p-4 lg:p-5 flex flex-col justify-between">
               {/* Top */}
               <div className="flex justify-between items-start">
-                <div className="text-foreground font-heading font-bold text-xs sm:text-sm md:text-base tracking-tight">
-                  Referd<span className="text-foreground/60 text-[8px] sm:text-[10px] align-super">®</span>
+                <div className="text-foreground font-heading font-bold text-sm lg:text-base tracking-tight">
+                  Referd<span className="text-foreground/60 text-[10px] lg:text-xs align-super">®</span>
                 </div>
-                <div className="w-5 h-4 sm:w-6 sm:h-5 md:w-7 md:h-5 rounded bg-gradient-to-br from-mustard/80 to-mustard/50 border border-foreground/10" />
+                <div className="w-7 h-5 lg:w-8 lg:h-6 rounded bg-gradient-to-br from-mustard/80 to-mustard/50 border border-foreground/10" />
               </div>
               
               {/* Balance */}
               <div>
-                <p className="text-[7px] sm:text-[8px] md:text-[10px] uppercase tracking-widest text-foreground/60">
+                <p className="text-[10px] lg:text-xs uppercase tracking-widest text-foreground/60">
                   Referral Balance
                 </p>
-                <p className="text-base sm:text-lg md:text-xl font-heading font-bold text-foreground tracking-tight">
+                <p className="text-xl lg:text-2xl font-heading font-bold text-foreground tracking-tight">
                   £24,000
                 </p>
               </div>
@@ -206,12 +209,12 @@ const HeroSection = () => {
               {/* Bottom */}
               <div className="flex justify-between items-end">
                 <div>
-                  <p className="text-[5px] sm:text-[6px] md:text-[8px] uppercase tracking-wider text-foreground/50">Since</p>
-                  <p className="text-[9px] sm:text-[10px] md:text-xs font-medium text-foreground/80">2024</p>
+                  <p className="text-[8px] lg:text-[10px] uppercase tracking-wider text-foreground/50">Since</p>
+                  <p className="text-xs lg:text-sm font-medium text-foreground/80">2024</p>
                 </div>
                 <div className="flex">
-                  <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 rounded-full bg-rose/80" />
-                  <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 rounded-full bg-mustard/80 -ml-1.5 sm:-ml-2" />
+                  <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-rose/80" />
+                  <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-mustard/80 -ml-2" />
                 </div>
               </div>
             </div>
@@ -227,13 +230,13 @@ const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator - centered at bottom */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.8, duration: 0.8 }}
         style={{ opacity: useTransform(smoothProgress, [0, 0.2], [1, 0]) }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20"
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}
@@ -242,13 +245,12 @@ const HeroSection = () => {
         >
           <span className="text-xs uppercase tracking-[0.2em] text-background/40">Scroll</span>
           <motion.div
-            className="w-px h-10 bg-gradient-to-b from-background/50 to-transparent"
+            className="w-px h-8 bg-gradient-to-b from-background/50 to-transparent"
             animate={{ scaleY: [1, 0.6, 1] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
           />
         </motion.div>
       </motion.div>
-
     </section>
   );
 };
