@@ -57,41 +57,41 @@ const DirectionalButton = ({
   }, []);
 
   const sizeClasses = {
-    default: "h-12 px-6 text-base",
-    lg: "h-14 px-8 text-lg",
-    xl: "h-16 sm:h-20 px-8 sm:px-12 text-lg sm:text-xl",
+    default: "h-14 px-8 text-base",
+    lg: "h-16 px-10 text-lg",
+    xl: "h-16 sm:h-[4.5rem] px-10 sm:px-14 text-lg sm:text-xl font-bold",
   };
 
   const themeStyles = {
     dark: {
-      bg: "bg-foreground",
-      text: "text-background",
-      textHover: "group-hover:text-foreground",
-      circle: "bg-sage",
+      bg: "bg-[hsl(180,40%,6%)]",
+      text: "text-[hsl(48,60%,96%)]",
+      textHover: "group-hover:text-[hsl(180,40%,6%)]",
+      circle: "bg-[hsl(102,95%,76%)]",
     },
     light: {
-      bg: "bg-background",
-      text: "text-foreground",
-      textHover: "group-hover:text-foreground",
-      circle: "bg-sage/60",
+      bg: "bg-[hsl(48,30%,92%)]",
+      text: "text-[hsl(180,40%,6%)]",
+      textHover: "group-hover:text-[hsl(180,40%,6%)]",
+      circle: "bg-[hsl(177,25%,70%)]",
     },
     primary: {
-      bg: "bg-sage",
-      text: "text-foreground",
-      textHover: "group-hover:text-foreground",
+      bg: "bg-[hsl(102,95%,76%)]",
+      text: "text-[hsl(180,40%,6%)]",
+      textHover: "group-hover:text-[hsl(180,40%,6%)]",
       circle: "bg-[hsl(85,95%,65%)]",
     },
     sage: {
-      bg: "bg-gradient-to-r from-sage via-sage to-forest",
-      text: "text-foreground",
-      textHover: "group-hover:text-background",
-      circle: "bg-foreground",
+      bg: "bg-[hsl(102,95%,76%)]",
+      text: "text-[hsl(180,40%,6%)]",
+      textHover: "group-hover:text-[hsl(48,60%,96%)]",
+      circle: "bg-[hsl(180,40%,6%)]",
     },
     mustard: {
-      bg: "bg-gradient-to-r from-mustard via-mustard to-mustard/80",
-      text: "text-foreground",
-      textHover: "group-hover:text-background",
-      circle: "bg-foreground",
+      bg: "bg-[hsl(45,80%,65%)]",
+      text: "text-[hsl(180,40%,6%)]",
+      textHover: "group-hover:text-[hsl(48,60%,96%)]",
+      circle: "bg-[hsl(180,40%,6%)]",
     },
   };
 
