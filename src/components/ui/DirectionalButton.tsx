@@ -59,39 +59,41 @@ const DirectionalButton = ({
   const sizeClasses = {
     default: "h-14 px-8 text-base",
     lg: "h-16 px-10 text-lg",
-    xl: "h-16 sm:h-[4.5rem] px-10 sm:px-14 text-lg sm:text-xl font-bold",
+    xl: "h-[4rem] sm:h-[4.5rem] md:h-20 px-8 sm:px-12 md:px-16 text-base sm:text-lg md:text-xl font-bold",
   };
 
   const themeStyles = {
     dark: {
-      bg: "bg-[hsl(180,40%,6%)]",
+      bg: "bg-[hsl(180,30%,8%)]",
       text: "text-[hsl(48,60%,96%)]",
-      textHover: "group-hover:text-[hsl(180,40%,6%)]",
-      circle: "bg-[hsl(102,95%,76%)]",
+      textHover: "group-hover:text-[hsl(180,30%,8%)]",
+      circle: "bg-[hsl(80,100%,55%)]",
     },
     light: {
-      bg: "bg-[hsl(48,30%,92%)]",
-      text: "text-[hsl(180,40%,6%)]",
-      textHover: "group-hover:text-[hsl(180,40%,6%)]",
-      circle: "bg-[hsl(177,25%,70%)]",
+      bg: "bg-[hsl(48,30%,96%)]",
+      text: "text-[hsl(180,30%,8%)]",
+      textHover: "group-hover:text-[hsl(180,30%,8%)]",
+      circle: "bg-[hsl(80,100%,55%)]",
     },
     primary: {
-      bg: "bg-[hsl(102,95%,76%)]",
-      text: "text-[hsl(180,40%,6%)]",
-      textHover: "group-hover:text-[hsl(180,40%,6%)]",
-      circle: "bg-[hsl(85,95%,65%)]",
+      bg: "bg-[hsl(80,100%,55%)]",
+      text: "text-[hsl(180,30%,8%)]",
+      textHover: "group-hover:text-[hsl(180,30%,8%)]",
+      circle: "bg-[hsl(90,100%,65%)]",
     },
     sage: {
-      bg: "bg-[hsl(102,95%,76%)]",
-      text: "text-[hsl(180,40%,6%)]",
-      textHover: "group-hover:text-[hsl(48,60%,96%)]",
-      circle: "bg-[hsl(180,40%,6%)]",
+      // Vibrant lime green
+      bg: "bg-[hsl(80,100%,55%)]",
+      text: "text-[hsl(180,30%,8%)]",
+      textHover: "group-hover:text-[hsl(80,100%,55%)]",
+      circle: "bg-[hsl(180,30%,8%)]",
     },
     mustard: {
-      bg: "bg-[hsl(45,80%,65%)]",
-      text: "text-[hsl(180,40%,6%)]",
-      textHover: "group-hover:text-[hsl(48,60%,96%)]",
-      circle: "bg-[hsl(180,40%,6%)]",
+      // Bold warm yellow/gold
+      bg: "bg-[hsl(45,100%,55%)]",
+      text: "text-[hsl(180,30%,8%)]",
+      textHover: "group-hover:text-[hsl(45,100%,55%)]",
+      circle: "bg-[hsl(180,30%,8%)]",
     },
   };
 

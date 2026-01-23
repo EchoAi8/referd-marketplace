@@ -53,17 +53,17 @@ const HeroSection = () => {
       </motion.div>
 
       {/* Main Content Container - Full height with flexbox */}
-      <div className="relative z-10 h-full flex flex-col justify-between pt-32 sm:pt-36 md:pt-40 pb-20 sm:pb-24 md:pb-28 px-4 sm:px-6 md:px-12 pointer-events-none">
+      <div className="relative z-10 h-full flex flex-col justify-between pt-24 sm:pt-28 md:pt-32 pb-20 sm:pb-24 md:pb-28 px-4 sm:px-6 md:px-12 pointer-events-none">
         {/* Top - Logo with character animation and parallax */}
         <motion.div 
           style={{ y: logoY, scale: logoScale }} 
-          className="origin-top-left"
+          className="origin-top-left overflow-visible"
         >
           <motion.h1
             initial={{ y: 120 }}
             animate={{ y: 0 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[14vw] sm:text-[12vw] md:text-[10vw] lg:text-[8vw] font-heading font-bold text-background leading-none tracking-tight"
+            className="text-[18vw] sm:text-[16vw] md:text-[14vw] lg:text-[12vw] font-heading font-bold text-background leading-[0.85] tracking-tighter"
           >
             {"Referd".split("").map((char, i) => (
               <motion.span
@@ -84,7 +84,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="text-sage"
+              className="text-sage text-[0.4em] align-super ml-1"
             >
               ®
             </motion.span>
