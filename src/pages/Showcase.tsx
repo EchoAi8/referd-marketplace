@@ -378,9 +378,12 @@ const Showcase = () => {
     const container = crispHeaderRef.current;
     if (!container) return;
 
-    const loaderGroups = container.querySelector<HTMLElement>('.crisp-loader__groups');
-    const loaderGroup = container.querySelectorAll<HTMLElement>('.crisp-loader__group');
-    const loaderSingles = container.querySelectorAll<HTMLElement>('.crisp-loader__single');
+    // Ensure we always start in loading state when entering /showcase
+    setCrispIsLoading(true);
+
+    // In the original effect, the moving "mini squares" are the direct children of the groups
+    // (each .crisp-loader__single). We animate those, not the group wrappers.
+    const revealImages = container.querySelectorAll<HTMLElement>('.crisp-loader__group > *');
     const isScaleUp = container.querySelectorAll<HTMLElement>('.crisp-loader__media.is--scaling');
     const isScaleDown = container.querySelectorAll<HTMLElement>('.crisp-loader__cover-img.is--scale-down');
     const isRadius = container.querySelectorAll<HTMLElement>('.crisp-loader__media.is--scaling.is--radius');
@@ -395,12 +398,12 @@ const Showcase = () => {
       }
     });
 
-    // Animate the group elements (not singles) scrolling through
-    const loaderGroupElements = container.querySelectorAll<HTMLElement>('.crisp-loader__group');
-    if (loaderGroupElements.length) {
-      tl.fromTo(loaderGroupElements, 
-        { xPercent: 0 }, 
-        { xPercent: -200, duration: 2.5, stagger: 0.05 }
+    // Animate images scrolling through (mini tiles)
+    if (revealImages.length) {
+      tl.fromTo(
+        revealImages,
+        { xPercent: 500 },
+        { xPercent: -500, duration: 2.5, stagger: 0.05 }
       );
     }
 
@@ -1095,7 +1098,7 @@ const Showcase = () => {
 
         .crisp-loader__groups {
           position: relative;
-          overflow: visible;
+          overflow: hidden;
         }
 
         .crisp-loader__group {
