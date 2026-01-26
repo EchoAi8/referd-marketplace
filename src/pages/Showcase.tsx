@@ -69,6 +69,7 @@ const Showcase = () => {
   const scrambleAltRef = useRef<HTMLHeadingElement>(null);
   const scrambleHoverRef = useRef<HTMLAnchorElement>(null);
   const matterCanvasRef = useRef<HTMLDivElement>(null);
+  const footerParallaxRef = useRef<HTMLDivElement>(null);
   const lastWidthRef = useRef(typeof window !== "undefined" ? window.innerWidth : 0);
 
   // 3D Carousel Effect
@@ -538,6 +539,42 @@ const Showcase = () => {
     };
   }, []);
 
+  // Footer Parallax Effect
+  useEffect(() => {
+    const el = footerParallaxRef.current;
+    if (!el) return;
+
+    const inner = el.querySelector('[data-footer-parallax-inner]');
+    const dark = el.querySelector('[data-footer-parallax-dark]');
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: el,
+        start: 'clamp(top bottom)',
+        end: 'clamp(top top)',
+        scrub: true
+      }
+    });
+
+    if (inner) {
+      tl.from(inner, {
+        yPercent: -25,
+        ease: 'linear'
+      });
+    }
+
+    if (dark) {
+      tl.from(dark, {
+        opacity: 0.5,
+        ease: 'linear'
+      }, '<');
+    }
+
+    return () => {
+      tl.kill();
+    };
+  }, []);
+
   return (
     <PageLayout>
       {/* 3D Image Carousel */}
@@ -670,6 +707,73 @@ const Showcase = () => {
           <div ref={matterCanvasRef} id="canvas-target" className="canvas-matter__target"></div>
         </div>
       </section>
+
+      {/* Footer Parallax Demo */}
+      <main className="demo-main">
+        <section className="demo-header">
+          <div className="demo-header__nav-row">
+            <div className="demo-header__logo">
+              <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 1360 164" fill="none">
+                <path d="M513.618 8.42969C525.002 8.42974 535.449 10.375 544.96 14.2656C554.471 18.0123 562.756 23.4166 569.817 30.4775C577.022 37.3943 582.57 45.6077 586.461 55.1182C590.352 64.4847 592.297 74.7167 592.297 85.8125C592.297 96.9081 590.352 107.211 586.461 116.722C582.57 126.088 577.022 134.302 569.817 141.363C562.757 148.28 554.47 153.684 544.96 157.574C535.449 161.321 525.002 163.194 513.618 163.194C502.378 163.194 491.93 161.321 482.275 157.574C472.621 153.684 464.191 148.28 456.986 141.363C449.925 134.302 444.378 126.088 440.343 116.722C440.224 116.432 440.108 116.142 439.993 115.852V161.465H401.086V101.375C401.086 94.4582 401.229 88.2619 401.518 82.7861C401.806 77.1663 402.022 72.6991 402.166 69.3848C402.452 65.951 402.597 64.2218 402.599 64.1973C402.591 64.219 402.014 65.8039 400.869 68.9521C399.716 72.1223 398.203 76.3734 396.33 81.7051C394.457 86.8926 392.224 92.6568 389.63 98.9971L364.556 161.465H336.673L311.599 98.9971C309.005 92.8009 306.772 87.0367 304.898 81.7051C303.025 76.3734 301.584 72.1224 300.575 68.9521C299.571 65.7969 299.066 64.2121 299.062 64.1973C299.063 64.221 299.135 65.9503 299.278 69.3848C299.567 72.6991 299.711 77.1663 299.711 82.7861C299.855 88.2619 299.927 94.3865 299.927 101.159V161.465H261.235V135.637C260.39 137.393 259.426 139.086 258.34 140.715C253.44 147.92 246.667 153.468 238.021 157.358C229.52 161.249 219.864 163.194 209.057 163.194C196.376 163.194 185.425 160.888 176.202 156.277C166.98 151.666 159.702 145.254 154.37 137.04C151.914 133.083 149.911 128.803 148.359 124.2C144.879 130.526 140.531 136.248 135.311 141.363C128.25 148.28 119.964 153.683 110.453 157.574C100.943 161.321 90.4952 163.194 79.1113 163.194C67.8715 163.194 57.4233 161.321 47.7686 157.574C38.1141 153.684 29.6844 148.28 22.4795 141.363C15.4185 134.302 9.87077 126.088 5.83594 116.722C1.94525 107.211 4.07364e-05 96.9081 0 85.8125C0 74.7167 1.94521 64.4847 5.83594 55.1182C9.87075 45.6077 15.4187 37.3943 22.4795 30.4775C29.6845 23.4167 38.1139 18.0122 47.7686 14.2656C57.4233 10.3749 67.8715 8.42969 79.1113 8.42969C90.4952 8.42973 100.943 10.3749 110.453 14.2656C119.964 18.0123 128.25 23.4166 135.311 30.4775C142.413 37.2964 147.904 45.3762 151.786 54.7158C151.78 54.3487 151.776 53.9785 151.776 53.6055C151.776 44.5271 154.227 36.6735 159.126 30.0449C164.169 23.2722 170.798 18.0122 179.012 14.2656C187.225 10.375 196.232 8.42975 206.03 8.42969C217.702 8.42969 227.718 10.3749 236.076 14.2656C244.434 18.0122 251.063 23.4884 255.962 30.6934C258.055 33.684 259.812 36.9608 261.235 40.5225V10.1592H314.625L339.698 72.4111C342.292 78.7514 344.382 84.5873 345.967 89.9189C347.696 95.2504 348.993 99.5734 349.857 102.888C350.722 106.058 351.154 107.644 351.154 107.644C351.154 107.644 351.587 106.058 352.451 102.888C353.316 99.5734 354.613 95.2505 356.342 89.9189C358.071 84.5872 360.233 78.8233 362.827 72.627L388.116 10.1592H439.993V55.9746C440.108 55.6885 440.225 55.4027 440.343 55.1182C444.378 45.6077 449.926 37.3943 456.986 30.4775C464.191 23.4167 472.621 18.0122 482.275 14.2656C491.93 10.3749 502.378 8.42969 513.618 8.42969Z" fill="currentColor"></path>
+              </svg>
+            </div>
+            <p data-underline-link="" className="demo-header__nav-a">Navigation</p>
+          </div>
+          <div className="demo-header__title-row">
+            <h1 className="demo-header__h1">The footer marks the end of the scroll, but not the end of the story.</h1>
+          </div>
+          <div className="demo-header__info-row">
+            <div className="demo-header__col">
+              <p className="demo-eyebrow">( Concept )</p>
+            </div>
+            <div className="demo-header__col">
+              <p className="demo-p">Parallax adds a sense of depth and motion that feels natural to the human eye. By shifting elements at different speeds, we create a layered world that reacts to scroll.</p>
+              <p data-underline-link="" className="demo-eyebrow">Scroll down ↓</p>
+            </div>
+            <div className="demo-header__col">
+              <img src="https://cdn.prod.website-files.com/68ecabe37c9bd7423c65df4e/68ecc45be5d83f026c6c91d5_Freshly%20Baked%20Bread.avif" loading="lazy" alt="Bread" className="demo-header__img" />
+            </div>
+          </div>
+        </section>
+        <div ref={footerParallaxRef} data-footer-parallax="" className="footer-wrap">
+          <footer data-footer-parallax-inner="" className="demo-footer">
+            <div className="demo-footer__links-row">
+              <div className="demo-footer__col">
+                <p className="demo-eyebrow">( Pages )</p>
+                <div className="demo-footer__links">
+                  <a data-underline-link="" href="#" className="demo-footer__a">Home</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">Resources</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">About</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">Platform</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">Login</a>
+                </div>
+              </div>
+              <div className="demo-footer__col">
+                <p className="demo-eyebrow">( Socials )</p>
+                <div className="demo-footer__links">
+                  <a data-underline-link="" href="#" className="demo-footer__a">LinkedIn</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">Instagram</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">X/Twitter</a>
+                </div>
+              </div>
+              <div className="demo-footer__col">
+                <p className="demo-eyebrow">( Contact )</p>
+                <div className="demo-footer__links">
+                  <a data-underline-link="" href="#" className="demo-footer__a">hello@osmo.supply</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">+31 6 12 34 56 78</a>
+                </div>
+              </div>
+            </div>
+            <div className="demo-footer__logo-row">
+              <p className="demo-eyebrow">Not your typical platform</p>
+              <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 1360 164" fill="none" className="demo-footer__logo-svg">
+                <path d="M513.618 8.42969C525.002 8.42974 535.449 10.375 544.96 14.2656C554.471 18.0123 562.756 23.4166 569.817 30.4775C577.022 37.3943 582.57 45.6077 586.461 55.1182C590.352 64.4847 592.297 74.7167 592.297 85.8125C592.297 96.9081 590.352 107.211 586.461 116.722C582.57 126.088 577.022 134.302 569.817 141.363C562.757 148.28 554.47 153.684 544.96 157.574C535.449 161.321 525.002 163.194 513.618 163.194C502.378 163.194 491.93 161.321 482.275 157.574C472.621 153.684 464.191 148.28 456.986 141.363C449.925 134.302 444.378 126.088 440.343 116.722C440.224 116.432 440.108 116.142 439.993 115.852V161.465H401.086V101.375C401.086 94.4582 401.229 88.2619 401.518 82.7861C401.806 77.1663 402.022 72.6991 402.166 69.3848C402.452 65.951 402.597 64.2218 402.599 64.1973C402.591 64.219 402.014 65.8039 400.869 68.9521C399.716 72.1223 398.203 76.3734 396.33 81.7051C394.457 86.8926 392.224 92.6568 389.63 98.9971L364.556 161.465H336.673L311.599 98.9971C309.005 92.8009 306.772 87.0367 304.898 81.7051C303.025 76.3734 301.584 72.1224 300.575 68.9521C299.571 65.7969 299.066 64.2121 299.062 64.1973C299.063 64.221 299.135 65.9503 299.278 69.3848C299.567 72.6991 299.711 77.1663 299.711 82.7861C299.855 88.2619 299.927 94.3865 299.927 101.159V161.465H261.235V135.637C260.39 137.393 259.426 139.086 258.34 140.715C253.44 147.92 246.667 153.468 238.021 157.358C229.52 161.249 219.864 163.194 209.057 163.194C196.376 163.194 185.425 160.888 176.202 156.277C166.98 151.666 159.702 145.254 154.37 137.04C151.914 133.083 149.911 128.803 148.359 124.2C144.879 130.526 140.531 136.248 135.311 141.363C128.25 148.28 119.964 153.683 110.453 157.574C100.943 161.321 90.4952 163.194 79.1113 163.194C67.8715 163.194 57.4233 161.321 47.7686 157.574C38.1141 153.684 29.6844 148.28 22.4795 141.363C15.4185 134.302 9.87077 126.088 5.83594 116.722C1.94525 107.211 4.07364e-05 96.9081 0 85.8125C0 74.7167 1.94521 64.4847 5.83594 55.1182C9.87075 45.6077 15.4187 37.3943 22.4795 30.4775C29.6845 23.4167 38.1139 18.0122 47.7686 14.2656C57.4233 10.3749 67.8715 8.42969 79.1113 8.42969C90.4952 8.42973 100.943 10.3749 110.453 14.2656C119.964 18.0123 128.25 23.4166 135.311 30.4775C142.413 37.2964 147.904 45.3762 151.786 54.7158C151.78 54.3487 151.776 53.9785 151.776 53.6055C151.776 44.5271 154.227 36.6735 159.126 30.0449C164.169 23.2722 170.798 18.0122 179.012 14.2656C187.225 10.375 196.232 8.42975 206.03 8.42969C217.702 8.42969 227.718 10.3749 236.076 14.2656C244.434 18.0122 251.063 23.4884 255.962 30.6934C258.055 33.684 259.812 36.9608 261.235 40.5225V10.1592H314.625L339.698 72.4111C342.292 78.7514 344.382 84.5873 345.967 89.9189C347.696 95.2504 348.993 99.5734 349.857 102.888C350.722 106.058 351.154 107.644 351.154 107.644C351.154 107.644 351.587 106.058 352.451 102.888C353.316 99.5734 354.613 95.2505 356.342 89.9189C358.071 84.5872 360.233 78.8233 362.827 72.627L388.116 10.1592H439.993V55.9746C440.108 55.6885 440.225 55.4027 440.343 55.1182C444.378 45.6077 449.926 37.3943 456.986 30.4775C464.191 23.4167 472.621 18.0122 482.275 14.2656C491.93 10.3749 502.378 8.42969 513.618 8.42969Z" fill="currentColor"></path>
+              </svg>
+            </div>
+          </footer>
+          <div data-footer-parallax-dark="" className="footer-wrap__dark"></div>
+        </div>
+      </main>
 
       <style>{`
         /* 3D Carousel Styles */
@@ -960,6 +1064,270 @@ const Showcase = () => {
           max-height: calc(100% + 2px);
           min-width: calc(100% + 2px);
           min-height: calc(100% + 2px);
+        }
+
+        /* Footer Parallax Styles */
+        .demo-main {
+          overflow: clip;
+        }
+
+        .demo-eyebrow {
+          opacity: .5;
+          margin-bottom: 0;
+          font-size: 1.3125em;
+          font-weight: 600;
+          color: hsl(var(--foreground));
+        }
+
+        .demo-p {
+          max-width: 19em;
+          margin-bottom: 0;
+          font-size: 1.3125em;
+          font-weight: 600;
+          color: hsl(var(--foreground));
+        }
+
+        .demo-header {
+          grid-column-gap: 7.5em;
+          grid-row-gap: 7.5em;
+          letter-spacing: -.02em;
+          border-bottom: 1px solid hsl(var(--foreground) / 0.15);
+          flex-flow: column;
+          justify-content: space-between;
+          width: 100%;
+          min-height: 100svh;
+          padding: 2.5em;
+          font-weight: 600;
+          display: flex;
+          position: relative;
+          background: hsl(var(--background));
+        }
+
+        .demo-header__nav-row {
+          justify-content: space-between;
+          align-items: flex-start;
+          display: flex;
+        }
+
+        .demo-header__title-row {
+          grid-column-gap: 2.5em;
+          grid-row-gap: 2.5em;
+          padding-left: calc(33.3333% + .833333em);
+          display: flex;
+        }
+
+        .demo-header__info-row {
+          grid-column-gap: 2.5em;
+          grid-row-gap: 2.5em;
+          display: flex;
+        }
+
+        .demo-header__col {
+          grid-column-gap: 3em;
+          grid-row-gap: 3em;
+          flex-flow: column;
+          justify-content: space-between;
+          width: calc(33.3333% - 1.66667em);
+          display: flex;
+        }
+
+        .demo-header__h1 {
+          letter-spacing: -.03em;
+          max-width: 11em;
+          font-size: 4em;
+          font-weight: 600;
+          line-height: .95;
+          color: hsl(var(--foreground));
+        }
+
+        .demo-header__img {
+          aspect-ratio: 3 / 2;
+          object-fit: cover;
+          width: 100%;
+        }
+
+        .demo-header__logo {
+          width: 15em;
+          color: hsl(var(--foreground));
+        }
+
+        .demo-header__nav-a {
+          margin-bottom: 0;
+          font-size: 1.3125em;
+          font-weight: 600;
+          color: hsl(var(--foreground));
+        }
+
+        .footer-wrap {
+          position: relative;
+          overflow: hidden;
+        }
+
+        .demo-footer {
+          grid-column-gap: 7.5em;
+          grid-row-gap: 7.5em;
+          letter-spacing: -.02em;
+          flex-flow: column;
+          justify-content: space-between;
+          min-height: 100svh;
+          padding: 2.5em;
+          font-weight: 600;
+          display: flex;
+          position: relative;
+          background: hsl(var(--muted));
+        }
+
+        .demo-footer__links-row {
+          grid-column-gap: 2.5em;
+          grid-row-gap: 2.5em;
+          display: flex;
+        }
+
+        .demo-footer__logo-row {
+          grid-column-gap: 1em;
+          grid-row-gap: 1em;
+          flex-flow: column;
+          display: flex;
+        }
+
+        .demo-footer__col {
+          grid-column-gap: 3em;
+          grid-row-gap: 3em;
+          flex-flow: column;
+          width: calc(33.3333% - 1.66667em);
+          display: flex;
+        }
+
+        .demo-footer__links {
+          grid-column-gap: .25em;
+          grid-row-gap: .25em;
+          flex-flow: column;
+          align-items: flex-start;
+          display: flex;
+        }
+
+        .demo-footer__a {
+          color: hsl(var(--foreground));
+          font-size: 2.75em;
+          line-height: 1;
+          text-decoration: none;
+        }
+
+        .demo-footer__logo-svg {
+          width: 100%;
+          color: hsl(var(--foreground));
+        }
+
+        .footer-wrap__dark {
+          opacity: 0;
+          pointer-events: none;
+          background-color: hsl(var(--foreground));
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+
+        [data-underline-link] {
+          text-decoration: none;
+          position: relative;
+          cursor: pointer;
+        }
+
+        [data-underline-link]::before {
+          content: "";
+          position: absolute;
+          bottom: -0.0625em;
+          left: 0;
+          width: 100%;
+          height: 0.1em;
+          background-color: currentColor;
+          transition: transform 0.735s cubic-bezier(0.625, 0.05, 0, 1);
+          transform-origin: right;
+          transform: scaleX(0) rotate(0.001deg);
+        }
+
+        [data-underline-link]:hover::before {
+          transform-origin: left;
+          transform: scaleX(1) rotate(0.001deg);
+        }
+
+        @media screen and (max-width: 991px) {
+          .demo-header__title-row {
+            padding-left: 0;
+          }
+
+          .demo-header__info-row {
+            flex-flow: column;
+          }
+
+          .demo-header__col {
+            width: 100%;
+          }
+
+          .demo-header__logo {
+            width: 50vw;
+          }
+
+          .demo-footer__links-row {
+            flex-flow: column;
+          }
+
+          .demo-footer__logo-row {
+            grid-column-gap: 1.5em;
+            grid-row-gap: 1.5em;
+          }
+
+          .demo-footer__col {
+            width: 100%;
+          }
+        }
+
+        @media screen and (max-width: 767px) {
+          .demo-header {
+            grid-column-gap: 5em;
+            grid-row-gap: 5em;
+            padding-left: 1em;
+            padding-right: 1em;
+          }
+
+          .demo-footer {
+            padding-left: 1em;
+            padding-right: 1em;
+          }
+
+          .demo-footer__col {
+            grid-column-gap: 1em;
+            grid-row-gap: 1em;
+          }
+
+          .demo-footer__a {
+            font-size: 1.75em;
+          }
+
+          .demo-header__info-row {
+            grid-column-gap: 1em;
+            grid-row-gap: 1em;
+          }
+
+          .demo-header__h1 {
+            font-size: 3em;
+          }
+
+          .demo-header__nav-a {
+            max-width: 100%;
+            font-size: 1em;
+          }
+
+          .demo-eyebrow {
+            font-size: 1em;
+          }
+
+          .demo-p {
+            max-width: 100%;
+            font-size: 1.25em;
+          }
         }
       `}</style>
     </PageLayout>
