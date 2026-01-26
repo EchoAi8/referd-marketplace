@@ -24,6 +24,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import ReferrerDashboard from "./pages/ReferrerDashboard";
 import NotFound from "./pages/NotFound";
+import Showcase from "./pages/Showcase";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const AnimatedRoutes = () => {
         <Route path="/auth" element={<Auth />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/referrer" element={<ProtectedRoute><ReferrerDashboard /></ProtectedRoute>} />
+        <Route path="/showcase" element={<Showcase />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
