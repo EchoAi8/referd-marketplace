@@ -1,8 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { motion, useInView } from "framer-motion";
 
 const TwoStepNavigation = () => {
   const [isActive, setIsActive] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
+  const linksRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(linksRef, { once: true, margin: "-50px" });
 
   const toggleNav = () => setIsActive(!isActive);
   const closeNav = () => setIsActive(false);
@@ -16,8 +20,46 @@ const TwoStepNavigation = () => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isActive]);
 
+  // Animation variants for staggered entrance
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20, filter: "blur(4px)" },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.5,
+        ease: [0.25, 0.1, 0.25, 1] as const,
+      },
+    },
+  };
+
+  const socialVariants = {
+    hidden: { opacity: 0, x: -10 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.4,
+        ease: [0.25, 0.1, 0.25, 1] as const,
+      },
+    },
+  };
+
   return (
     <nav
+      ref={navRef}
       data-twostep-nav
       data-nav-status={isActive ? "active" : "not-active"}
       className="twostep-nav"
@@ -37,34 +79,14 @@ const TwoStepNavigation = () => {
             </div>
 
             <div className="twostep-nav__top">
-              <Link to="/" className="twostep-nav__logo">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="100%"
-                  viewBox="0 0 512 512"
-                  fill="none"
-                  className="twostep-nav__logo-svg"
-                >
-                  <path
-                    d="M256 0C114.615 0 0 114.615 0 256s114.615 256 256 256 256-114.615 256-256S397.385 0 256 0zm0 472c-119.103 0-216-96.897-216-216S136.897 40 256 40s216 96.897 216 216-96.897 216-216 216z"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M256 96c-88.366 0-160 71.634-160 160s71.634 160 160 160 160-71.634 160-160S344.366 96 256 96zm0 280c-66.274 0-120-53.726-120-120s53.726-120 120-120 120 53.726 120 120-53.726 120-120 120z"
-                    fill="hsl(var(--primary))"
-                  />
-                  <text
-                    x="256"
-                    y="280"
-                    textAnchor="middle"
-                    fontSize="140"
-                    fontWeight="bold"
-                    fontFamily="system-ui, -apple-system, sans-serif"
-                    fill="currentColor"
-                  >
-                    R
-                  </text>
-                </svg>
+              <Link to="/" className="twostep-nav__logo" onClick={closeNav}>
+                {/* Referd Wordmark */}
+                <div className="flex items-center gap-1">
+                  <span className="font-heading font-bold text-xl tracking-tight text-current">
+                    Referd
+                  </span>
+                  <span className="text-[hsl(var(--sage))] text-xs align-super">®</span>
+                </div>
               </Link>
 
               <button
@@ -80,36 +102,46 @@ const TwoStepNavigation = () => {
               <div className="twostep-nav__top-line" />
             </div>
 
-            <div className="twostep-nav__bottom">
+            <div className="twostep-nav__bottom" ref={linksRef}>
               <div className="twostep-nav__bottom-overflow">
                 <div className="twostep-nav__bottom-inner">
                   <div className="twostep-nav__bottom-row">
                     <div className="twostep-nav__bottom-col">
                       <div className="twostep-nav__info">
-                        <ul className="twostep-nav__ul">
-                          <li className="twostep-nav__li">
+                        <motion.ul
+                          className="twostep-nav__ul"
+                          variants={containerVariants}
+                          initial="hidden"
+                          animate={isActive ? "visible" : "hidden"}
+                        >
+                          <motion.li className="twostep-nav__li" variants={itemVariants}>
                             <Link to="/" className="twostep-nav__link" onClick={closeNav}>
                               <span className="twostep-nav__link-span">Home</span>
                             </Link>
-                          </li>
-                          <li className="twostep-nav__li">
+                          </motion.li>
+                          <motion.li className="twostep-nav__li" variants={itemVariants}>
                             <Link to="/work" className="twostep-nav__link" onClick={closeNav}>
                               <span className="twostep-nav__link-span">Portfolio</span>
                             </Link>
-                          </li>
-                          <li className="twostep-nav__li">
+                          </motion.li>
+                          <motion.li className="twostep-nav__li" variants={itemVariants}>
                             <Link to="/about" className="twostep-nav__link" onClick={closeNav}>
                               <span className="twostep-nav__link-span">About us</span>
                             </Link>
-                          </li>
-                          <li className="twostep-nav__li">
+                          </motion.li>
+                          <motion.li className="twostep-nav__li" variants={itemVariants}>
                             <Link to="/how-it-works" className="twostep-nav__link" onClick={closeNav}>
                               <span className="twostep-nav__link-span">Services</span>
                             </Link>
-                          </li>
-                        </ul>
-                        <ul className="twostep-nav__ul is--small">
-                          <li className="twostep-nav__li">
+                          </motion.li>
+                        </motion.ul>
+                        <motion.ul
+                          className="twostep-nav__ul is--small"
+                          variants={containerVariants}
+                          initial="hidden"
+                          animate={isActive ? "visible" : "hidden"}
+                        >
+                          <motion.li className="twostep-nav__li" variants={socialVariants}>
                             <a
                               href="https://instagram.com"
                               target="_blank"
@@ -118,8 +150,8 @@ const TwoStepNavigation = () => {
                             >
                               <span className="twostep-nav__link-eyebrow">Instagram</span>
                             </a>
-                          </li>
-                          <li className="twostep-nav__li">
+                          </motion.li>
+                          <motion.li className="twostep-nav__li" variants={socialVariants}>
                             <a
                               href="https://linkedin.com"
                               target="_blank"
@@ -128,8 +160,8 @@ const TwoStepNavigation = () => {
                             >
                               <span className="twostep-nav__link-eyebrow">LinkedIn</span>
                             </a>
-                          </li>
-                          <li className="twostep-nav__li">
+                          </motion.li>
+                          <motion.li className="twostep-nav__li" variants={socialVariants}>
                             <a
                               href="https://twitter.com"
                               target="_blank"
@@ -138,11 +170,16 @@ const TwoStepNavigation = () => {
                             >
                               <span className="twostep-nav__link-eyebrow">Twitter/X</span>
                             </a>
-                          </li>
-                        </ul>
+                          </motion.li>
+                        </motion.ul>
                       </div>
                     </div>
-                    <div className="twostep-nav__bottom-col is--visual">
+                    <motion.div
+                      className="twostep-nav__bottom-col is--visual"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={isActive ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                    >
                       <div className="twostep-nav__visual">
                         <img
                           src="https://cdn.prod.website-files.com/6970c1684e330d82d41ba734/6970d4c112ff725efd1230ca_osmo-twostep-nav-image.avif"
@@ -150,7 +187,7 @@ const TwoStepNavigation = () => {
                           className="twostep-nav__visual-img"
                         />
                       </div>
-                    </div>
+                    </motion.div>
                   </div>
                 </div>
               </div>
