@@ -1061,11 +1061,12 @@ const Showcase = () => {
           right: -1px;
           bottom: -1px;
           max-width: unset;
-          pointer-events: all;
+          pointer-events: auto;
           max-width: calc(100% + 2px);
           max-height: calc(100% + 2px);
           min-width: calc(100% + 2px);
           min-height: calc(100% + 2px);
+          touch-action: pan-y;
         }
 
         /* Footer Parallax Styles */
