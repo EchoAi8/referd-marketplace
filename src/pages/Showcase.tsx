@@ -39,24 +39,37 @@ const carouselImages = [
     src: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=90",
     title: "Office Culture",
   },
+  {
+    id: 7,
+    src: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&auto=format&fit=crop&q=90",
+    title: "Brainstorming",
+  },
+  {
+    id: 8,
+    src: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&auto=format&fit=crop&q=90",
+    title: "Tech Innovation",
+  },
 ];
 
 const Showcase = () => {
   const wrapRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const spinRef = useRef<gsap.core.Tween | null>(null);
   const introRef = useRef<gsap.core.Timeline | null>(null);
   const draggableRef = useRef<Draggable | null>(null);
   const observerRef = useRef<Observer | null>(null);
-  const lastWidthRef = useRef(window.innerWidth);
+  const lastWidthRef = useRef(typeof window !== 'undefined' ? window.innerWidth : 0);
 
   useEffect(() => {
     const wrap = wrapRef.current;
-    if (!wrap) return;
+    const list = listRef.current;
+    if (!wrap || !list) return;
 
     let radius: number;
 
     const calcRadius = () => {
-      radius = window.innerWidth * 0.5;
+      // Larger radius for better 3D effect
+      radius = Math.max(window.innerWidth * 0.6, 400);
     };
 
     const destroy = () => {
@@ -66,7 +79,8 @@ const Showcase = () => {
       introRef.current?.kill();
       ScrollTrigger.getAll().forEach((st) => st.kill());
       const panels = wrap.querySelectorAll("[data-3d-carousel-panel]");
-      gsap.set(panels, { clearProps: "transform" });
+      gsap.set(panels, { clearProps: "all" });
+      gsap.set(list, { clearProps: "all" });
     };
 
     const create = () => {
@@ -76,36 +90,46 @@ const Showcase = () => {
       const content = wrap.querySelectorAll("[data-3d-carousel-content]");
       const proxy = document.createElement("div");
       const wrapProgress = gsap.utils.wrap(0, 1);
-      const dragDistance = window.innerWidth * 3;
+      const dragDistance = window.innerWidth * 2; // More responsive drag
       let startProg = 0;
+      const numPanels = panels.length;
+      const angleIncrement = 360 / numPanels;
 
-      // Position panels in 3D space
-      panels.forEach((p) => {
-        p.style.transformOrigin = `50% 50% ${-radius}px`;
+      // Position each panel in 3D space around a cylinder
+      panels.forEach((panel, i) => {
+        const angle = i * angleIncrement;
+        gsap.set(panel, {
+          rotationY: angle,
+          transformOrigin: `50% 50% ${-radius}px`,
+        });
       });
 
-      // Infinite rotation of all panels
-      spinRef.current = gsap.fromTo(
-        panels,
-        { rotationY: (i) => (i * 360) / panels.length },
-        { rotationY: "-=360", duration: 30, ease: "none", repeat: -1 }
-      );
+      // Infinite rotation of the entire list container
+      spinRef.current = gsap.to(list, {
+        rotationY: "-=360",
+        duration: 25,
+        ease: "none",
+        repeat: -1,
+      });
 
-      // Buffer for scrolling
-      spinRef.current.progress(1000);
+      // Start with some progress for buffer
+      spinRef.current.progress(0.5);
 
       const [draggable] = Draggable.create(proxy, {
         trigger: wrap,
         type: "x",
         inertia: true,
-        allowNativeTouchScrolling: true,
+        allowNativeTouchScrolling: false,
         onPress() {
+          // Visual feedback on grab
           gsap.to(content, {
-            clipPath: "inset(5%)",
+            clipPath: "inset(3%)",
+            scale: 0.98,
             duration: 0.3,
             ease: "power4.out",
             overwrite: "auto",
           });
+          // Stop auto-spin
           gsap.killTweensOf(spinRef.current);
           spinRef.current!.timeScale(0);
           startProg = spinRef.current!.progress();
@@ -120,64 +144,64 @@ const Showcase = () => {
         },
         onRelease() {
           if (!this.tween || !this.tween.isActive()) {
-            gsap.to(spinRef.current, { timeScale: 1, duration: 0.1 });
+            gsap.to(spinRef.current, { timeScale: 1, duration: 0.5 });
           }
           gsap.to(content, {
             clipPath: "inset(0%)",
+            scale: 1,
             duration: 0.5,
             ease: "power4.out",
             overwrite: "auto",
           });
         },
         onThrowComplete() {
-          gsap.to(spinRef.current, { timeScale: 1, duration: 0.1 });
+          gsap.to(spinRef.current, { timeScale: 1, duration: 0.5 });
         },
       });
 
       draggableRef.current = draggable;
 
-      // Scroll-into-view animation
+      // Scroll-into-view intro animation
       introRef.current = gsap.timeline({
         scrollTrigger: {
           trigger: wrap,
-          start: "top 80%",
+          start: "top 85%",
           end: "bottom top",
           scrub: false,
           toggleActions: "play resume play play",
         },
-        defaults: { ease: "expo.inOut" },
+        defaults: { ease: "expo.out" },
       });
 
       introRef.current
-        .fromTo(spinRef.current, { timeScale: 15 }, { timeScale: 1, duration: 2 })
-        .fromTo(wrap, { scale: 0.5, rotation: 12 }, { scale: 1, rotation: 5, duration: 1.2 }, "<")
+        .fromTo(spinRef.current, { timeScale: 8 }, { timeScale: 1, duration: 2.5 })
+        .fromTo(
+          wrap,
+          { scale: 0.4, rotationX: 25 },
+          { scale: 1, rotationX: 0, duration: 1.5 },
+          "<"
+        )
         .fromTo(
           content,
-          { autoAlpha: 0 },
-          { autoAlpha: 1, stagger: { amount: 0.8, from: "random" } },
-          "<"
+          { autoAlpha: 0, scale: 0.8 },
+          { autoAlpha: 1, scale: 1, stagger: { amount: 0.6, from: "random" } },
+          "<0.2"
         );
 
-      // While-scrolling feedback
+      // Scroll velocity affects spin speed
       observerRef.current = Observer.create({
         target: window,
         type: "wheel,scroll,touch",
         onChangeY: (self) => {
-          let v = gsap.utils.clamp(-60, 60, self.velocityY * 0.005);
+          let v = gsap.utils.clamp(-30, 30, self.velocityY * 0.008);
           spinRef.current!.timeScale(v);
           const resting = v < 0 ? -1 : 1;
 
-          gsap.fromTo(
-            { value: v },
-            { value: v },
-            {
-              value: resting,
-              duration: 1.2,
-              onUpdate() {
-                spinRef.current!.timeScale(this.targets()[0].value);
-              },
-            }
-          );
+          gsap.to(spinRef.current, {
+            timeScale: resting,
+            duration: 1.5,
+            ease: "power2.out",
+          });
         },
       });
     };
@@ -213,20 +237,20 @@ const Showcase = () => {
   return (
     <PageLayout>
       {/* Hero Section */}
-      <section className="min-h-[60vh] flex items-center justify-center bg-background">
+      <section className="min-h-[50vh] flex items-center justify-center bg-background">
         <div className="container mx-auto px-6 text-center">
           <h1 className="text-fluid-5xl md:text-fluid-6xl font-heading font-bold text-foreground mb-6">
             3D Carousel
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Drag, scroll, or let it spin. Experience an immersive 3D image gallery.
+            Grab and spin. Scroll to accelerate. Experience immersive 3D.
           </p>
         </div>
       </section>
 
       {/* 3D Carousel Section */}
-      <section className="relative min-h-screen bg-foreground overflow-hidden py-32">
-        <div className="container mx-auto px-6 mb-16 text-center">
+      <section className="relative min-h-[120vh] bg-foreground overflow-hidden py-24">
+        <div className="container mx-auto px-6 mb-12 text-center">
           <p className="text-xs uppercase tracking-[0.3em] text-background/50 mb-4">
             Interactive Experience
           </p>
@@ -235,27 +259,32 @@ const Showcase = () => {
           </h2>
         </div>
 
-        {/* Carousel Wrapper */}
+        {/* Carousel Wrapper with perspective */}
         <div
           ref={wrapRef}
           data-3d-carousel-wrap
-          className="relative w-full h-[60vh] flex items-center justify-center"
+          className="relative w-full h-[70vh] flex items-center justify-center cursor-grab active:cursor-grabbing"
           style={{
-            perspective: "1000px",
+            perspective: "1200px",
             perspectiveOrigin: "50% 50%",
           }}
         >
+          {/* Rotating container */}
           <div
-            className="relative w-full h-full flex items-center justify-center"
-            style={{ transformStyle: "preserve-3d" }}
+            ref={listRef}
+            className="relative w-0 h-0 flex items-center justify-center"
+            style={{
+              transformStyle: "preserve-3d",
+            }}
           >
-            {carouselImages.map((image, index) => (
+            {carouselImages.map((image) => (
               <div
                 key={image.id}
                 data-3d-carousel-panel
-                className="absolute w-[300px] md:w-[400px] lg:w-[500px] aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl"
+                className="absolute w-[280px] md:w-[350px] lg:w-[420px] aspect-[3/4] rounded-2xl overflow-hidden"
                 style={{
                   backfaceVisibility: "hidden",
+                  boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
                 }}
               >
                 <div
@@ -269,9 +298,9 @@ const Showcase = () => {
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <p className="text-xl font-heading font-semibold text-white">
+                    <p className="text-lg md:text-xl font-heading font-semibold text-white">
                       {image.title}
                     </p>
                   </div>
@@ -282,22 +311,26 @@ const Showcase = () => {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-          <p className="text-sm text-background/50">Scroll or drag to explore</p>
-          <div className="w-6 h-10 rounded-full border-2 border-background/30 flex items-start justify-center p-2">
-            <div className="w-1.5 h-3 rounded-full bg-background/50 animate-bounce" />
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+          <p className="text-sm text-background/60 font-medium">
+            Grab to spin • Scroll to accelerate
+          </p>
+          <div className="flex gap-2">
+            <div className="w-2 h-2 rounded-full bg-background/40 animate-pulse" />
+            <div className="w-2 h-2 rounded-full bg-background/60 animate-pulse delay-100" />
+            <div className="w-2 h-2 rounded-full bg-background/40 animate-pulse delay-200" />
           </div>
         </div>
       </section>
 
-      {/* Additional Content Section */}
+      {/* Spacer for scroll effect */}
       <section className="py-32 bg-background">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-fluid-4xl font-heading font-bold text-foreground mb-8">
-            Scroll to see more effects
+            Keep scrolling
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            The carousel responds to your scroll velocity, creating a dynamic and engaging experience.
+            The carousel responds to scroll velocity for a dynamic experience.
           </p>
         </div>
       </section>
