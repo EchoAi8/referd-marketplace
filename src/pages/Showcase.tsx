@@ -498,38 +498,8 @@ const Showcase = () => {
     };
     addSmiley();
 
-    // Create mouse
-    const mouse = Mouse.create(render.canvas);
-    const mouseConstraint = MouseConstraint.create(engine, {
-      mouse: mouse,
-      constraint: {
-        stiffness: 0.2,
-        render: { visible: false }
-      }
-    });
-
-    Composite.add(engine.world, mouseConstraint);
-
-    // Fix: Allow native page scroll
-    mouseConstraint.mouse.element.removeEventListener("mousewheel", mouseConstraint.mouse.mousewheel);
-    mouseConstraint.mouse.element.removeEventListener("DOMMouseScroll", mouseConstraint.mouse.mousewheel);
-
-    // Fix: Scroll on touch devices
-    mouseConstraint.mouse.element.removeEventListener('touchstart', mouseConstraint.mouse.mousedown);
-    mouseConstraint.mouse.element.removeEventListener('touchmove', mouseConstraint.mouse.mousemove);
-    mouseConstraint.mouse.element.removeEventListener('touchend', mouseConstraint.mouse.mouseup);
-
-    mouseConstraint.mouse.element.addEventListener('touchstart', mouseConstraint.mouse.mousedown, { passive: true });
-    mouseConstraint.mouse.element.addEventListener('touchmove', (e: TouchEvent) => {
-      if (mouseConstraint.body) {
-        mouseConstraint.mouse.mousemove(e as unknown as MouseEvent);
-      }
-    });
-    mouseConstraint.mouse.element.addEventListener('touchend', (e: TouchEvent) => {
-      if (mouseConstraint.body) {
-        mouseConstraint.mouse.mouseup(e as unknown as MouseEvent);
-      }
-    });
+    // Note: Mouse constraint removed to allow page scrolling
+    // The smileys will still fall and interact with physics, but won't be draggable
 
     return () => {
       Render.stop(render);
@@ -1020,7 +990,6 @@ const Showcase = () => {
           height: 100svh;
           padding: 2vw;
           display: flex;
-          overflow: hidden;
           position: relative;
           background: hsl(var(--background));
         }
@@ -1036,7 +1005,7 @@ const Showcase = () => {
           position: absolute;
           bottom: 0%;
           left: 0%;
-          overflow: hidden;
+          overflow: visible;
           pointer-events: none;
         }
 
@@ -1051,7 +1020,8 @@ const Showcase = () => {
           position: absolute;
           top: 0;
           left: 0;
-          overflow: hidden;
+          overflow: visible;
+          pointer-events: none;
         }
 
         #canvas-target canvas {
@@ -1061,12 +1031,11 @@ const Showcase = () => {
           right: -1px;
           bottom: -1px;
           max-width: unset;
-          pointer-events: auto;
+          pointer-events: none;
           max-width: calc(100% + 2px);
           max-height: calc(100% + 2px);
           min-width: calc(100% + 2px);
           min-height: calc(100% + 2px);
-          touch-action: pan-y;
         }
 
         /* Footer Parallax Styles */
