@@ -395,11 +395,12 @@ const Showcase = () => {
       }
     });
 
-    // Animate images scrolling through (the singles inside the group)
-    if (loaderSingles.length) {
-      tl.fromTo(loaderSingles, 
-        { xPercent: 500 }, 
-        { xPercent: -500, duration: 2.5, stagger: 0.05 }
+    // Animate the group elements (not singles) scrolling through
+    const loaderGroupElements = container.querySelectorAll<HTMLElement>('.crisp-loader__group');
+    if (loaderGroupElements.length) {
+      tl.fromTo(loaderGroupElements, 
+        { xPercent: 0 }, 
+        { xPercent: -200, duration: 2.5, stagger: 0.05 }
       );
     }
 
@@ -662,8 +663,8 @@ const Showcase = () => {
         <div className="crisp-loader">
           <div className="crisp-loader__wrap">
             <div className="crisp-loader__groups">
-              <div className="crisp-loader__group">
-                {crispSlideImages.slice(0, 3).map((src, i) => (
+              <div className="crisp-loader__group is--relative">
+                {crispSlideImages.map((src, i) => (
                   <div key={i} className="crisp-loader__single">
                     <div className="crisp-loader__media is--scaling is--radius">
                       <img src={src} alt="" className="crisp-loader__cover-img is--scale-down" />
@@ -672,8 +673,8 @@ const Showcase = () => {
                 ))}
               </div>
               <div className="crisp-loader__group is--duplicate">
-                {crispSlideImages.slice(0, 3).map((src, i) => (
-                  <div key={i} className="crisp-loader__single">
+                {crispSlideImages.map((src, i) => (
+                  <div key={`dup-${i}`} className="crisp-loader__single">
                     <div className="crisp-loader__media is--scaling is--radius">
                       <img src={src} alt="" className="crisp-loader__cover-img is--scale-down" />
                     </div>
@@ -1140,8 +1141,15 @@ const Showcase = () => {
           border-radius: .5em;
         }
 
+        .crisp-loader__group.is--relative {
+          position: relative;
+          left: 100%;
+        }
+
         .crisp-loader__group.is--duplicate {
           position: absolute;
+          top: 0;
+          left: 0;
         }
 
         .crisp-loader__cover-img.is--scale-down {
