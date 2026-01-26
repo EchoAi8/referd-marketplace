@@ -27,11 +27,31 @@ const horizontalPanels = [
   { id: 5, title: "Launch", description: "Deploying with precision and measuring impact.", color: "secondary" },
 ];
 
+const logoData = [
+  { id: 1, name: "Stripe", icon: "💳" },
+  { id: 2, name: "Notion", icon: "📝" },
+  { id: 3, name: "Slack", icon: "💬" },
+  { id: 4, name: "Figma", icon: "🎨" },
+  { id: 5, name: "Linear", icon: "📊" },
+  { id: 6, name: "Vercel", icon: "▲" },
+  { id: 7, name: "GitHub", icon: "🐙" },
+  { id: 8, name: "Discord", icon: "🎮" },
+  { id: 9, name: "Spotify", icon: "🎵" },
+  { id: 10, name: "Airbnb", icon: "🏠" },
+  { id: 11, name: "Uber", icon: "🚗" },
+  { id: 12, name: "Netflix", icon: "🎬" },
+  { id: 13, name: "Amazon", icon: "📦" },
+  { id: 14, name: "Google", icon: "🔍" },
+  { id: 15, name: "Apple", icon: "🍎" },
+  { id: 16, name: "Meta", icon: "∞" },
+];
+
 const Showcase = () => {
   const wrapRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
   const horizontalRef = useRef<HTMLDivElement>(null);
+  const logoWallRef = useRef<HTMLDivElement>(null);
   const spinRef = useRef<gsap.core.Tween | null>(null);
   const introRef = useRef<gsap.core.Timeline | null>(null);
   const draggableRef = useRef<Draggable | null>(null);
@@ -167,8 +187,6 @@ const Showcase = () => {
       },
       (context) => {
         const { isMobile } = context.conditions || {};
-
-        // Disable horizontal scroll on mobile
         if (isMobile) return;
 
         const panels = gsap.utils.toArray<HTMLElement>("[data-horizontal-scroll-panel]", wrap);
@@ -188,14 +206,146 @@ const Showcase = () => {
         });
 
         return () => {
-          ScrollTrigger.getAll().forEach((st) => {
-            if (st.trigger === wrap) st.kill();
-          });
+          ScrollTrigger.getAll().forEach((st) => { if (st.trigger === wrap) st.kill(); });
         };
       }
     );
 
     return () => { mm.revert(); };
+  }, []);
+
+  // Logo Wall Cycle Effect
+  useEffect(() => {
+    const root = logoWallRef.current;
+    if (!root) return;
+
+    const loopDelay = 1.5;
+    const duration = 0.9;
+
+    const list = root.querySelector("[data-logo-wall-list]");
+    if (!list) return;
+
+    const items = Array.from(list.querySelectorAll("[data-logo-wall-item]")) as HTMLElement[];
+    const originalTargets = items
+      .map((item) => item.querySelector("[data-logo-wall-target]"))
+      .filter(Boolean) as HTMLElement[];
+
+    let visibleItems: HTMLElement[] = [];
+    let visibleCount = 0;
+    let pool: HTMLElement[] = [];
+    let pattern: number[] = [];
+    let patternIndex = 0;
+    let tl: gsap.core.Timeline;
+
+    const isVisible = (el: HTMLElement) => window.getComputedStyle(el).display !== "none";
+
+    const shuffleArray = <T,>(arr: T[]): T[] => {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    };
+
+    const swapNext = () => {
+      const nowCount = items.filter(isVisible).length;
+      if (nowCount !== visibleCount) {
+        setup();
+        return;
+      }
+      if (!pool.length) return;
+
+      const idx = pattern[patternIndex % visibleCount];
+      patternIndex++;
+
+      const container = visibleItems[idx];
+      const parent =
+        container.querySelector("[data-logo-wall-target-parent]") ||
+        container.querySelector("*:has(> [data-logo-wall-target])") ||
+        container;
+      const existing = parent.querySelectorAll("[data-logo-wall-target]");
+      if (existing.length > 1) return;
+
+      const current = parent.querySelector("[data-logo-wall-target]");
+      const incoming = pool.shift()!;
+
+      gsap.set(incoming, { yPercent: 50, autoAlpha: 0 });
+      parent.appendChild(incoming);
+
+      if (current) {
+        gsap.to(current, {
+          yPercent: -50,
+          autoAlpha: 0,
+          duration,
+          ease: "expo.inOut",
+          onComplete: () => {
+            current.remove();
+            pool.push(current as HTMLElement);
+          },
+        });
+      }
+
+      gsap.to(incoming, {
+        yPercent: 0,
+        autoAlpha: 1,
+        duration,
+        delay: 0.1,
+        ease: "expo.inOut",
+      });
+    };
+
+    const setup = () => {
+      if (tl) tl.kill();
+
+      visibleItems = items.filter(isVisible);
+      visibleCount = visibleItems.length;
+
+      pattern = shuffleArray(Array.from({ length: visibleCount }, (_, i) => i));
+      patternIndex = 0;
+
+      items.forEach((item) => {
+        item.querySelectorAll("[data-logo-wall-target]").forEach((old) => old.remove());
+      });
+
+      pool = originalTargets.map((n) => n.cloneNode(true) as HTMLElement);
+
+      const shuffledAll = shuffleArray(pool);
+      const front = shuffledAll.slice(0, visibleCount);
+      const rest = shuffleArray(shuffledAll.slice(visibleCount));
+      pool = front.concat(rest);
+
+      for (let i = 0; i < visibleCount; i++) {
+        const parent =
+          visibleItems[i].querySelector("[data-logo-wall-target-parent]") || visibleItems[i];
+        parent.appendChild(pool.shift()!);
+      }
+
+      tl = gsap.timeline({ repeat: -1, repeatDelay: loopDelay });
+      tl.call(swapNext);
+      tl.play();
+    };
+
+    setup();
+
+    const scrollTriggerInstance = ScrollTrigger.create({
+      trigger: root,
+      start: "top bottom",
+      end: "bottom top",
+      onEnter: () => tl?.play(),
+      onLeave: () => tl?.pause(),
+      onEnterBack: () => tl?.play(),
+      onLeaveBack: () => tl?.pause(),
+    });
+
+    const handleVisibility = () => (document.hidden ? tl?.pause() : tl?.play());
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      tl?.kill();
+      scrollTriggerInstance.kill();
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, []);
 
   const colorClasses: Record<string, { bg: string; text: string; border: string }> = {
@@ -211,16 +361,16 @@ const Showcase = () => {
       {/* Hero Section */}
       <section className="min-h-[50vh] flex items-center justify-center bg-background">
         <div className="container mx-auto px-6 text-center">
-          <h1 className="text-fluid-5xl md:text-fluid-6xl font-heading font-bold text-foreground mb-6">3D Carousel</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">Grab and spin. Scroll to accelerate. Experience immersive 3D.</p>
+          <h1 className="text-fluid-5xl md:text-fluid-6xl font-heading font-bold text-foreground mb-6">Effect Showcase</h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">Scroll through to experience each GSAP-powered animation.</p>
         </div>
       </section>
 
       {/* 3D Carousel Section */}
       <section className="relative min-h-[120vh] bg-foreground overflow-hidden py-24">
         <div className="container mx-auto px-6 mb-12 text-center">
-          <p className="text-xs uppercase tracking-[0.3em] text-background/50 mb-4">Interactive Experience</p>
-          <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold text-background">Explore Our Work</h2>
+          <p className="text-xs uppercase tracking-[0.3em] text-background/50 mb-4">Effect 01</p>
+          <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold text-background">3D Carousel</h2>
         </div>
 
         <div ref={wrapRef} data-3d-carousel-wrap className="relative w-full h-[70vh] flex items-center justify-center cursor-grab active:cursor-grabbing" style={{ perspective: "1200px", perspectiveOrigin: "50% 50%" }}>
@@ -241,16 +391,14 @@ const Showcase = () => {
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
           <p className="text-sm text-background/60 font-medium">Grab to spin • Scroll to accelerate</p>
-          <div className="flex gap-2">
-            <div className="w-2 h-2 rounded-full bg-background/40 animate-pulse" />
-            <div className="w-2 h-2 rounded-full bg-background/60 animate-pulse" style={{ animationDelay: "100ms" }} />
-            <div className="w-2 h-2 rounded-full bg-background/40 animate-pulse" style={{ animationDelay: "200ms" }} />
-          </div>
         </div>
       </section>
 
       {/* Parallax Layers Section */}
       <section ref={parallaxRef} data-parallax-layers className="relative min-h-[150vh] bg-background overflow-hidden">
+        <div className="container mx-auto px-6 pt-24 text-center relative z-10">
+          <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-4">Effect 02</p>
+        </div>
         <div data-parallax-layer="1" className="absolute inset-0 flex items-center justify-center">
           <div className="w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 blur-3xl" />
         </div>
@@ -273,43 +421,28 @@ const Showcase = () => {
         </div>
         <div data-parallax-layer="4" className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="text-center max-w-4xl px-6">
-            <h2 className="text-fluid-5xl md:text-fluid-6xl font-heading font-bold text-foreground mb-6">Parallax Depth</h2>
-            <p className="text-xl md:text-2xl text-muted-foreground">Four layers moving at different speeds create an immersive sense of depth.</p>
+            <h2 className="text-fluid-5xl md:text-fluid-6xl font-heading font-bold text-foreground mb-6">Parallax Layers</h2>
+            <p className="text-xl md:text-2xl text-muted-foreground">Four layers at different speeds.</p>
           </div>
         </div>
-        <div data-parallax-layer="1" className="absolute top-1/4 left-10"><div className="w-20 h-20 rounded-full border-2 border-primary/20" /></div>
-        <div data-parallax-layer="2" className="absolute bottom-1/3 right-16"><div className="w-32 h-32 rounded-full border-2 border-secondary/20" /></div>
-        <div data-parallax-layer="3" className="absolute top-1/2 left-1/4"><div className="w-16 h-16 rounded-xl bg-accent/10 rotate-45" /></div>
       </section>
 
       {/* Horizontal Scroll Section */}
       <section className="bg-foreground py-24">
         <div className="container mx-auto px-6 mb-12 text-center">
-          <p className="text-xs uppercase tracking-[0.3em] text-background/50 mb-4">Our Process</p>
-          <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold text-background">How We Work</h2>
+          <p className="text-xs uppercase tracking-[0.3em] text-background/50 mb-4">Effect 03</p>
+          <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold text-background">Horizontal Scroll</h2>
         </div>
       </section>
 
-      <div
-        ref={horizontalRef}
-        data-horizontal-scroll-wrap
-        className="flex w-max bg-foreground"
-      >
+      <div ref={horizontalRef} data-horizontal-scroll-wrap className="flex w-max bg-foreground">
         {horizontalPanels.map((panel, index) => {
           const colors = colorClasses[panel.color] || colorClasses.primary;
           return (
-            <div
-              key={panel.id}
-              data-horizontal-scroll-panel
-              className="flex items-center justify-center w-screen h-screen flex-shrink-0 px-6"
-            >
+            <div key={panel.id} data-horizontal-scroll-panel className="flex items-center justify-center w-screen h-screen flex-shrink-0 px-6">
               <div className={`relative max-w-2xl w-full p-12 rounded-3xl border ${colors.border} ${colors.bg} backdrop-blur-sm`}>
-                <span className={`text-8xl font-heading font-bold ${colors.text} opacity-20 absolute top-6 right-8`}>
-                  0{index + 1}
-                </span>
-                <h3 className={`text-fluid-4xl font-heading font-bold ${colors.text} mb-4`}>
-                  {panel.title}
-                </h3>
+                <span className={`text-8xl font-heading font-bold ${colors.text} opacity-20 absolute top-6 right-8`}>0{index + 1}</span>
+                <h3 className={`text-fluid-4xl font-heading font-bold ${colors.text} mb-4`}>{panel.title}</h3>
                 <p className="text-xl text-background/80">{panel.description}</p>
               </div>
             </div>
@@ -317,11 +450,50 @@ const Showcase = () => {
         })}
       </div>
 
+      {/* Logo Wall Section */}
+      <section
+        ref={logoWallRef}
+        data-logo-wall-cycle-init
+        data-logo-wall-shuffle="true"
+        className="py-32 bg-background"
+      >
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-4">Effect 04</p>
+            <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold text-foreground mb-4">Logo Wall Cycle</h2>
+            <p className="text-xl text-muted-foreground">Logos swap in and out with smooth animations.</p>
+          </div>
+
+          <div
+            data-logo-wall-list
+            className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-6"
+          >
+            {logoData.map((logo) => (
+              <div
+                key={logo.id}
+                data-logo-wall-item
+                className="relative aspect-square flex items-center justify-center rounded-2xl border border-border bg-muted/30 overflow-hidden [&:nth-child(n+9)]:hidden lg:[&:nth-child(n+9)]:flex [&:nth-child(n+7)]:hidden md:[&:nth-child(n+7)]:flex"
+              >
+                <div data-logo-wall-target-parent className="relative w-full h-full flex items-center justify-center">
+                  <div
+                    data-logo-wall-target
+                    className="flex flex-col items-center justify-center gap-2"
+                  >
+                    <span className="text-4xl">{logo.icon}</span>
+                    <span className="text-sm font-medium text-foreground/70">{logo.name}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Footer spacer */}
       <section className="py-32 bg-muted/30">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-fluid-4xl font-heading font-bold text-foreground mb-8">All Effects Complete</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">3D Carousel • Parallax Layers • Horizontal Scroll</p>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">3D Carousel • Parallax Layers • Horizontal Scroll • Logo Wall</p>
         </div>
       </section>
     </PageLayout>
