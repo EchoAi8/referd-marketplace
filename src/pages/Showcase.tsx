@@ -71,6 +71,9 @@ const Showcase = () => {
   const crispHeaderRef = useRef<HTMLDivElement>(null);
   const [crispCurrentSlide, setCrispCurrentSlide] = useState(0);
   const [crispIsLoading, setCrispIsLoading] = useState(true);
+  const crispAutoplayTimerRef = useRef<number | null>(null);
+  const crispPausedRef = useRef(false);
+  const crispAnimatingRef = useRef(false);
   const footerParallaxRef = useRef<HTMLDivElement>(null);
   const lastWidthRef = useRef(typeof window !== "undefined" ? window.innerWidth : 0);
 
@@ -473,6 +476,8 @@ const Showcase = () => {
 
   // Crisp Slideshow navigation
   const navigateCrispSlide = (direction: number, targetIndex?: number) => {
+    if (crispAnimatingRef.current) return;
+
     const newIndex = targetIndex !== undefined 
       ? targetIndex 
       : direction === 1 
@@ -489,6 +494,8 @@ const Showcase = () => {
     const upcomingSlide = slides[newIndex];
     const upcomingInner = inner[newIndex];
 
+    crispAnimatingRef.current = true;
+
     gsap.timeline({
       defaults: { duration: 1.5, ease: "power3.inOut" },
       onStart: () => {
@@ -497,6 +504,7 @@ const Showcase = () => {
       onComplete: () => {
         currentSlide.classList.remove('is--current');
         setCrispCurrentSlide(newIndex);
+        crispAnimatingRef.current = false;
       }
     })
       .to(currentSlide, { xPercent: -direction * 100 }, 0)
@@ -504,6 +512,46 @@ const Showcase = () => {
       .fromTo(upcomingSlide, { xPercent: direction * 100 }, { xPercent: 0 }, 0)
       .fromTo(upcomingInner, { xPercent: -direction * 75 }, { xPercent: 0 }, 0);
   };
+
+  // Crisp Slideshow autoplay (starts after the loading animation completes)
+  useEffect(() => {
+    const root = crispHeaderRef.current;
+    if (!root) return;
+    if (crispIsLoading) return;
+
+    const clear = () => {
+      if (crispAutoplayTimerRef.current) {
+        window.clearInterval(crispAutoplayTimerRef.current);
+        crispAutoplayTimerRef.current = null;
+      }
+    };
+
+    const start = () => {
+      clear();
+      crispAutoplayTimerRef.current = window.setInterval(() => {
+        if (crispPausedRef.current) return;
+        navigateCrispSlide(1);
+      }, 5000); // 4–6s target; using 5s default
+    };
+
+    const onEnter = () => {
+      crispPausedRef.current = true;
+    };
+    const onLeave = () => {
+      crispPausedRef.current = false;
+    };
+
+    root.addEventListener('mouseenter', onEnter);
+    root.addEventListener('mouseleave', onLeave);
+
+    start();
+    return () => {
+      root.removeEventListener('mouseenter', onEnter);
+      root.removeEventListener('mouseleave', onLeave);
+      clear();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [crispIsLoading, crispCurrentSlide]);
 
   // Footer Parallax Effect
   useEffect(() => {
