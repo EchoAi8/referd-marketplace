@@ -54,12 +54,14 @@ const carouselImages = [
 const Showcase = () => {
   const wrapRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const parallaxRef = useRef<HTMLDivElement>(null);
   const spinRef = useRef<gsap.core.Tween | null>(null);
   const introRef = useRef<gsap.core.Timeline | null>(null);
   const draggableRef = useRef<Draggable | null>(null);
   const observerRef = useRef<Observer | null>(null);
   const lastWidthRef = useRef(typeof window !== 'undefined' ? window.innerWidth : 0);
 
+  // 3D Carousel Effect
   useEffect(() => {
     const wrap = wrapRef.current;
     const list = listRef.current;
@@ -68,7 +70,6 @@ const Showcase = () => {
     let radius: number;
 
     const calcRadius = () => {
-      // Larger radius for better 3D effect
       radius = Math.max(window.innerWidth * 0.6, 400);
     };
 
@@ -77,7 +78,9 @@ const Showcase = () => {
       observerRef.current?.kill();
       spinRef.current?.kill();
       introRef.current?.kill();
-      ScrollTrigger.getAll().forEach((st) => st.kill());
+      ScrollTrigger.getAll().forEach((st) => {
+        if (st.trigger === wrap) st.kill();
+      });
       const panels = wrap.querySelectorAll("[data-3d-carousel-panel]");
       gsap.set(panels, { clearProps: "all" });
       gsap.set(list, { clearProps: "all" });
@@ -90,12 +93,11 @@ const Showcase = () => {
       const content = wrap.querySelectorAll("[data-3d-carousel-content]");
       const proxy = document.createElement("div");
       const wrapProgress = gsap.utils.wrap(0, 1);
-      const dragDistance = window.innerWidth * 2; // More responsive drag
+      const dragDistance = window.innerWidth * 2;
       let startProg = 0;
       const numPanels = panels.length;
       const angleIncrement = 360 / numPanels;
 
-      // Position each panel in 3D space around a cylinder
       panels.forEach((panel, i) => {
         const angle = i * angleIncrement;
         gsap.set(panel, {
@@ -104,7 +106,6 @@ const Showcase = () => {
         });
       });
 
-      // Infinite rotation of the entire list container
       spinRef.current = gsap.to(list, {
         rotationY: "-=360",
         duration: 25,
@@ -112,7 +113,6 @@ const Showcase = () => {
         repeat: -1,
       });
 
-      // Start with some progress for buffer
       spinRef.current.progress(0.5);
 
       const [draggable] = Draggable.create(proxy, {
@@ -121,7 +121,6 @@ const Showcase = () => {
         inertia: true,
         allowNativeTouchScrolling: false,
         onPress() {
-          // Visual feedback on grab
           gsap.to(content, {
             clipPath: "inset(3%)",
             scale: 0.98,
@@ -129,7 +128,6 @@ const Showcase = () => {
             ease: "power4.out",
             overwrite: "auto",
           });
-          // Stop auto-spin
           gsap.killTweensOf(spinRef.current);
           spinRef.current!.timeScale(0);
           startProg = spinRef.current!.progress();
@@ -161,7 +159,6 @@ const Showcase = () => {
 
       draggableRef.current = draggable;
 
-      // Scroll-into-view intro animation
       introRef.current = gsap.timeline({
         scrollTrigger: {
           trigger: wrap,
@@ -175,12 +172,7 @@ const Showcase = () => {
 
       introRef.current
         .fromTo(spinRef.current, { timeScale: 8 }, { timeScale: 1, duration: 2.5 })
-        .fromTo(
-          wrap,
-          { scale: 0.4, rotationX: 25 },
-          { scale: 1, rotationX: 0, duration: 1.5 },
-          "<"
-        )
+        .fromTo(wrap, { scale: 0.4, rotationX: 25 }, { scale: 1, rotationX: 0, duration: 1.5 }, "<")
         .fromTo(
           content,
           { autoAlpha: 0, scale: 0.8 },
@@ -188,7 +180,6 @@ const Showcase = () => {
           "<0.2"
         );
 
-      // Scroll velocity affects spin speed
       observerRef.current = Observer.create({
         target: window,
         type: "wheel,scroll,touch",
@@ -196,12 +187,7 @@ const Showcase = () => {
           let v = gsap.utils.clamp(-30, 30, self.velocityY * 0.008);
           spinRef.current!.timeScale(v);
           const resting = v < 0 ? -1 : 1;
-
-          gsap.to(spinRef.current, {
-            timeScale: resting,
-            duration: 1.5,
-            ease: "power2.out",
-          });
+          gsap.to(spinRef.current, { timeScale: resting, duration: 1.5, ease: "power2.out" });
         },
       });
     };
@@ -234,6 +220,40 @@ const Showcase = () => {
     };
   }, []);
 
+  // Parallax Layers Effect
+  useEffect(() => {
+    const parallaxSection = parallaxRef.current;
+    if (!parallaxSection) return;
+
+    const layers = [
+      { layer: "1", yPercent: 70 },
+      { layer: "2", yPercent: 55 },
+      { layer: "3", yPercent: 40 },
+      { layer: "4", yPercent: 10 },
+    ];
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: parallaxSection,
+        start: "0% 0%",
+        end: "100% 0%",
+        scrub: 0,
+      },
+    });
+
+    layers.forEach((layerObj, idx) => {
+      tl.to(
+        parallaxSection.querySelectorAll(`[data-parallax-layer="${layerObj.layer}"]`),
+        { yPercent: layerObj.yPercent, ease: "none" },
+        idx === 0 ? undefined : "<"
+      );
+    });
+
+    return () => {
+      tl.kill();
+    };
+  }, []);
+
   return (
     <PageLayout>
       {/* Hero Section */}
@@ -259,50 +279,29 @@ const Showcase = () => {
           </h2>
         </div>
 
-        {/* Carousel Wrapper with perspective */}
         <div
           ref={wrapRef}
           data-3d-carousel-wrap
           className="relative w-full h-[70vh] flex items-center justify-center cursor-grab active:cursor-grabbing"
-          style={{
-            perspective: "1200px",
-            perspectiveOrigin: "50% 50%",
-          }}
+          style={{ perspective: "1200px", perspectiveOrigin: "50% 50%" }}
         >
-          {/* Rotating container */}
           <div
             ref={listRef}
             className="relative w-0 h-0 flex items-center justify-center"
-            style={{
-              transformStyle: "preserve-3d",
-            }}
+            style={{ transformStyle: "preserve-3d" }}
           >
             {carouselImages.map((image) => (
               <div
                 key={image.id}
                 data-3d-carousel-panel
                 className="absolute w-[280px] md:w-[350px] lg:w-[420px] aspect-[3/4] rounded-2xl overflow-hidden"
-                style={{
-                  backfaceVisibility: "hidden",
-                  boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
-                }}
+                style={{ backfaceVisibility: "hidden", boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)" }}
               >
-                <div
-                  data-3d-carousel-content
-                  className="relative w-full h-full"
-                  style={{ clipPath: "inset(0%)" }}
-                >
-                  <img
-                    src={image.src}
-                    alt={image.title}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+                <div data-3d-carousel-content className="relative w-full h-full" style={{ clipPath: "inset(0%)" }}>
+                  <img src={image.src} alt={image.title} className="w-full h-full object-cover" loading="lazy" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <p className="text-lg md:text-xl font-heading font-semibold text-white">
-                      {image.title}
-                    </p>
+                    <p className="text-lg md:text-xl font-heading font-semibold text-white">{image.title}</p>
                   </div>
                 </div>
               </div>
@@ -310,27 +309,100 @@ const Showcase = () => {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
-          <p className="text-sm text-background/60 font-medium">
-            Grab to spin • Scroll to accelerate
-          </p>
+          <p className="text-sm text-background/60 font-medium">Grab to spin • Scroll to accelerate</p>
           <div className="flex gap-2">
             <div className="w-2 h-2 rounded-full bg-background/40 animate-pulse" />
-            <div className="w-2 h-2 rounded-full bg-background/60 animate-pulse delay-100" />
-            <div className="w-2 h-2 rounded-full bg-background/40 animate-pulse delay-200" />
+            <div className="w-2 h-2 rounded-full bg-background/60 animate-pulse" style={{ animationDelay: "100ms" }} />
+            <div className="w-2 h-2 rounded-full bg-background/40 animate-pulse" style={{ animationDelay: "200ms" }} />
           </div>
         </div>
       </section>
 
-      {/* Spacer for scroll effect */}
-      <section className="py-32 bg-background">
+      {/* Parallax Layers Section */}
+      <section
+        ref={parallaxRef}
+        data-parallax-layers
+        className="relative min-h-[150vh] bg-background overflow-hidden"
+      >
+        {/* Layer 1 - Slowest (Background) */}
+        <div
+          data-parallax-layer="1"
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          <div className="w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 blur-3xl" />
+        </div>
+
+        {/* Layer 2 */}
+        <div
+          data-parallax-layer="2"
+          className="absolute inset-0 flex items-start justify-center pt-32"
+        >
+          <div className="grid grid-cols-3 gap-8 max-w-5xl px-6">
+            <div className="aspect-square rounded-3xl bg-gradient-to-br from-talent/30 to-talent/10 backdrop-blur-sm" />
+            <div className="aspect-square rounded-3xl bg-gradient-to-br from-referrer/30 to-referrer/10 backdrop-blur-sm mt-24" />
+            <div className="aspect-square rounded-3xl bg-gradient-to-br from-brand/30 to-brand/10 backdrop-blur-sm" />
+          </div>
+        </div>
+
+        {/* Layer 3 */}
+        <div
+          data-parallax-layer="3"
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          <div className="grid grid-cols-2 gap-12 max-w-4xl px-6">
+            <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&auto=format&fit=crop&q=90"
+                alt="Parallax Image 1"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl mt-32">
+              <img
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&auto=format&fit=crop&q=90"
+                alt="Parallax Image 2"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Layer 4 - Fastest (Foreground Text) */}
+        <div
+          data-parallax-layer="4"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        >
+          <div className="text-center max-w-4xl px-6">
+            <h2 className="text-fluid-5xl md:text-fluid-6xl font-heading font-bold text-foreground mb-6">
+              Parallax Depth
+            </h2>
+            <p className="text-xl md:text-2xl text-muted-foreground">
+              Four layers moving at different speeds create an immersive sense of depth.
+            </p>
+          </div>
+        </div>
+
+        {/* Decorative elements */}
+        <div data-parallax-layer="1" className="absolute top-1/4 left-10">
+          <div className="w-20 h-20 rounded-full border-2 border-primary/20" />
+        </div>
+        <div data-parallax-layer="2" className="absolute bottom-1/3 right-16">
+          <div className="w-32 h-32 rounded-full border-2 border-secondary/20" />
+        </div>
+        <div data-parallax-layer="3" className="absolute top-1/2 left-1/4">
+          <div className="w-16 h-16 rounded-xl bg-accent/10 rotate-45" />
+        </div>
+      </section>
+
+      {/* Footer spacer */}
+      <section className="py-32 bg-muted/30">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-fluid-4xl font-heading font-bold text-foreground mb-8">
-            Keep scrolling
+            Scroll Effects Complete
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            The carousel responds to scroll velocity for a dynamic experience.
+            Experience 3D carousel + multi-layer parallax depth in one seamless page.
           </p>
         </div>
       </section>
