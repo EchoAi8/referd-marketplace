@@ -498,8 +498,49 @@ const Showcase = () => {
     };
     addSmiley();
 
-    // Note: Mouse constraint removed to allow page scrolling
-    // The smileys will still fall and interact with physics, but won't be draggable
+    // Create mouse constraint for dragging smileys
+    const mouse = Mouse.create(render.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse: mouse,
+      constraint: {
+        stiffness: 0.2,
+        render: { visible: false }
+      }
+    });
+
+    Composite.add(engine.world, mouseConstraint);
+
+    // Remove wheel listeners to allow page scroll
+    const canvasEl = mouseConstraint.mouse.element;
+    canvasEl.removeEventListener("mousewheel", mouseConstraint.mouse.mousewheel as EventListener);
+    canvasEl.removeEventListener("DOMMouseScroll", mouseConstraint.mouse.mousewheel as EventListener);
+
+    // For touch: only prevent default when dragging a body
+    canvasEl.removeEventListener('touchstart', mouseConstraint.mouse.mousedown as EventListener);
+    canvasEl.removeEventListener('touchmove', mouseConstraint.mouse.mousemove as EventListener);
+    canvasEl.removeEventListener('touchend', mouseConstraint.mouse.mouseup as EventListener);
+
+    let isDraggingBody = false;
+
+    canvasEl.addEventListener('touchstart', (e: TouchEvent) => {
+      mouseConstraint.mouse.mousedown(e as unknown as MouseEvent);
+      // Check if we're over a body after a short delay
+      requestAnimationFrame(() => {
+        isDraggingBody = mouseConstraint.body !== null;
+      });
+    }, { passive: true });
+
+    canvasEl.addEventListener('touchmove', (e: TouchEvent) => {
+      if (isDraggingBody && mouseConstraint.body) {
+        e.preventDefault();
+        mouseConstraint.mouse.mousemove(e as unknown as MouseEvent);
+      }
+    }, { passive: false });
+
+    canvasEl.addEventListener('touchend', (e: TouchEvent) => {
+      mouseConstraint.mouse.mouseup(e as unknown as MouseEvent);
+      isDraggingBody = false;
+    }, { passive: true });
 
     return () => {
       Render.stop(render);
@@ -1021,7 +1062,6 @@ const Showcase = () => {
           top: 0;
           left: 0;
           overflow: visible;
-          pointer-events: none;
         }
 
         #canvas-target canvas {
@@ -1031,11 +1071,12 @@ const Showcase = () => {
           right: -1px;
           bottom: -1px;
           max-width: unset;
-          pointer-events: none;
+          pointer-events: auto;
           max-width: calc(100% + 2px);
           max-height: calc(100% + 2px);
           min-width: calc(100% + 2px);
           min-height: calc(100% + 2px);
+          touch-action: pan-y pinch-zoom;
         }
 
         /* Footer Parallax Styles */
