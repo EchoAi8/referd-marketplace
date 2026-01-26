@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Draggable } from "gsap/Draggable";
 import { Observer } from "gsap/Observer";
+import Matter from "matter-js";
 import PageLayout from "@/components/layout/PageLayout";
 
 gsap.registerPlugin(Draggable, Observer, ScrollTrigger);
@@ -52,6 +53,14 @@ const carouselImages = [
   ]},
 ];
 
+const smileyTextures = [
+  'https://cdn.prod.website-files.com/67f388c94c43e20cfb7ca732/67f394c931c1e6fc303e12ec_smiley-1.svg',
+  'https://cdn.prod.website-files.com/67f388c94c43e20cfb7ca732/67f394c9718ec3640accf3d4_smiley-2.svg',
+  'https://cdn.prod.website-files.com/67f388c94c43e20cfb7ca732/67f394c940dfb6d33af4c6d6_smiley-3.svg',
+  'https://cdn.prod.website-files.com/67f388c94c43e20cfb7ca732/67f394c9ab4fc0301d56d8c5_smiley-4.svg',
+  'https://cdn.prod.website-files.com/67f388c94c43e20cfb7ca732/67f394c9d9ee6112fdb67b89_smiley-5.svg'
+];
+
 const Showcase = () => {
   const wrapRef = useRef<HTMLDivElement>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
@@ -59,6 +68,7 @@ const Showcase = () => {
   const scrambleScrollRef = useRef<HTMLHeadingElement>(null);
   const scrambleAltRef = useRef<HTMLHeadingElement>(null);
   const scrambleHoverRef = useRef<HTMLAnchorElement>(null);
+  const matterCanvasRef = useRef<HTMLDivElement>(null);
   const lastWidthRef = useRef(typeof window !== "undefined" ? window.innerWidth : 0);
 
   // 3D Carousel Effect
@@ -360,6 +370,174 @@ const Showcase = () => {
     }
   }, []);
 
+  // Matter.js Falling 2D Elements Effect
+  useEffect(() => {
+    const canvas = matterCanvasRef.current;
+    if (!canvas) return;
+
+    const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint } = Matter;
+
+    const canvasWidth = canvas.clientWidth + 2;
+    const canvasHeight = canvas.clientHeight + 2;
+    const canvasWallDepth = canvasWidth / 4;
+    const smileyAmount = 15;
+    const smileySize = canvasWidth / 7.5;
+    const smileySizeTexture = 256;
+    const smileySizeScale = smileySize / smileySizeTexture;
+    const smileyRestitution = 0.75;
+    const worldGravity = 2;
+
+    // Create an engine
+    const engine = Engine.create();
+    engine.world.gravity.y = worldGravity;
+
+    // Create a renderer
+    const render = Render.create({
+      element: canvas,
+      engine: engine,
+      options: {
+        background: "transparent",
+        wireframes: false,
+        width: canvasWidth,
+        height: canvasHeight,
+        pixelRatio: 2,
+      }
+    });
+
+    // Generate a random number between min (inclusive) and max (exclusive)
+    const getRandomNumber = (min: number, max: number) => Math.random() * (max - min) + min;
+
+    const min = smileySize / 2;
+    const max = canvasWidth - (smileySize / 2);
+
+    // Function to loop through all textures
+    let textureIndex = 0;
+    const getNextTexture = () => {
+      const texture = smileyTextures[textureIndex];
+      textureIndex = (textureIndex + 1) % smileyTextures.length;
+      return texture;
+    };
+
+    // Create smiley
+    const smileyCreate = () => {
+      const smiley = Bodies.rectangle(
+        getRandomNumber(min, max),
+        smileySize,
+        smileySize,
+        smileySize,
+        {
+          chamfer: { radius: smileySize / 2 },
+          restitution: smileyRestitution,
+          render: {
+            sprite: {
+              texture: getNextTexture(),
+              xScale: smileySizeScale,
+              yScale: smileySizeScale
+            }
+          }
+        }
+      );
+      Composite.add(engine.world, smiley);
+    };
+
+    // Create boundary boxes
+    const boxTop = Bodies.rectangle(
+      canvasWidth / 2 + (canvasWallDepth * 2),
+      canvasHeight + canvasWallDepth,
+      canvasWidth + (canvasWallDepth * 4),
+      canvasWallDepth * 2,
+      { isStatic: true, render: { visible: false } }
+    );
+
+    const boxLeft = Bodies.rectangle(
+      canvasWallDepth * -1,
+      canvasHeight / 2,
+      canvasWallDepth * 2,
+      canvasHeight,
+      { isStatic: true, render: { visible: false } }
+    );
+
+    const boxRight = Bodies.rectangle(
+      canvasWidth + canvasWallDepth,
+      canvasHeight / 2,
+      canvasWallDepth * 2,
+      canvasHeight,
+      { isStatic: true, render: { visible: false } }
+    );
+
+    const boxBottom = Bodies.rectangle(
+      canvasWidth / 2 + (canvasWallDepth * 2),
+      canvasWallDepth * -1,
+      canvasWidth + (canvasWallDepth * 4),
+      canvasWallDepth * 2,
+      { isStatic: true, render: { visible: false } }
+    );
+
+    // Add all of the bodies to the world
+    Composite.add(engine.world, [boxTop, boxLeft, boxRight, boxBottom]);
+
+    // Run the renderer
+    Render.run(render);
+
+    // Create runner
+    const runner = Runner.create();
+
+    // Run the engine
+    Runner.run(runner, engine);
+
+    // Add smileys with delay
+    let count = 0;
+    const addSmiley = () => {
+      if (count < smileyAmount) {
+        smileyCreate();
+        count++;
+        setTimeout(addSmiley, 100);
+      }
+    };
+    addSmiley();
+
+    // Create mouse
+    const mouse = Mouse.create(render.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse: mouse,
+      constraint: {
+        stiffness: 0.2,
+        render: { visible: false }
+      }
+    });
+
+    Composite.add(engine.world, mouseConstraint);
+
+    // Fix: Allow native page scroll
+    mouseConstraint.mouse.element.removeEventListener("mousewheel", mouseConstraint.mouse.mousewheel);
+    mouseConstraint.mouse.element.removeEventListener("DOMMouseScroll", mouseConstraint.mouse.mousewheel);
+
+    // Fix: Scroll on touch devices
+    mouseConstraint.mouse.element.removeEventListener('touchstart', mouseConstraint.mouse.mousedown);
+    mouseConstraint.mouse.element.removeEventListener('touchmove', mouseConstraint.mouse.mousemove);
+    mouseConstraint.mouse.element.removeEventListener('touchend', mouseConstraint.mouse.mouseup);
+
+    mouseConstraint.mouse.element.addEventListener('touchstart', mouseConstraint.mouse.mousedown, { passive: true });
+    mouseConstraint.mouse.element.addEventListener('touchmove', (e: TouchEvent) => {
+      if (mouseConstraint.body) {
+        mouseConstraint.mouse.mousemove(e as unknown as MouseEvent);
+      }
+    });
+    mouseConstraint.mouse.element.addEventListener('touchend', (e: TouchEvent) => {
+      if (mouseConstraint.body) {
+        mouseConstraint.mouse.mouseup(e as unknown as MouseEvent);
+      }
+    });
+
+    return () => {
+      Render.stop(render);
+      Runner.stop(runner);
+      Engine.clear(engine);
+      render.canvas.remove();
+      render.textures = {};
+    };
+  }, []);
+
   return (
     <PageLayout>
       {/* 3D Image Carousel */}
@@ -474,6 +652,24 @@ const Showcase = () => {
           </a>
         </div>
       </div>
+
+      {/* Matter.js Falling 2D Elements */}
+      <section className="section-resource">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 1340 257" fill="none" className="resource-name__svg">
+          <path d="M51.3731 251H0.952148V5.7551H66.8082L124.775 175.54H125.461L183.428 5.7551H249.627V251H198.863V84.3021H198.177L144.669 251H105.91L52.0592 84.3021H51.3731V251Z" fill="currentColor"></path>
+          <path d="M325.377 256.145C290.734 256.145 268.782 235.908 268.782 205.381C268.782 167.994 298.623 154.617 338.411 146.728C360.363 142.269 383.687 139.182 383.687 122.032C383.687 111.056 376.141 103.167 356.59 103.167C332.923 103.167 323.319 112.085 321.604 131.636H276.328C278.043 98.0221 301.71 69.8961 358.648 69.8961C402.209 69.8961 429.306 87.7321 429.306 138.153V210.869C429.306 221.502 430.678 226.304 436.509 226.304C437.881 226.304 438.91 226.304 440.968 225.961V249.971C431.707 251.686 422.446 252.715 415.586 252.715C395.692 252.715 387.117 245.169 384.716 228.362H384.03C372.025 244.826 351.788 256.145 325.377 256.145ZM342.527 222.531C367.566 222.531 383.687 205.038 383.687 181.028V162.506C377.17 165.936 366.537 168.68 350.759 172.453C326.406 177.598 317.145 186.173 317.145 200.922C317.145 215.328 326.063 222.531 342.527 222.531Z" fill="currentColor"></path>
+          <path d="M533.926 217.729C539.414 217.729 542.158 217.386 548.675 216.357V250.657C538.042 253.058 529.81 254.087 520.206 254.087C485.22 254.087 468.413 238.995 468.413 196.806V111.742H443.717V75.7271H468.413V23.9341H515.404V75.7271H546.96V111.742H515.404V196.463C515.404 214.985 521.921 217.729 533.926 217.729Z" fill="currentColor"></path>
+          <path d="M645.307 217.729C650.795 217.729 653.539 217.386 660.056 216.357V250.657C649.423 253.058 641.191 254.087 631.587 254.087C596.601 254.087 579.794 238.995 579.794 196.806V111.742H555.098V75.7271H579.794V23.9341H626.785V75.7271H658.341V111.742H626.785V196.463C626.785 214.985 633.302 217.729 645.307 217.729Z" fill="currentColor"></path>
+          <path d="M843.213 165.936V175.883H713.902C714.245 201.951 731.395 220.473 757.12 220.473C780.787 220.473 790.391 207.439 793.821 197.492H841.498C831.894 232.478 804.111 256.488 755.748 256.488C699.496 256.488 666.568 217.729 666.568 163.192C666.568 110.37 698.81 69.8961 755.748 69.8961C813.029 69.8961 843.213 105.225 843.213 165.936ZM713.902 144.67H795.536C795.536 120.317 780.101 105.225 755.405 105.225C732.081 105.225 715.96 119.974 713.902 144.67Z" fill="currentColor"></path>
+          <path d="M953.806 73.3261C958.951 73.3261 963.41 73.3261 969.241 74.3551V116.544C964.782 115.858 961.695 115.515 957.922 115.515C930.825 115.515 908.53 134.037 908.53 165.936V251H861.539V75.7271H908.53V105.911H909.216C918.134 86.3601 932.883 73.3261 953.806 73.3261Z" fill="currentColor"></path>
+          <path d="M1032.5 256.145C968.703 256.145 952.239 216.357 952.239 171.424V154.617H1000.26V171.424C1000.26 196.463 1005.4 212.584 1030.1 212.584C1054.8 212.584 1059.94 196.463 1059.94 171.424V5.7551H1113.11V171.424C1113.11 216.357 1096.3 256.145 1032.5 256.145Z" fill="currentColor"></path>
+          <path d="M1244.79 256.145C1181.34 256.145 1134.69 223.903 1133.66 167.994H1187.51C1188.54 197.835 1209.46 212.927 1244.1 212.927C1272.92 212.927 1284.92 200.922 1284.92 184.458C1284.92 159.762 1260.57 154.617 1222.84 143.984C1181.68 131.979 1142.23 116.887 1142.23 72.2971C1142.23 22.9051 1180.65 0.610107 1233.47 0.610107C1290.41 0.610107 1331.91 30.1081 1334.31 79.8431H1280.81C1277.38 56.8621 1261.6 43.8281 1233.47 43.8281C1210.49 43.8281 1196.43 51.7171 1196.43 68.5241C1196.43 89.1041 1214.61 94.5921 1245.82 103.51C1292.81 116.544 1339.12 128.892 1339.12 179.999C1339.12 225.275 1306.19 256.145 1244.79 256.145Z" fill="currentColor"></path>
+        </svg>
+        <div className="canvas-matter">
+          <div className="canvas-matter__before"></div>
+          <div ref={matterCanvasRef} id="canvas-target" className="canvas-matter__target"></div>
+        </div>
+      </section>
 
       <style>{`
         /* 3D Carousel Styles */
@@ -708,6 +904,62 @@ const Showcase = () => {
 
         .scramble-button-text {
           margin: 0;
+        }
+
+        /* Matter.js Falling Elements Styles */
+        .section-resource {
+          justify-content: center;
+          align-items: flex-start;
+          width: 100%;
+          height: 100svh;
+          padding: 2vw;
+          display: flex;
+          overflow: hidden;
+          position: relative;
+          background: hsl(var(--background));
+        }
+
+        .resource-name__svg {
+          width: 100%;
+          color: hsl(var(--foreground));
+        }
+
+        .canvas-matter {
+          width: 100%;
+          margin-bottom: 0;
+          position: absolute;
+          bottom: 0%;
+          left: 0%;
+          overflow: hidden;
+          pointer-events: none;
+        }
+
+        .canvas-matter__before {
+          padding-top: 100%;
+        }
+
+        .canvas-matter__target {
+          transform-style: preserve-3d;
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          overflow: hidden;
+        }
+
+        #canvas-target canvas {
+          position: relative;
+          top: -1px;
+          left: -1px;
+          right: -1px;
+          bottom: -1px;
+          max-width: unset;
+          pointer-events: all;
+          max-width: calc(100% + 2px);
+          max-height: calc(100% + 2px);
+          min-width: calc(100% + 2px);
+          min-height: calc(100% + 2px);
         }
       `}</style>
     </PageLayout>
