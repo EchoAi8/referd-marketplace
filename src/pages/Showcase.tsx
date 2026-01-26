@@ -54,8 +54,10 @@ const carouselImages = [
 
 const Showcase = () => {
   const wrapRef = useRef<HTMLDivElement>(null);
+  const parallaxRef = useRef<HTMLDivElement>(null);
   const lastWidthRef = useRef(typeof window !== "undefined" ? window.innerWidth : 0);
 
+  // 3D Carousel Effect
   useEffect(() => {
     let radius: number;
     let draggableInstance: Draggable | null = null;
@@ -77,7 +79,9 @@ const Showcase = () => {
       observerInstance && observerInstance.kill();
       spin && spin.kill();
       intro && intro.kill();
-      ScrollTrigger.getAll().forEach(st => st.kill());
+      ScrollTrigger.getAll().forEach(st => {
+        if (st.trigger === wrap) st.kill();
+      });
       const panels = wrap.querySelectorAll('[data-3d-carousel-panel]');
       gsap.set(panels, { clearProps: 'transform' });
     };
@@ -223,12 +227,49 @@ const Showcase = () => {
     };
   }, []);
 
+  // Parallax Layers Effect
+  useEffect(() => {
+    const triggerElement = parallaxRef.current;
+    if (!triggerElement) return;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: triggerElement,
+        start: "0% 0%",
+        end: "100% 0%",
+        scrub: 0
+      }
+    });
+
+    const layers = [
+      { layer: "1", yPercent: 70 },
+      { layer: "2", yPercent: 55 },
+      { layer: "3", yPercent: 40 },
+      { layer: "4", yPercent: 10 }
+    ];
+
+    layers.forEach((layerObj, idx) => {
+      tl.to(
+        triggerElement.querySelectorAll(`[data-parallax-layer="${layerObj.layer}"]`),
+        {
+          yPercent: layerObj.yPercent,
+          ease: "none"
+        },
+        idx === 0 ? undefined : "<"
+      );
+    });
+
+    return () => {
+      tl.kill();
+    };
+  }, []);
+
   return (
     <PageLayout>
       {/* 3D Image Carousel */}
       <div className="img-carousel__wrap">
         <div ref={wrapRef} data-3d-carousel-wrap="" className="img-carousel__list">
-          {carouselImages.map((panel, panelIndex) => (
+          {carouselImages.map((panel) => (
             <div 
               key={panel.id} 
               data-3d-carousel-panel="" 
@@ -244,7 +285,52 @@ const Showcase = () => {
         </div>
       </div>
 
+      {/* Parallax Layers */}
+      <div className="parallax">
+        <section className="parallax__header">
+          <div className="parallax__visuals">
+            <div className="parallax__black-line-overflow"></div>
+            <div ref={parallaxRef} data-parallax-layers className="parallax__layers">
+              <img 
+                src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795be09b462b2e8ebf71_osmo-parallax-layer-3.webp" 
+                loading="eager" 
+                width="800" 
+                data-parallax-layer="1" 
+                alt="" 
+                className="parallax__layer-img"
+              />
+              <img 
+                src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795b4d5ac529e7d3a562_osmo-parallax-layer-2.webp" 
+                loading="eager" 
+                width="800" 
+                data-parallax-layer="2" 
+                alt="" 
+                className="parallax__layer-img"
+              />
+              <div data-parallax-layer="3" className="parallax__layer-title">
+                <h2 className="parallax__title">Parallax</h2>
+              </div>
+              <img 
+                src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795bb5aceca85011ad83_osmo-parallax-layer-1.webp" 
+                loading="eager" 
+                width="800" 
+                data-parallax-layer="4" 
+                alt="" 
+                className="parallax__layer-img"
+              />
+            </div>
+            <div className="parallax__fade"></div>
+          </div>
+        </section>
+        <section className="parallax__content">
+          <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 160 160" fill="none" className="osmo-icon-svg">
+            <path d="M94.8284 53.8578C92.3086 56.3776 88 54.593 88 51.0294V0H72V59.9999C72 66.6273 66.6274 71.9999 60 71.9999H0V87.9999H51.0294C54.5931 87.9999 56.3777 92.3085 53.8579 94.8283L18.3431 130.343L29.6569 141.657L65.1717 106.142C67.684 103.63 71.9745 105.396 72 108.939V160L88.0001 160L88 99.9999C88 93.3725 93.3726 87.9999 100 87.9999H160V71.9999H108.939C105.407 71.9745 103.64 67.7091 106.12 65.1938L106.142 65.1716L141.657 29.6568L130.343 18.3432L94.8284 53.8578Z" fill="currentColor"></path>
+          </svg>
+        </section>
+      </div>
+
       <style>{`
+        /* 3D Carousel Styles */
         .img-carousel__wrap {
           justify-content: center;
           align-items: center;
@@ -304,6 +390,118 @@ const Showcase = () => {
           height: 100%;
           position: absolute;
           inset: 0%;
+        }
+
+        /* Parallax Styles */
+        .parallax {
+          width: 100%;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .parallax__content {
+          padding: 10em 1em;
+          justify-content: center;
+          align-items: center;
+          min-height: 100svh;
+          display: flex;
+          position: relative;
+          background: #000;
+        }
+
+        .parallax__layers {
+          object-fit: cover;
+          width: 100%;
+          max-width: none;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          overflow: hidden;
+        }
+
+        .parallax__title {
+          pointer-events: auto;
+          text-align: center;
+          text-transform: none;
+          margin-top: 0;
+          margin-bottom: .1em;
+          margin-right: .075em;
+          font-size: 10em;
+          font-weight: 700;
+          line-height: 1;
+          position: relative;
+          color: #fff;
+        }
+
+        .parallax__black-line-overflow {
+          z-index: 20;
+          background-color: #000;
+          width: 100%;
+          height: 2px;
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+        }
+
+        .parallax__layer-img {
+          pointer-events: none;
+          object-fit: cover;
+          width: 100%;
+          max-width: none;
+          height: 117.5%;
+          position: absolute;
+          top: -17.5%;
+          left: 0;
+        }
+
+        .parallax__fade {
+          z-index: 30;
+          object-fit: cover;
+          background-image: linear-gradient(#0000, #000);
+          width: 100%;
+          max-width: none;
+          height: 20%;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+        }
+
+        .parallax__header {
+          z-index: 2;
+          padding: 10em 1em;
+          justify-content: center;
+          align-items: center;
+          min-height: 100svh;
+          display: flex;
+          position: relative;
+        }
+
+        .parallax__visuals {
+          object-fit: cover;
+          width: 100%;
+          max-width: none;
+          height: 120%;
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+
+        .parallax__layer-title {
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          height: 100svh;
+          display: flex;
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+
+        .osmo-icon-svg {
+          width: 160px;
+          height: 160px;
+          color: #fff;
         }
       `}</style>
     </PageLayout>
