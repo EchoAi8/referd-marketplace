@@ -378,9 +378,12 @@ const Showcase = () => {
     const container = crispHeaderRef.current;
     if (!container) return;
 
-    const revealImages = container.querySelectorAll<HTMLElement>('.crisp-loader__group > *');
-    const isScaleUp = container.querySelectorAll<HTMLElement>('.crisp-loader__media');
-    const isScaleDown = container.querySelectorAll<HTMLElement>('.crisp-loader__media .is--scale-down');
+    const loaderGroups = container.querySelector<HTMLElement>('.crisp-loader__groups');
+    const loaderGroup = container.querySelectorAll<HTMLElement>('.crisp-loader__group');
+    const loaderSingles = container.querySelectorAll<HTMLElement>('.crisp-loader__single');
+    const isScaleUp = container.querySelectorAll<HTMLElement>('.crisp-loader__media.is--scaling');
+    const isScaleDown = container.querySelectorAll<HTMLElement>('.crisp-loader__cover-img.is--scale-down');
+    const isRadius = container.querySelectorAll<HTMLElement>('.crisp-loader__media.is--scaling.is--radius');
     const heading = container.querySelector<HTMLElement>('.crisp-header__h1');
     const smallElements = container.querySelectorAll<HTMLElement>('.crisp-header__top, .crisp-header__p');
     const sliderNav = container.querySelectorAll<HTMLElement>('.crisp-header__slider-nav > *');
@@ -392,20 +395,24 @@ const Showcase = () => {
       }
     });
 
-    // Animate images scrolling through
-    if (revealImages.length) {
-      tl.fromTo(revealImages, 
+    // Animate images scrolling through (the singles inside the group)
+    if (loaderSingles.length) {
+      tl.fromTo(loaderSingles, 
         { xPercent: 500 }, 
         { xPercent: -500, duration: 2.5, stagger: 0.05 }
       );
     }
 
-    // Scale down images
+    // Scale down the images inside
     if (isScaleDown.length) {
       tl.to(isScaleDown, {
         scale: 0.5,
         duration: 2,
-        stagger: { each: 0.05, from: "edges", ease: "none" }
+        stagger: { each: 0.05, from: "edges", ease: "none" },
+        onComplete: () => {
+          // Remove radius class after scale animation
+          isRadius.forEach(el => el.classList.remove('is--radius'));
+        }
       }, "-=0.1");
     }
 
@@ -1087,7 +1094,7 @@ const Showcase = () => {
 
         .crisp-loader__groups {
           position: relative;
-          overflow: hidden;
+          overflow: visible;
         }
 
         .crisp-loader__group {
