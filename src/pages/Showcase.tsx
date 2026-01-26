@@ -55,6 +55,10 @@ const carouselImages = [
 const Showcase = () => {
   const wrapRef = useRef<HTMLDivElement>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
+  const scrambleLoadRef = useRef<HTMLHeadingElement>(null);
+  const scrambleScrollRef = useRef<HTMLHeadingElement>(null);
+  const scrambleAltRef = useRef<HTMLHeadingElement>(null);
+  const scrambleHoverRef = useRef<HTMLAnchorElement>(null);
   const lastWidthRef = useRef(typeof window !== "undefined" ? window.innerWidth : 0);
 
   // 3D Carousel Effect
@@ -264,6 +268,98 @@ const Showcase = () => {
     };
   }, []);
 
+  // Scramble Text Effect - Custom implementation (ScrambleTextPlugin & SplitText are paid GSAP plugins)
+  useEffect(() => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const altChars = '▯|◊∆';
+
+    const scrambleText = (
+      element: HTMLElement | null, 
+      finalText: string, 
+      duration: number = 1200, 
+      charSet: string = chars
+    ) => {
+      if (!element) return;
+      
+      const length = finalText.length;
+      const startTime = Date.now();
+      
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        let result = '';
+        for (let i = 0; i < length; i++) {
+          if (finalText[i] === ' ' || finalText[i] === '\n') {
+            result += finalText[i];
+          } else if (progress > (i / length) * 0.8) {
+            result += finalText[i];
+          } else {
+            result += charSet[Math.floor(Math.random() * charSet.length)];
+          }
+        }
+        
+        element.textContent = result;
+        
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          element.textContent = finalText;
+        }
+      };
+      
+      animate();
+    };
+
+    // Scramble on load
+    if (scrambleLoadRef.current) {
+      const text = scrambleLoadRef.current.getAttribute('data-original-text') || scrambleLoadRef.current.textContent || '';
+      scrambleLoadRef.current.setAttribute('data-original-text', text);
+      scrambleText(scrambleLoadRef.current, text, 1200, chars);
+    }
+
+    // Scramble on scroll
+    const scrollTargets = [
+      { ref: scrambleScrollRef.current, alt: false },
+      { ref: scrambleAltRef.current, alt: true }
+    ];
+
+    scrollTargets.forEach(({ ref, alt }) => {
+      if (!ref) return;
+      
+      const text = ref.getAttribute('data-original-text') || ref.textContent || '';
+      ref.setAttribute('data-original-text', text);
+      ref.textContent = '';
+      
+      ScrollTrigger.create({
+        trigger: ref,
+        start: 'top bottom',
+        once: true,
+        onEnter: () => {
+          scrambleText(ref, text, 1400, alt ? altChars : chars);
+        }
+      });
+    });
+
+    // Scramble on hover
+    const hoverEl = scrambleHoverRef.current;
+    if (hoverEl) {
+      const textEl = hoverEl.querySelector('[data-scramble-hover="target"]') as HTMLElement;
+      if (textEl) {
+        const originalText = textEl.textContent || '';
+        const customHoverText = textEl.getAttribute('data-scramble-text') || originalText;
+        
+        hoverEl.addEventListener('mouseenter', () => {
+          scrambleText(textEl, customHoverText, 1000, '◊▯∆|');
+        });
+        
+        hoverEl.addEventListener('mouseleave', () => {
+          scrambleText(textEl, originalText, 600, '◊▯∆');
+        });
+      }
+    }
+  }, []);
+
   return (
     <PageLayout>
       {/* 3D Image Carousel */}
@@ -327,6 +423,56 @@ const Showcase = () => {
             <path d="M94.8284 53.8578C92.3086 56.3776 88 54.593 88 51.0294V0H72V59.9999C72 66.6273 66.6274 71.9999 60 71.9999H0V87.9999H51.0294C54.5931 87.9999 56.3777 92.3085 53.8579 94.8283L18.3431 130.343L29.6569 141.657L65.1717 106.142C67.684 103.63 71.9745 105.396 72 108.939V160L88.0001 160L88 99.9999C88 93.3725 93.3726 87.9999 100 87.9999H160V71.9999H108.939C105.407 71.9745 103.64 67.7091 106.12 65.1938L106.142 65.1716L141.657 29.6568L130.343 18.3432L94.8284 53.8578Z" fill="currentColor"></path>
           </svg>
         </section>
+      </div>
+
+      {/* Scramble Text Demo */}
+      <div className="demo-group">
+        <div className="scramble-section">
+          <h1 
+            ref={scrambleLoadRef}
+            data-scramble="load" 
+            className="scramble-heading"
+          >
+            This heading will reveal with a basic scrambling effect on page load
+          </h1>
+        </div>
+        <div className="scramble-section u--bg-light">
+          <h2 
+            ref={scrambleScrollRef}
+            data-scramble="scroll" 
+            className="scramble-heading"
+          >
+            this is an example of a heading that is triggered by a scrolltrigger
+          </h2>
+        </div>
+        <div className="scramble-section">
+          <h2 
+            ref={scrambleAltRef}
+            data-scramble-alt="" 
+            data-scramble="scroll" 
+            className="scramble-heading"
+          >
+            You can even control the characters that are used during scramble
+          </h2>
+        </div>
+        <div className="scramble-section u--bg-light">
+          <h2 className="scramble-heading">and here's how to work with scramble text on hover:</h2>
+          <a 
+            ref={scrambleHoverRef}
+            data-scramble-hover="link" 
+            href="#" 
+            className="scramble-button"
+            onClick={(e) => e.preventDefault()}
+          >
+            <p 
+              data-scramble-text="this text can be custom too" 
+              data-scramble-hover="target" 
+              className="scramble-button-text"
+            >
+              How to scramble on hover
+            </p>
+          </a>
+        </div>
       </div>
 
       <style>{`
@@ -502,6 +648,66 @@ const Showcase = () => {
           width: 160px;
           height: 160px;
           color: #fff;
+        }
+
+        /* Scramble Text Styles */
+        .demo-group {
+          width: 100%;
+        }
+
+        .scramble-section {
+          grid-column-gap: 2em;
+          grid-row-gap: 2em;
+          flex-flow: column;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          min-height: 100vh;
+          display: flex;
+          background: #131313;
+        }
+
+        .scramble-section.u--bg-light {
+          background-color: #efeeec;
+        }
+
+        .scramble-section.u--bg-light .scramble-heading {
+          color: #131313;
+        }
+
+        .scramble-heading {
+          text-align: center;
+          letter-spacing: -.03em;
+          text-transform: uppercase;
+          max-width: 12em;
+          margin: 0 auto;
+          font-family: monospace;
+          font-size: 3em;
+          font-weight: 400;
+          line-height: .9;
+          color: #fff;
+        }
+
+        .scramble-button {
+          color: #131313;
+          text-transform: uppercase;
+          border: 1px dotted #000;
+          border-radius: .3125em;
+          padding: .5em 1em;
+          font-family: monospace;
+          font-size: 1em;
+          font-weight: 400;
+          text-decoration: none;
+          display: inline-block;
+          cursor: pointer;
+        }
+
+        .scramble-button:hover {
+          background: rgba(0,0,0,0.05);
+        }
+
+        .scramble-button-text {
+          margin: 0;
         }
       `}</style>
     </PageLayout>
