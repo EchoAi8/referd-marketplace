@@ -12,7 +12,7 @@ interface ShowcaseTalentCardProps {
 
 /**
  * A compact talent card designed for the 3D rotating carousel on the Showcase page.
- * Uses Referd branding with the floating head aesthetic.
+ * Uses Referd branding with monochromatic dark aesthetic and full-bleed photos.
  */
 const ShowcaseTalentCard = ({
   name,
@@ -24,7 +24,21 @@ const ShowcaseTalentCard = ({
   skills = [],
 }: ShowcaseTalentCardProps) => {
   return (
-    <div className="relative w-full h-full bg-gradient-to-b from-card via-card to-muted/50 rounded-2xl overflow-hidden border border-border/50 shadow-xl">
+    <div 
+      className="relative w-full h-full overflow-hidden rounded-2xl"
+      style={{
+        background: 'linear-gradient(to bottom, hsl(var(--card)), hsl(var(--foreground) / 0.95))',
+        boxShadow: '0 0 30px 5px rgba(255,255,255,0.15), 0 0 60px 10px rgba(255,255,255,0.08), 0 0 100px 20px rgba(255,255,255,0.05)',
+      }}
+    >
+      {/* Inner white glow ring */}
+      <div 
+        className="absolute inset-0 rounded-2xl pointer-events-none z-30"
+        style={{
+          boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.2), inset 0 0 20px rgba(255,255,255,0.05)',
+        }}
+      />
+
       {/* Top Referrer Badge */}
       {topReferrer && (
         <div className="absolute top-3 right-3 z-20 flex items-center gap-1 px-2 py-1 bg-mustard/90 rounded-full">
@@ -33,30 +47,27 @@ const ShowcaseTalentCard = ({
         </div>
       )}
 
-      {/* Floating Profile Photo */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[85%] aspect-[3/4] z-10">
+      {/* Full-Bleed Profile Photo */}
+      <div className="absolute inset-0">
+        <img
+          src={image}
+          alt={name}
+          className="w-full h-full object-cover object-top"
+          loading="lazy"
+          draggable={false}
+        />
+        {/* Dark gradient overlay for text readability - keeps face visible */}
         <div 
-          className="w-full h-full"
-          style={{
-            maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-          }}
-        >
-          <img
-            src={image}
-            alt={name}
-            className="w-full h-full object-cover object-top"
-            loading="lazy"
-            draggable={false}
-          />
-        </div>
+          className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"
+          style={{ top: '45%' }}
+        />
       </div>
 
-      {/* Content Overlay */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 z-20 bg-gradient-to-t from-card via-card/95 to-transparent pt-16">
+      {/* Content Overlay - Bottom aligned */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
         {/* Name & Verification */}
         <div className="flex items-center gap-1.5 mb-1">
-          <h3 className="font-heading font-bold text-sm text-foreground truncate">
+          <h3 className="font-heading font-bold text-base text-white truncate">
             {name}
           </h3>
           {verified && (
@@ -65,8 +76,8 @@ const ShowcaseTalentCard = ({
         </div>
 
         {/* Role & Company */}
-        <p className="text-xs text-muted-foreground truncate mb-2">
-          {role} <span className="text-muted-foreground/50">•</span> {company}
+        <p className="text-xs text-white/80 truncate mb-2">
+          {role} <span className="text-white/40">•</span> {company}
         </p>
 
         {/* Skills */}
@@ -75,7 +86,7 @@ const ShowcaseTalentCard = ({
             {skills.slice(0, 3).map((skill, i) => (
               <span
                 key={i}
-                className="px-2 py-0.5 text-[9px] font-medium bg-muted/80 text-muted-foreground rounded-full"
+                className="px-2 py-0.5 text-[9px] font-medium bg-white/10 text-white/90 rounded-full backdrop-blur-sm"
               >
                 {skill}
               </span>
@@ -83,9 +94,6 @@ const ShowcaseTalentCard = ({
           </div>
         )}
       </div>
-
-      {/* Decorative gradient border glow */}
-      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-foreground/5 pointer-events-none" />
     </div>
   );
 };
