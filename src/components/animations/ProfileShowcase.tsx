@@ -398,7 +398,7 @@ const FlipCard = ({
   return (
     <div
       className="relative cursor-pointer select-none touch-none"
-      style={{ width: 320, height: 440, perspective: 2000 }}
+      style={{ width: 340, height: 480, perspective: 2000 }}
       onMouseEnter={() => onFlip(true)}
       onMouseLeave={() => onFlip(false)}
       onClick={onClick}
@@ -448,8 +448,8 @@ const FlipCard = ({
             </motion.button>
           )}
 
-          {/* Profile Photo - Top Half */}
-          <div className="relative w-full h-[55%] overflow-hidden bg-muted">
+          {/* Profile Photo - Full bleed with gradient overlay */}
+          <div className="absolute inset-0 overflow-hidden">
             {!imageLoaded && (
               <div className="absolute inset-0 bg-gradient-to-b from-muted to-muted/50 animate-pulse" />
             )}
@@ -457,25 +457,23 @@ const FlipCard = ({
               src={profile.image}
               alt={profile.name}
               className={`w-full h-full object-cover object-top ${!imageLoaded ? 'opacity-0' : 'opacity-100'}`}
-              style={{ 
-                maskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
-              }}
               onLoad={() => setImageLoaded(true)}
               draggable={false}
             />
+            {/* Gradient overlay for content readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" style={{ top: '40%' }} />
           </div>
 
-          {/* Content Section */}
-          <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-card via-card to-transparent">
+          {/* Content Section - Overlaid on bottom */}
+          <div className="absolute bottom-0 left-0 right-0 p-5">
             {/* Name & Verification */}
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="text-lg font-heading font-bold text-foreground truncate">{profile.name}</h3>
+              <h3 className="text-xl font-heading font-bold text-foreground truncate">{profile.name}</h3>
               {profile.verified && <BadgeCheck className="w-5 h-5 text-sage flex-shrink-0" />}
             </div>
 
             {/* Role & Company */}
-            <p className="text-sm font-medium text-foreground/80 truncate">{profile.role}</p>
+            <p className="text-sm font-medium text-foreground/90 truncate">{profile.role}</p>
             <div className="flex items-center gap-1.5 mt-1 text-muted-foreground">
               <Building2 className="w-3.5 h-3.5" />
               <span className="text-xs truncate">{profile.company}</span>
@@ -485,27 +483,27 @@ const FlipCard = ({
             </div>
 
             {/* Stats Row */}
-            <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border/50">
+            <div className="flex items-center gap-3 mt-4 pt-3 border-t border-foreground/10">
               <div className="flex-1 text-center">
-                <p className="text-base font-bold text-foreground">{profile.connections.toLocaleString()}</p>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Connections</p>
+                <p className="text-sm font-bold text-foreground">{profile.connections.toLocaleString()}</p>
+                <p className="text-[9px] text-muted-foreground uppercase tracking-wide">Connections</p>
               </div>
-              <div className="w-px h-8 bg-border/50" />
+              <div className="w-px h-7 bg-foreground/10" />
               <div className="flex-1 text-center">
-                <p className="text-base font-bold text-foreground">{profile.endorsements}</p>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Endorsements</p>
+                <p className="text-sm font-bold text-foreground">{profile.endorsements}</p>
+                <p className="text-[9px] text-muted-foreground uppercase tracking-wide">Endorsements</p>
               </div>
-              <div className="w-px h-8 bg-border/50" />
+              <div className="w-px h-7 bg-foreground/10" />
               <div className="flex-1 text-center">
-                <p className="text-base font-bold text-sage">{profile.responseTime}</p>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Response</p>
+                <p className="text-sm font-bold text-sage">{profile.responseTime}</p>
+                <p className="text-[9px] text-muted-foreground uppercase tracking-wide">Response</p>
               </div>
             </div>
 
             {/* Skills Pills */}
-            <div className="flex flex-wrap gap-1.5 mt-4">
+            <div className="flex flex-wrap gap-1.5 mt-3">
               {profile.skills.slice(0, 4).map((skill) => (
-                <span key={skill} className="px-2.5 py-1 text-[10px] font-semibold text-foreground/70 bg-muted/80 rounded-full">
+                <span key={skill} className="px-2.5 py-1 text-[10px] font-semibold text-foreground/80 bg-background/60 backdrop-blur-sm rounded-full">
                   {skill}
                 </span>
               ))}
@@ -660,8 +658,8 @@ const ProfileShowcase = () => {
   const autoPlayRef = useRef<NodeJS.Timeout>();
 
   const springX = useSpring(0, { stiffness: 60, damping: 20, mass: 1 });
-  const cardWidth = 340;
-  const cardGap = 20;
+  const cardWidth = 360;
+  const cardGap = 24;
 
   useEffect(() => {
     springX.set(-activeIndex * (cardWidth + cardGap));
@@ -705,8 +703,8 @@ const ProfileShowcase = () => {
         <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
-        <motion.div ref={containerRef} className="relative h-[480px] flex items-center cursor-grab active:cursor-grabbing" drag="x" dragConstraints={{ left: 0, right: 0 }} dragElastic={0.1} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          <motion.div className="flex items-center gap-[20px] px-[calc(50vw-160px)]" style={{ x: currentX }}>
+        <motion.div ref={containerRef} className="relative h-[520px] flex items-center cursor-grab active:cursor-grabbing" drag="x" dragConstraints={{ left: 0, right: 0 }} dragElastic={0.1} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+          <motion.div className="flex items-center gap-[24px] px-[calc(50vw-170px)]" style={{ x: currentX }}>
             {profiles.map((profile, index) => {
               const isActive = index === activeIndex;
               const distance = Math.abs(index - activeIndex);
