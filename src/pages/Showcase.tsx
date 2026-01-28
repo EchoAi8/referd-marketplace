@@ -644,8 +644,7 @@ const Showcase = () => {
                 className="parallax__layer-img"
               />
               <div data-parallax-layer="3" className="parallax__layer-title">
-                <h2 className="parallax__title">Referd</h2>
-                <p className="parallax__subtitle">The People Powered Recruitment Marketplace</p>
+                <h2 className="parallax__title">Parallax</h2>
               </div>
               <img 
                 src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795bb5aceca85011ad83_osmo-parallax-layer-1.webp" 
@@ -980,21 +979,11 @@ const Showcase = () => {
           margin-top: 0;
           margin-bottom: .1em;
           margin-right: .075em;
-          font-size: 8em;
+          font-size: 10em;
           font-weight: 700;
           line-height: 1;
           position: relative;
           color: #fff;
-          font-family: var(--font-heading);
-        }
-
-        .parallax__subtitle {
-          text-align: center;
-          font-size: 1.5em;
-          font-weight: 400;
-          color: rgba(255,255,255,0.7);
-          margin-top: 0.5em;
-          letter-spacing: 0.05em;
         }
 
         .parallax__black-line-overflow {
