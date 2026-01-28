@@ -12,46 +12,46 @@ gsap.registerPlugin(Draggable, Observer, ScrollTrigger);
 // Referd talent data for the 3D carousel
 const carouselTalent = [
   { id: 1, items: [
-    { name: "Sarah Chen", role: "Senior Product Designer", company: "Stripe", location: "San Francisco", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Product Design", "Figma", "Design Systems"], connections: 847, endorsements: 156, responseTime: "< 2hrs" },
-    { name: "Marcus Johnson", role: "Engineering Manager", company: "Vercel", location: "Brooklyn, NY", image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["React", "TypeScript", "Next.js"], connections: 2340, endorsements: 423, responseTime: "< 4hrs" },
+    { name: "Sarah Chen", role: "Senior Product Designer", company: "Stripe", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Product Design", "Figma", "Design Systems"] },
+    { name: "Marcus Johnson", role: "Engineering Manager", company: "Vercel", image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["React", "TypeScript", "Next.js"] },
   ]},
   { id: 2, items: [
-    { name: "Elena Rodriguez", role: "VP of Marketing", company: "Notion", location: "Austin, TX", image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Growth Marketing", "Brand Strategy"], connections: 1560, endorsements: 287, responseTime: "< 1hr" },
+    { name: "Elena Rodriguez", role: "VP of Marketing", company: "Notion", image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Growth Marketing", "Brand Strategy"] },
   ]},
   { id: 3, items: [
-    { name: "David Kim", role: "Principal Data Scientist", company: "OpenAI", location: "Seattle, WA", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Machine Learning", "Python", "TensorFlow"], connections: 923, endorsements: 198, responseTime: "< 6hrs" },
-    { name: "Aisha Patel", role: "Chief People Officer", company: "Canva", location: "London, UK", image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["People Ops", "Culture", "DEI"], connections: 1890, endorsements: 342, responseTime: "< 3hrs" },
+    { name: "David Kim", role: "Principal Data Scientist", company: "OpenAI", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Machine Learning", "Python", "TensorFlow"] },
+    { name: "Aisha Patel", role: "Chief People Officer", company: "Canva", image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["People Ops", "Culture", "DEI"] },
   ]},
   { id: 4, items: [
-    { name: "James Wright", role: "Head of Sales", company: "Stripe", location: "Chicago, IL", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Enterprise Sales", "SaaS"], connections: 3420, endorsements: 521, responseTime: "< 1hr" },
+    { name: "James Wright", role: "Head of Sales", company: "Stripe", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Enterprise Sales", "SaaS"] },
   ]},
   { id: 5, items: [
-    { name: "Nina Kowalski", role: "Brand Strategist", company: "Airbnb", location: "Miami, FL", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Branding", "Strategy"], connections: 1120, endorsements: 234, responseTime: "< 2hrs" },
-    { name: "Alex Turner", role: "Tech Lead", company: "Figma", location: "Portland, OR", image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["React", "Architecture"], connections: 1890, endorsements: 312, responseTime: "< 3hrs" },
+    { name: "Nina Kowalski", role: "Brand Strategist", company: "Airbnb", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Branding", "Strategy"] },
+    { name: "Alex Turner", role: "Tech Lead", company: "Figma", image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["React", "Architecture"] },
   ]},
   { id: 6, items: [
-    { name: "Sofia Garcia", role: "UX Researcher", company: "Google", location: "NYC", image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["User Research", "Insights"], connections: 780, endorsements: 145, responseTime: "< 4hrs" },
+    { name: "Sofia Garcia", role: "UX Researcher", company: "Google", image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["User Research", "Insights"] },
   ]},
   { id: 7, items: [
-    { name: "Michael Chang", role: "Full Stack Dev", company: "Meta", location: "Menlo Park", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Node.js", "React", "GraphQL"], connections: 2100, endorsements: 389, responseTime: "< 2hrs" },
-    { name: "Emma Thompson", role: "Product Manager", company: "Spotify", location: "Stockholm", image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Product Strategy", "Agile"], connections: 1340, endorsements: 267, responseTime: "< 3hrs" },
+    { name: "Michael Chang", role: "Full Stack Dev", company: "Meta", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Node.js", "React", "GraphQL"] },
+    { name: "Emma Thompson", role: "Product Manager", company: "Spotify", image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Product Strategy", "Agile"] },
   ]},
   { id: 8, items: [
-    { name: "Carlos Mendez", role: "DevOps Engineer", company: "AWS", location: "Seattle", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Kubernetes", "Docker", "CI/CD"], connections: 1560, endorsements: 298, responseTime: "< 5hrs" },
+    { name: "Carlos Mendez", role: "DevOps Engineer", company: "AWS", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Kubernetes", "Docker", "CI/CD"] },
   ]},
   { id: 9, items: [
-    { name: "Mei Lin", role: "Creative Director", company: "Apple", location: "Cupertino", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Creative", "Design Leadership"], connections: 2890, endorsements: 567, responseTime: "< 1hr" },
-    { name: "Jordan Blake", role: "Solutions Architect", company: "Salesforce", location: "Denver", image: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Cloud", "Enterprise"], connections: 1780, endorsements: 345, responseTime: "< 4hrs" },
+    { name: "Mei Lin", role: "Creative Director", company: "Apple", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Creative", "Design Leadership"] },
+    { name: "Jordan Blake", role: "Solutions Architect", company: "Salesforce", image: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Cloud", "Enterprise"] },
   ]},
   { id: 10, items: [
-    { name: "Priya Sharma", role: "Growth Lead", company: "Uber", location: "San Francisco", image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Growth", "Analytics"], connections: 2340, endorsements: 412, responseTime: "< 2hrs" },
+    { name: "Priya Sharma", role: "Growth Lead", company: "Uber", image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Growth", "Analytics"] },
   ]},
   { id: 11, items: [
-    { name: "Ryan O'Connor", role: "Frontend Developer", company: "Netflix", location: "Los Angeles", image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["JavaScript", "CSS"], connections: 1120, endorsements: 189, responseTime: "< 3hrs" },
-    { name: "Lena Müller", role: "Data Analyst", company: "Shopify", location: "Toronto", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["SQL", "Tableau"], connections: 890, endorsements: 156, responseTime: "< 4hrs" },
+    { name: "Ryan O'Connor", role: "Frontend Developer", company: "Netflix", image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["JavaScript", "CSS"] },
+    { name: "Lena Müller", role: "Data Analyst", company: "Shopify", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["SQL", "Tableau"] },
   ]},
   { id: 12, items: [
-    { name: "Tom Anderson", role: "Backend Engineer", company: "Slack", location: "San Francisco", image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Go", "Microservices"], connections: 1670, endorsements: 278, responseTime: "< 2hrs" },
+    { name: "Tom Anderson", role: "Backend Engineer", company: "Slack", image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Go", "Microservices"] },
   ]},
 ];
 
