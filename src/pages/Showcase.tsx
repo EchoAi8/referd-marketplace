@@ -5,51 +5,53 @@ import { Draggable } from "gsap/Draggable";
 import { Observer } from "gsap/Observer";
 import TwoStepNavigation from "@/components/navigation/TwoStepNavigation";
 import SiteFooter from "@/components/layout/SiteFooter";
+import ShowcaseTalentCard from "@/components/showcase/ShowcaseTalentCard";
 
 gsap.registerPlugin(Draggable, Observer, ScrollTrigger);
 
-const carouselImages = [
+// Referd talent data for the 3D carousel
+const carouselTalent = [
   { id: 1, items: [
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d87de67d8f1795c60d_Contemplative%20Portrait%20with%20Bucket%20Hat.avif",
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d83a1a3815a26f7bd6_Mysterious%20Urban%20Portrait.avif"
+    { name: "Sarah Chen", role: "Senior Product Designer", company: "Stripe", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Product Design", "Figma", "Design Systems"] },
+    { name: "Marcus Johnson", role: "Engineering Manager", company: "Vercel", image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["React", "TypeScript", "Next.js"] },
   ]},
   { id: 2, items: [
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d819cbb2dbff9b2a64_Moonlit%20Rocky%20Landscape.avif"
+    { name: "Elena Rodriguez", role: "VP of Marketing", company: "Notion", image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Growth Marketing", "Brand Strategy"] },
   ]},
   { id: 3, items: [
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d8cc5908532a8fd8c6_Mysterious%20Balaclava%20Portrait.avif",
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d8da35115879d4da77_Futuristic%20Mask%20Portrait.avif"
+    { name: "David Kim", role: "Principal Data Scientist", company: "OpenAI", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Machine Learning", "Python", "TensorFlow"] },
+    { name: "Aisha Patel", role: "Chief People Officer", company: "Canva", image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["People Ops", "Culture", "DEI"] },
   ]},
   { id: 4, items: [
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d819cbb2dbff9b2a80_Serene%20Wheat%20Field%20Landscape.avif"
+    { name: "James Wright", role: "Head of Sales", company: "Stripe", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Enterprise Sales", "SaaS"] },
   ]},
   { id: 5, items: [
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d84ab87177abc40d52_Solitude%20in%20White.avif",
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d8bcd829c22ae071e4_Mysterious%20Portrait.avif"
+    { name: "Nina Kowalski", role: "Brand Strategist", company: "Airbnb", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Branding", "Strategy"] },
+    { name: "Alex Turner", role: "Tech Lead", company: "Figma", image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["React", "Architecture"] },
   ]},
   { id: 6, items: [
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d8f2996c45c7f5ec3e_Modern%20House%20on%20Hillside.avif"
+    { name: "Sofia Garcia", role: "UX Researcher", company: "Google", image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["User Research", "Insights"] },
   ]},
   { id: 7, items: [
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d83b775bc909a4914f_Cylindrical%20Tube%20with%20Oranges.avif",
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d89daf4fb3b1b6dbcf_Contemplative%20Urban%20Portrait.avif"
+    { name: "Michael Chang", role: "Full Stack Dev", company: "Meta", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Node.js", "React", "GraphQL"] },
+    { name: "Emma Thompson", role: "Product Manager", company: "Spotify", image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Product Strategy", "Agile"] },
   ]},
   { id: 8, items: [
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d8cb1cc611680f5233_White%20Bucket%20Hat%20on%20Rocky%20Surface.avif"
+    { name: "Carlos Mendez", role: "DevOps Engineer", company: "AWS", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Kubernetes", "Docker", "CI/CD"] },
   ]},
   { id: 9, items: [
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d82ea2b65ee2abfc33_Urban%20Anonymity.avif",
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d880f185d08576afa9_Futuristic%20Masked%20Individual.avif"
+    { name: "Mei Lin", role: "Creative Director", company: "Apple", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Creative", "Design Leadership"] },
+    { name: "Jordan Blake", role: "Solutions Architect", company: "Salesforce", image: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Cloud", "Enterprise"] },
   ]},
   { id: 10, items: [
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d847d26653710d42aa_Regal%20Portrait%20with%20Crown.avif"
+    { name: "Priya Sharma", role: "Growth Lead", company: "Uber", image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Growth", "Analytics"] },
   ]},
   { id: 11, items: [
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d8d7f5ef9c36c91701_Window%20View%20of%20Vibrant%20Sky.avif",
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d87b92b30ee718d99d_White%20Baseball%20Cap%20with%20Dried%20Plants.avif"
+    { name: "Ryan O'Connor", role: "Frontend Developer", company: "Netflix", image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["JavaScript", "CSS"] },
+    { name: "Lena Müller", role: "Data Analyst", company: "Shopify", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["SQL", "Tableau"] },
   ]},
   { id: 12, items: [
-    "https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d85f8f425e2f133bba_Urban%20Chic%20Portrait.avif"
+    { name: "Tom Anderson", role: "Backend Engineer", company: "Slack", image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Go", "Microservices"] },
   ]},
 ];
 
@@ -592,18 +594,26 @@ const Showcase = () => {
   return (
     <div className="min-h-screen bg-background">
       <TwoStepNavigation />
-      {/* 3D Image Carousel */}
+      {/* 3D Talent Carousel */}
       <div className="img-carousel__wrap">
         <div ref={wrapRef} data-3d-carousel-wrap="" className="img-carousel__list">
-          {carouselImages.map((panel) => (
+          {carouselTalent.map((panel) => (
             <div 
               key={panel.id} 
               data-3d-carousel-panel="" 
               className={`img-carousel__panel ${panel.items.length === 1 ? 'img-carousel__panel--single' : ''}`}
             >
-              {panel.items.map((src, itemIndex) => (
+              {panel.items.map((talent, itemIndex) => (
                 <div key={itemIndex} data-3d-carousel-content="" className="img-carousel__item">
-                  <img src={src} alt="" className="img-carousel__img" />
+                  <ShowcaseTalentCard
+                    name={talent.name}
+                    role={talent.role}
+                    company={talent.company}
+                    image={talent.image}
+                    verified={talent.verified}
+                    topReferrer={talent.topReferrer}
+                    skills={talent.skills}
+                  />
                 </div>
               ))}
             </div>
