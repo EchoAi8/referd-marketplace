@@ -898,10 +898,10 @@ const Showcase = () => {
           justify-content: center;
           align-items: center;
           width: 80vw;
-          height: 50vw;
+          height: 55vw;
           margin-left: auto;
           margin-right: auto;
-          font-size: 1vw;
+          font-size: 1.2vw;
           display: flex;
           position: relative;
         }
@@ -912,8 +912,8 @@ const Showcase = () => {
           flex: none;
           justify-content: space-between;
           align-items: stretch;
-          width: 13em;
-          height: 39em;
+          width: 18em;
+          height: 44em;
           display: flex;
           position: absolute;
         }
@@ -927,10 +927,11 @@ const Showcase = () => {
         }
 
         .img-carousel__item {
-          aspect-ratio: 1;
+          aspect-ratio: 3/4;
           width: 100%;
           position: relative;
           overflow: hidden;
+          border-radius: 1em;
         }
 
         .img-carousel__img {
