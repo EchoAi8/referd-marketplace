@@ -648,12 +648,12 @@ const Showcase = () => {
                 <p className="parallax__subtitle">The People Powered Recruitment Marketplace</p>
               </div>
               <img 
-                src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795bb5aceca85011ad83_osmo-parallax-layer-1.webp" 
+                src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=1920&q=80&auto=format&fit=crop" 
                 loading="eager" 
                 width="800" 
                 data-parallax-layer="4" 
-                alt="" 
-                className="parallax__layer-img"
+                alt="City skyline" 
+                className="parallax__layer-img parallax__layer-city"
               />
             </div>
             <div className="parallax__fade"></div>
@@ -1016,6 +1016,15 @@ const Showcase = () => {
           position: absolute;
           top: -17.5%;
           left: 0;
+        }
+
+        .parallax__layer-city {
+          object-position: center bottom;
+          height: 80%;
+          top: auto;
+          bottom: 0;
+          mask-image: linear-gradient(to top, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+          -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
         }
 
         .parallax__fade {
