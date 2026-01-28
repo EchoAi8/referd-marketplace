@@ -29,10 +29,7 @@ const ShowcaseTalentCard = ({
 }: ShowcaseTalentCardProps) => {
   return (
     <div 
-      className="relative w-full h-full rounded-xl overflow-hidden bg-black"
-      style={{
-        boxShadow: '0 0 30px rgba(255,255,255,0.25), 0 0 60px rgba(255,255,255,0.15), 0 0 100px rgba(255,255,255,0.08), inset 0 0 0 1px rgba(255,255,255,0.2)'
-      }}
+      className="showcase-card relative w-full h-full rounded-xl overflow-hidden bg-black"
     >
       {/* Top Referrer Badge */}
       {topReferrer && (
@@ -42,7 +39,7 @@ const ShowcaseTalentCard = ({
         </div>
       )}
 
-      {/* Full-bleed Profile Photo with dark overlay */}
+      {/* Full-bleed Profile Photo with darker overlay */}
       <div className="absolute inset-0">
         <img
           src={image}
@@ -51,8 +48,8 @@ const ShowcaseTalentCard = ({
           loading="lazy"
           draggable={false}
         />
-        {/* Dark overlay for black/white aesthetic */}
-        <div className="absolute inset-0 bg-black/30" />
+        {/* Darker overlay for black/white aesthetic */}
+        <div className="absolute inset-0 bg-black/50" />
         {/* Bottom gradient for text */}
         <div 
           className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black via-black/80 to-transparent" 
@@ -90,8 +87,8 @@ const ShowcaseTalentCard = ({
         )}
       </div>
 
-      {/* Subtle inner border glow */}
-      <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/10 pointer-events-none" />
+      {/* Subtle inner border */}
+      <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/5 pointer-events-none" />
     </div>
   );
 };
