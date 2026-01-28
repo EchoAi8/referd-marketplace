@@ -621,151 +621,40 @@ const Showcase = () => {
         </div>
       </div>
 
-      {/* Parallax Layers - City Skyline */}
+      {/* Parallax Layers */}
       <div className="parallax">
         <section className="parallax__header">
           <div className="parallax__visuals">
             <div className="parallax__black-line-overflow"></div>
             <div ref={parallaxRef} data-parallax-layers className="parallax__layers">
-              {/* Layer 1 - Far background sky with stars */}
-              <div data-parallax-layer="1" className="parallax__layer-sky">
-                <div className="city-stars" />
-              </div>
-              
-              {/* Layer 2 - Distant city buildings */}
-              <div data-parallax-layer="2" className="parallax__layer-city-back">
-                <div className="city-skyline city-skyline--back">
-                  {/* Distant buildings */}
-                  <div className="building building--1" style={{ height: '35%', left: '5%' }}>
-                    <div className="building-light" style={{ top: '15%', left: '30%', animationDelay: '0s' }} />
-                    <div className="building-light" style={{ top: '35%', left: '60%', animationDelay: '1.2s' }} />
-                    <div className="building-light" style={{ top: '55%', left: '25%', animationDelay: '2.4s' }} />
-                  </div>
-                  <div className="building building--2" style={{ height: '45%', left: '12%' }}>
-                    <div className="building-light" style={{ top: '20%', left: '40%', animationDelay: '0.5s' }} />
-                    <div className="building-light" style={{ top: '40%', left: '70%', animationDelay: '1.8s' }} />
-                    <div className="building-light" style={{ top: '60%', left: '30%', animationDelay: '3s' }} />
-                    <div className="building-light" style={{ top: '75%', left: '55%', animationDelay: '0.3s' }} />
-                  </div>
-                  <div className="building building--3" style={{ height: '55%', left: '22%' }}>
-                    <div className="building-light" style={{ top: '10%', left: '50%', animationDelay: '0.8s' }} />
-                    <div className="building-light" style={{ top: '30%', left: '25%', animationDelay: '2s' }} />
-                    <div className="building-light" style={{ top: '50%', left: '65%', animationDelay: '1s' }} />
-                    <div className="building-light" style={{ top: '70%', left: '40%', animationDelay: '2.5s' }} />
-                  </div>
-                  <div className="building building--4" style={{ height: '40%', left: '35%' }}>
-                    <div className="building-light" style={{ top: '25%', left: '35%', animationDelay: '1.5s' }} />
-                    <div className="building-light" style={{ top: '50%', left: '60%', animationDelay: '0.2s' }} />
-                  </div>
-                  <div className="building building--5" style={{ height: '50%', left: '48%' }}>
-                    <div className="building-light" style={{ top: '15%', left: '45%', animationDelay: '2.2s' }} />
-                    <div className="building-light" style={{ top: '35%', left: '20%', animationDelay: '0.7s' }} />
-                    <div className="building-light" style={{ top: '55%', left: '70%', animationDelay: '1.3s' }} />
-                    <div className="building-light" style={{ top: '75%', left: '35%', animationDelay: '2.8s' }} />
-                  </div>
-                  <div className="building building--6" style={{ height: '38%', left: '60%' }}>
-                    <div className="building-light" style={{ top: '20%', left: '55%', animationDelay: '0.4s' }} />
-                    <div className="building-light" style={{ top: '45%', left: '30%', animationDelay: '1.6s' }} />
-                  </div>
-                  <div className="building building--7" style={{ height: '48%', left: '72%' }}>
-                    <div className="building-light" style={{ top: '12%', left: '40%', animationDelay: '1.1s' }} />
-                    <div className="building-light" style={{ top: '32%', left: '65%', animationDelay: '2.3s' }} />
-                    <div className="building-light" style={{ top: '52%', left: '25%', animationDelay: '0.6s' }} />
-                    <div className="building-light" style={{ top: '72%', left: '50%', animationDelay: '1.9s' }} />
-                  </div>
-                  <div className="building building--8" style={{ height: '42%', left: '85%' }}>
-                    <div className="building-light" style={{ top: '18%', left: '35%', animationDelay: '2.6s' }} />
-                    <div className="building-light" style={{ top: '42%', left: '60%', animationDelay: '0.9s' }} />
-                    <div className="building-light" style={{ top: '65%', left: '40%', animationDelay: '1.4s' }} />
-                  </div>
-                </div>
-              </div>
-
-              {/* Layer 3 - Title overlay */}
+              <img 
+                src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795be09b462b2e8ebf71_osmo-parallax-layer-3.webp" 
+                loading="eager" 
+                width="800" 
+                data-parallax-layer="1" 
+                alt="" 
+                className="parallax__layer-img"
+              />
+              <img 
+                src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795b4d5ac529e7d3a562_osmo-parallax-layer-2.webp" 
+                loading="eager" 
+                width="800" 
+                data-parallax-layer="2" 
+                alt="" 
+                className="parallax__layer-img"
+              />
               <div data-parallax-layer="3" className="parallax__layer-title">
                 <h2 className="parallax__title">Referd</h2>
                 <p className="parallax__subtitle">The People Powered Recruitment Marketplace</p>
               </div>
-
-              {/* Layer 4 - Foreground city silhouette (person equivalent - stays mostly still) */}
-              <div data-parallax-layer="4" className="parallax__layer-city-front">
-                <div className="city-skyline city-skyline--front">
-                  {/* Foreground prominent buildings */}
-                  <div className="building building-front--1" style={{ height: '70%', left: '0%' }}>
-                    <div className="building-light building-light--bright" style={{ top: '8%', left: '40%', animationDelay: '0s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '18%', left: '60%', animationDelay: '0.5s' }} />
-                    <div className="building-light" style={{ top: '28%', left: '30%', animationDelay: '1s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '38%', left: '70%', animationDelay: '1.5s' }} />
-                    <div className="building-light" style={{ top: '48%', left: '45%', animationDelay: '2s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '58%', left: '25%', animationDelay: '2.5s' }} />
-                    <div className="building-light" style={{ top: '68%', left: '55%', animationDelay: '3s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '78%', left: '35%', animationDelay: '0.3s' }} />
-                  </div>
-                  <div className="building building-front--2" style={{ height: '85%', left: '8%' }}>
-                    <div className="building-antenna" />
-                    <div className="building-light building-light--bright" style={{ top: '5%', left: '50%', animationDelay: '0.2s' }} />
-                    <div className="building-light" style={{ top: '15%', left: '30%', animationDelay: '0.8s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '25%', left: '65%', animationDelay: '1.4s' }} />
-                    <div className="building-light" style={{ top: '35%', left: '40%', animationDelay: '2s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '45%', left: '55%', animationDelay: '2.6s' }} />
-                    <div className="building-light" style={{ top: '55%', left: '25%', animationDelay: '0.6s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '65%', left: '70%', animationDelay: '1.2s' }} />
-                    <div className="building-light" style={{ top: '75%', left: '45%', animationDelay: '1.8s' }} />
-                  </div>
-                  <div className="building building-front--3" style={{ height: '60%', left: '18%' }}>
-                    <div className="building-light" style={{ top: '15%', left: '35%', animationDelay: '1.1s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '35%', left: '60%', animationDelay: '0.4s' }} />
-                    <div className="building-light" style={{ top: '55%', left: '40%', animationDelay: '1.7s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '75%', left: '55%', animationDelay: '2.3s' }} />
-                  </div>
-                  <div className="building building-front--4" style={{ height: '75%', left: '28%' }}>
-                    <div className="building-light building-light--bright" style={{ top: '10%', left: '45%', animationDelay: '0.7s' }} />
-                    <div className="building-light" style={{ top: '25%', left: '30%', animationDelay: '1.3s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '40%', left: '65%', animationDelay: '1.9s' }} />
-                    <div className="building-light" style={{ top: '55%', left: '50%', animationDelay: '2.5s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '70%', left: '35%', animationDelay: '0.1s' }} />
-                  </div>
-                  <div className="building building-front--5" style={{ height: '90%', left: '42%' }}>
-                    <div className="building-antenna building-antenna--tall" />
-                    <div className="building-light building-light--bright" style={{ top: '3%', left: '50%', animationDelay: '0s' }} />
-                    <div className="building-light" style={{ top: '12%', left: '35%', animationDelay: '0.6s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '22%', left: '60%', animationDelay: '1.2s' }} />
-                    <div className="building-light" style={{ top: '32%', left: '45%', animationDelay: '1.8s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '42%', left: '30%', animationDelay: '2.4s' }} />
-                    <div className="building-light" style={{ top: '52%', left: '70%', animationDelay: '0.3s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '62%', left: '55%', animationDelay: '0.9s' }} />
-                    <div className="building-light" style={{ top: '72%', left: '40%', animationDelay: '1.5s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '82%', left: '65%', animationDelay: '2.1s' }} />
-                  </div>
-                  <div className="building building-front--6" style={{ height: '65%', left: '55%' }}>
-                    <div className="building-light" style={{ top: '12%', left: '40%', animationDelay: '0.4s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '30%', left: '55%', animationDelay: '1s' }} />
-                    <div className="building-light" style={{ top: '48%', left: '35%', animationDelay: '1.6s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '66%', left: '60%', animationDelay: '2.2s' }} />
-                  </div>
-                  <div className="building building-front--7" style={{ height: '80%', left: '68%' }}>
-                    <div className="building-antenna" />
-                    <div className="building-light building-light--bright" style={{ top: '8%', left: '50%', animationDelay: '0.8s' }} />
-                    <div className="building-light" style={{ top: '20%', left: '35%', animationDelay: '1.4s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '32%', left: '65%', animationDelay: '2s' }} />
-                    <div className="building-light" style={{ top: '44%', left: '45%', animationDelay: '2.6s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '56%', left: '30%', animationDelay: '0.2s' }} />
-                    <div className="building-light" style={{ top: '68%', left: '55%', animationDelay: '0.9s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '80%', left: '40%', animationDelay: '1.5s' }} />
-                  </div>
-                  <div className="building building-front--8" style={{ height: '55%', left: '82%' }}>
-                    <div className="building-light" style={{ top: '18%', left: '45%', animationDelay: '1.1s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '40%', left: '60%', animationDelay: '0.5s' }} />
-                    <div className="building-light" style={{ top: '62%', left: '35%', animationDelay: '1.7s' }} />
-                  </div>
-                  <div className="building building-front--9" style={{ height: '72%', left: '92%' }}>
-                    <div className="building-light building-light--bright" style={{ top: '10%', left: '50%', animationDelay: '0.3s' }} />
-                    <div className="building-light" style={{ top: '28%', left: '40%', animationDelay: '1.3s' }} />
-                    <div className="building-light building-light--bright" style={{ top: '46%', left: '55%', animationDelay: '1.9s' }} />
-                    <div className="building-light" style={{ top: '64%', left: '35%', animationDelay: '2.5s' }} />
-                  </div>
-                </div>
-              </div>
+              <img 
+                src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795bb5aceca85011ad83_osmo-parallax-layer-1.webp" 
+                loading="eager" 
+                width="800" 
+                data-parallax-layer="4" 
+                alt="" 
+                className="parallax__layer-img"
+              />
             </div>
             <div className="parallax__fade"></div>
           </div>
@@ -1164,193 +1053,12 @@ const Showcase = () => {
         .parallax__layer-title {
           justify-content: center;
           align-items: center;
-          flex-direction: column;
           width: 100%;
           height: 100svh;
           display: flex;
           position: absolute;
           top: 0;
           left: 0;
-          z-index: 15;
-        }
-
-        /* City Skyline Styles */
-        .parallax__layer-sky,
-        .parallax__layer-city-back,
-        .parallax__layer-city-front {
-          pointer-events: none;
-          width: 100%;
-          height: 117.5%;
-          position: absolute;
-          top: -17.5%;
-          left: 0;
-        }
-
-        .parallax__layer-sky {
-          background: linear-gradient(
-            to bottom,
-            #0a0a12 0%,
-            #0d0d1a 30%,
-            #111122 60%,
-            #151528 100%
-          );
-        }
-
-        .city-stars {
-          position: absolute;
-          inset: 0;
-          background-image: 
-            radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.4) 100%, transparent),
-            radial-gradient(1px 1px at 25% 8%, rgba(255,255,255,0.3) 100%, transparent),
-            radial-gradient(1.5px 1.5px at 40% 22%, rgba(255,255,255,0.5) 100%, transparent),
-            radial-gradient(1px 1px at 55% 12%, rgba(255,255,255,0.35) 100%, transparent),
-            radial-gradient(1px 1px at 70% 18%, rgba(255,255,255,0.4) 100%, transparent),
-            radial-gradient(1.5px 1.5px at 85% 10%, rgba(255,255,255,0.45) 100%, transparent),
-            radial-gradient(1px 1px at 95% 25%, rgba(255,255,255,0.3) 100%, transparent),
-            radial-gradient(1px 1px at 15% 35%, rgba(255,255,255,0.25) 100%, transparent),
-            radial-gradient(1px 1px at 35% 5%, rgba(255,255,255,0.4) 100%, transparent),
-            radial-gradient(1px 1px at 60% 28%, rgba(255,255,255,0.3) 100%, transparent),
-            radial-gradient(1px 1px at 78% 6%, rgba(255,255,255,0.35) 100%, transparent),
-            radial-gradient(1px 1px at 5% 42%, rgba(255,255,255,0.3) 100%, transparent);
-        }
-
-        .city-skyline {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          height: 60%;
-        }
-
-        .city-skyline--back {
-          opacity: 0.5;
-        }
-
-        .city-skyline--front {
-          height: 70%;
-        }
-
-        .building {
-          position: absolute;
-          bottom: 0;
-          width: 8%;
-          background: linear-gradient(to top, #0a0a0f, #15151f);
-          border-radius: 2px 2px 0 0;
-        }
-
-        .city-skyline--back .building {
-          background: linear-gradient(to top, #0c0c14, #1a1a28);
-        }
-
-        .city-skyline--front .building {
-          background: linear-gradient(to top, #050508, #0d0d14);
-        }
-
-        .building-front--1,
-        .building-front--9 { width: 9%; }
-        .building-front--2,
-        .building-front--7 { width: 11%; }
-        .building-front--3,
-        .building-front--6,
-        .building-front--8 { width: 10%; }
-        .building-front--4 { width: 12%; }
-        .building-front--5 { width: 14%; border-radius: 4px 4px 0 0; }
-
-        .building-antenna {
-          position: absolute;
-          top: -15px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 2px;
-          height: 15px;
-          background: #1a1a24;
-        }
-
-        .building-antenna::after {
-          content: '';
-          position: absolute;
-          top: -3px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: #ff3030;
-          animation: antenna-blink 1.5s ease-in-out infinite;
-        }
-
-        .building-antenna--tall {
-          height: 25px;
-          top: -25px;
-        }
-
-        .building-antenna--tall::after {
-          width: 8px;
-          height: 8px;
-          background: #ff4040;
-          box-shadow: 0 0 10px 3px rgba(255, 64, 64, 0.6);
-        }
-
-        @keyframes antenna-blink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.3; }
-        }
-
-        .building-light {
-          position: absolute;
-          width: 4px;
-          height: 4px;
-          background: rgba(255, 230, 150, 0.7);
-          border-radius: 1px;
-          animation: window-flicker 3s ease-in-out infinite;
-          box-shadow: 0 0 4px 1px rgba(255, 230, 150, 0.3);
-        }
-
-        .building-light--bright {
-          width: 5px;
-          height: 5px;
-          background: rgba(255, 240, 180, 0.9);
-          box-shadow: 0 0 8px 2px rgba(255, 240, 180, 0.5);
-          animation: window-flicker-bright 2.5s ease-in-out infinite;
-        }
-
-        @keyframes window-flicker {
-          0%, 100% { 
-            opacity: 0.7;
-            transform: scale(1);
-          }
-          15% { opacity: 0.4; }
-          30% { opacity: 0.9; }
-          45% { opacity: 0.5; }
-          60% { 
-            opacity: 1;
-            transform: scale(1.1);
-          }
-          75% { opacity: 0.6; }
-          90% { opacity: 0.85; }
-        }
-
-        @keyframes window-flicker-bright {
-          0%, 100% { 
-            opacity: 0.9;
-            box-shadow: 0 0 8px 2px rgba(255, 240, 180, 0.5);
-          }
-          20% { 
-            opacity: 0.5;
-            box-shadow: 0 0 4px 1px rgba(255, 240, 180, 0.3);
-          }
-          40% { 
-            opacity: 1;
-            box-shadow: 0 0 12px 4px rgba(255, 240, 180, 0.7);
-          }
-          60% { 
-            opacity: 0.7;
-            box-shadow: 0 0 6px 2px rgba(255, 240, 180, 0.4);
-          }
-          80% { 
-            opacity: 0.95;
-            box-shadow: 0 0 10px 3px rgba(255, 240, 180, 0.6);
-          }
         }
 
         .osmo-icon-svg {
