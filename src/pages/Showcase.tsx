@@ -880,12 +880,27 @@ const Showcase = () => {
       </main>
 
       <style>{`
+        /* Pulsing Glow Animation for Showcase Cards */
+        @keyframes pulseGlow {
+          0%, 100% {
+            box-shadow: 0 0 25px rgba(255,255,255,0.2), 0 0 50px rgba(255,255,255,0.1), 0 0 80px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.15);
+          }
+          50% {
+            box-shadow: 0 0 35px rgba(255,255,255,0.35), 0 0 70px rgba(255,255,255,0.2), 0 0 100px rgba(255,255,255,0.1), inset 0 0 0 1px rgba(255,255,255,0.25);
+          }
+        }
+
+        .showcase-card {
+          animation: pulseGlow 3s ease-in-out infinite;
+        }
+
         /* 3D Carousel Styles */
         .img-carousel__wrap {
           justify-content: center;
           align-items: center;
           width: 100%;
           min-height: 100vh;
+          padding-top: 12vh;
           display: flex;
           background: hsl(var(--foreground));
         }
@@ -898,7 +913,7 @@ const Showcase = () => {
           justify-content: center;
           align-items: center;
           width: 80vw;
-          height: 50vw;
+          height: 45vw;
           margin-left: auto;
           margin-right: auto;
           font-size: 1vw;
@@ -912,9 +927,9 @@ const Showcase = () => {
           flex: none;
           justify-content: space-between;
           align-items: stretch;
-          width: 15em;
-          height: 40em;
-          gap: 1em;
+          width: 12em;
+          height: 32em;
+          gap: 0.8em;
           display: flex;
           position: absolute;
         }
