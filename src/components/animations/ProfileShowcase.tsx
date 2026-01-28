@@ -375,7 +375,7 @@ const QuickContactModal = ({
   );
 };
 
-// Floating Head Profile Card with Video Intro
+// Redesigned Candidate Profile Card
 const FlipCard = ({
   profile,
   isActive,
@@ -398,161 +398,134 @@ const FlipCard = ({
   return (
     <div
       className="relative cursor-pointer select-none touch-none"
-      style={{ width: 340, height: 480, perspective: 2000 }}
+      style={{ width: 320, height: 440, perspective: 2000 }}
       onMouseEnter={() => onFlip(true)}
       onMouseLeave={() => onFlip(false)}
       onClick={onClick}
     >
-      {/* Floating Head - Extends above card */}
-      <motion.div 
-        className="absolute left-1/2 -translate-x-1/2 z-30 pointer-events-none"
-        style={{ top: -40, width: 240, height: 280 }}
-        animate={{
-          y: isFlipped ? 20 : 0,
-          scale: isFlipped ? 0.85 : 1,
-          opacity: isFlipped ? 0 : 1
-        }}
-        transition={{ type: "spring", stiffness: 200, damping: 25 }}
-      >
-        {!imageLoaded && (
-          <div className="absolute inset-0 bg-gradient-to-b from-muted to-transparent rounded-t-full animate-pulse" />
-        )}
-        <motion.img
-          src={profile.image}
-          alt={profile.name}
-          className={`w-full h-full object-cover object-top ${!imageLoaded ? 'opacity-0' : 'opacity-100'}`}
-          style={{ 
-            maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-          }}
-          onLoad={() => setImageLoaded(true)}
-          draggable={false}
-        />
-        
-        {/* Video intro button overlay */}
-        {profile.videoIntro && (
-          <motion.button
-            className="absolute bottom-16 left-1/2 -translate-x-1/2 pointer-events-auto"
-            onClick={(e) => { e.stopPropagation(); onVideoClick(); }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <div className="relative">
-              <motion.div 
-                className="absolute inset-0 bg-sage/30 rounded-full blur-md"
-                animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0.2, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-              <div className="relative w-12 h-12 bg-sage rounded-full flex items-center justify-center shadow-lg">
-                <Play className="w-5 h-5 text-foreground ml-0.5" fill="currentColor" />
-              </div>
-            </div>
-          </motion.button>
-        )}
-      </motion.div>
-
       <motion.div
         className="relative w-full h-full"
         style={{ transformStyle: "preserve-3d" }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ type: "spring", stiffness: 100, damping: 20, mass: 0.8 }}
       >
-        {/* FRONT - Clean Card with Floating Head Space */}
+        {/* FRONT - Clean Candidate Card */}
         <motion.div
-          className="absolute inset-0 rounded-2xl overflow-hidden bg-background"
+          className="absolute inset-0 rounded-3xl overflow-hidden bg-card border border-border/50"
           style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
         >
-          {/* Gradient border */}
+          {/* Card glow effect for active state */}
           <motion.div
-            className="absolute inset-0 rounded-2xl pointer-events-none z-20"
+            className="absolute inset-0 rounded-3xl pointer-events-none z-20"
             animate={{
               boxShadow: isActive
-                ? "inset 0 0 0 2px hsl(var(--foreground) / 0.15), 0 25px 50px -12px rgba(0,0,0,0.25)"
-                : "inset 0 0 0 1px hsl(var(--foreground) / 0.08), 0 10px 30px -10px rgba(0,0,0,0.1)",
+                ? "0 20px 60px -15px hsl(var(--foreground) / 0.15), 0 0 0 1px hsl(var(--border))"
+                : "0 8px 30px -10px hsl(var(--foreground) / 0.08), 0 0 0 1px hsl(var(--border) / 0.5)",
             }}
           />
 
-          {/* Top gradient area where head floats */}
-          <div className={`absolute top-0 left-0 right-0 h-48 bg-gradient-to-b ${profile.coverGradient} to-transparent`} />
-
-          {/* Top referrer badge */}
+          {/* Top Referrer Badge */}
           {profile.topReferrer && (
-            <div className="absolute top-3 right-3 z-20">
-              <div className="flex items-center gap-1 px-2.5 py-1 bg-mustard/90 rounded-full shadow-sm">
+            <div className="absolute top-4 left-4 z-30">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-mustard rounded-full shadow-md">
                 <Zap className="w-3.5 h-3.5 text-foreground" />
-                <span className="text-[10px] font-bold text-foreground uppercase tracking-wide">Top Referrer</span>
+                <span className="text-[11px] font-bold text-foreground tracking-wide">Top Referrer</span>
               </div>
             </div>
           )}
 
-          {/* Content - pushed down to account for floating head */}
-          <div className="absolute inset-x-0 top-44 bottom-0 flex flex-col">
-            {/* Name & verification */}
-            <div className="text-center mt-8 px-4">
-              <div className="flex items-center justify-center gap-1.5">
-                <h3 className="text-xl font-heading font-bold text-foreground">{profile.name}</h3>
-                {profile.verified && <BadgeCheck className="w-5 h-5 text-sage fill-sage/20" />}
+          {/* Video Intro Button */}
+          {profile.videoIntro && (
+            <motion.button
+              className="absolute top-4 right-4 z-30"
+              onClick={(e) => { e.stopPropagation(); onVideoClick(); }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <div className="w-10 h-10 bg-sage rounded-full flex items-center justify-center shadow-lg">
+                <Play className="w-4 h-4 text-foreground ml-0.5" fill="currentColor" />
               </div>
-              <p className="text-xs text-muted-foreground mt-0.5">{profile.handle}</p>
+            </motion.button>
+          )}
+
+          {/* Profile Photo - Top Half */}
+          <div className="relative w-full h-[55%] overflow-hidden bg-muted">
+            {!imageLoaded && (
+              <div className="absolute inset-0 bg-gradient-to-b from-muted to-muted/50 animate-pulse" />
+            )}
+            <motion.img
+              src={profile.image}
+              alt={profile.name}
+              className={`w-full h-full object-cover object-top ${!imageLoaded ? 'opacity-0' : 'opacity-100'}`}
+              style={{ 
+                maskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
+              }}
+              onLoad={() => setImageLoaded(true)}
+              draggable={false}
+            />
+          </div>
+
+          {/* Content Section */}
+          <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-card via-card to-transparent">
+            {/* Name & Verification */}
+            <div className="flex items-center gap-2 mb-1">
+              <h3 className="text-lg font-heading font-bold text-foreground truncate">{profile.name}</h3>
+              {profile.verified && <BadgeCheck className="w-5 h-5 text-sage flex-shrink-0" />}
             </div>
 
-            {/* Role & company */}
-            <div className="text-center mt-2 px-4">
-              <p className="text-sm font-medium text-foreground">{profile.role}</p>
-              <div className="flex items-center justify-center gap-1 mt-0.5 text-muted-foreground">
-                <Building2 className="w-3 h-3" />
-                <span className="text-[11px]">{profile.company}</span>
-                <span className="text-[11px]">•</span>
-                <MapPin className="w-3 h-3" />
-                <span className="text-[11px]">{profile.location}</span>
-              </div>
+            {/* Role & Company */}
+            <p className="text-sm font-medium text-foreground/80 truncate">{profile.role}</p>
+            <div className="flex items-center gap-1.5 mt-1 text-muted-foreground">
+              <Building2 className="w-3.5 h-3.5" />
+              <span className="text-xs truncate">{profile.company}</span>
+              <span className="text-xs">•</span>
+              <MapPin className="w-3.5 h-3.5" />
+              <span className="text-xs truncate">{profile.location}</span>
             </div>
 
-            {/* Bio - hidden on smaller cards to prioritize face */}
-            <p className="text-center text-xs text-muted-foreground mt-2 px-4 line-clamp-2 hidden">{profile.bio}</p>
-
-            {/* Stats row */}
-            <div className="flex justify-center gap-6 mt-3 px-4">
-              <div className="text-center">
+            {/* Stats Row */}
+            <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border/50">
+              <div className="flex-1 text-center">
                 <p className="text-base font-bold text-foreground">{profile.connections.toLocaleString()}</p>
-                <p className="text-[10px] text-muted-foreground">Connections</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Connections</p>
               </div>
-              <div className="text-center">
+              <div className="w-px h-8 bg-border/50" />
+              <div className="flex-1 text-center">
                 <p className="text-base font-bold text-foreground">{profile.endorsements}</p>
-                <p className="text-[10px] text-muted-foreground">Endorsements</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Endorsements</p>
               </div>
-              <div className="text-center">
+              <div className="w-px h-8 bg-border/50" />
+              <div className="flex-1 text-center">
                 <p className="text-base font-bold text-sage">{profile.responseTime}</p>
-                <p className="text-[10px] text-muted-foreground">Response</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Response</p>
               </div>
             </div>
 
-            {/* Skills */}
-            <div className="mt-auto pb-4 px-4">
-              <div className="flex flex-wrap justify-center gap-1">
-                {profile.skills.slice(0, 3).map((skill) => (
-                  <span key={skill} className="px-2 py-0.5 text-[10px] font-medium text-foreground/80 bg-muted rounded-full">
-                    {skill}
-                  </span>
-                ))}
-              </div>
+            {/* Skills Pills */}
+            <div className="flex flex-wrap gap-1.5 mt-4">
+              {profile.skills.slice(0, 4).map((skill) => (
+                <span key={skill} className="px-2.5 py-1 text-[10px] font-semibold text-foreground/70 bg-muted/80 rounded-full">
+                  {skill}
+                </span>
+              ))}
             </div>
           </div>
         </motion.div>
 
-        {/* BACK - Dynamic Timeline */}
+        {/* BACK - Career Timeline */}
         <motion.div
-          className="absolute inset-0 rounded-2xl overflow-hidden bg-background"
+          className="absolute inset-0 rounded-3xl overflow-hidden bg-card border border-border/50"
           style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
-          {/* Border */}
-          <div className="absolute inset-0 rounded-2xl pointer-events-none z-20" style={{ boxShadow: "inset 0 0 0 2px hsl(var(--foreground) / 0.1), 0 25px 50px -12px rgba(0,0,0,0.25)" }} />
+          {/* Border glow */}
+          <div className="absolute inset-0 rounded-3xl pointer-events-none z-20" style={{ boxShadow: "0 20px 60px -15px hsl(var(--foreground) / 0.15), 0 0 0 1px hsl(var(--border))" }} />
 
           {/* Header with mini profile */}
-          <div className="p-5 pb-3 border-b border-foreground/5 bg-gradient-to-b from-muted/30 to-transparent">
+          <div className="p-5 pb-4 border-b border-border/50 bg-muted/30">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <img src={profile.image} alt={profile.name} className="w-14 h-14 rounded-xl object-cover object-top" />
+                <img src={profile.image} alt={profile.name} className="w-14 h-14 rounded-2xl object-cover object-top ring-2 ring-background" />
                 {profile.videoIntro && (
                   <motion.button
                     className="absolute -bottom-1 -right-1 w-6 h-6 bg-sage rounded-full flex items-center justify-center shadow-md"
@@ -567,7 +540,7 @@ const FlipCard = ({
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
                   <h3 className="text-base font-heading font-bold text-foreground truncate">{profile.name}</h3>
-                  {profile.verified && <BadgeCheck className="w-4 h-4 text-sage fill-sage/20 flex-shrink-0" />}
+                  {profile.verified && <BadgeCheck className="w-4 h-4 text-sage flex-shrink-0" />}
                 </div>
                 <p className="text-xs text-muted-foreground truncate">{profile.role} at {profile.company}</p>
               </div>
@@ -575,10 +548,10 @@ const FlipCard = ({
           </div>
 
           {/* Timeline */}
-          <div className="p-5 pt-4 h-[calc(100%-150px)] overflow-y-auto scrollbar-thin scrollbar-thumb-muted/50 scrollbar-track-transparent">
+          <div className="p-5 pt-4 h-[calc(100%-160px)] overflow-y-auto scrollbar-thin scrollbar-thumb-muted/50 scrollbar-track-transparent">
             <div className="relative">
               {/* Timeline line */}
-              <div className="absolute left-5 top-0 bottom-0 w-px bg-gradient-to-b from-foreground/20 via-foreground/10 to-transparent" />
+              <div className="absolute left-5 top-0 bottom-0 w-px bg-gradient-to-b from-border via-border/50 to-transparent" />
 
               <div className="space-y-4">
                 {profile.timeline.map((item, idx) => {
@@ -598,7 +571,7 @@ const FlipCard = ({
                         <div 
                           className={`w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 ${
                             item.current 
-                              ? 'bg-sage/20 ring-2 ring-sage/30' 
+                              ? 'bg-sage/20 ring-2 ring-sage/40' 
                               : 'bg-muted'
                           }`}
                         >
@@ -610,7 +583,7 @@ const FlipCard = ({
                         </div>
                         {item.current && (
                           <motion.div 
-                            className="absolute -top-1 -right-1 w-3 h-3 bg-sage rounded-full ring-2 ring-background"
+                            className="absolute -top-1 -right-1 w-3 h-3 bg-sage rounded-full ring-2 ring-card"
                             animate={{ scale: [1, 1.2, 1] }}
                             transition={{ duration: 2, repeat: Infinity }}
                           />
@@ -635,7 +608,7 @@ const FlipCard = ({
                         </div>
 
                         {item.description && (
-                          <p className="text-xs text-muted-foreground/80 mt-1">{item.description}</p>
+                          <p className="text-xs text-muted-foreground/80 mt-1 line-clamp-1">{item.description}</p>
                         )}
 
                         {item.skills && item.skills.length > 0 && (
@@ -656,7 +629,7 @@ const FlipCard = ({
           </div>
 
           {/* CTA */}
-          <div className="absolute bottom-0 left-0 right-0 p-5 pt-3 bg-gradient-to-t from-background via-background to-transparent">
+          <div className="absolute bottom-0 left-0 right-0 p-5 pt-3 bg-gradient-to-t from-card via-card to-transparent">
             <motion.button
               onClick={(e) => { e.stopPropagation(); onContactClick(); }}
               whileHover={{ scale: 1.02 }}
@@ -687,8 +660,8 @@ const ProfileShowcase = () => {
   const autoPlayRef = useRef<NodeJS.Timeout>();
 
   const springX = useSpring(0, { stiffness: 60, damping: 20, mass: 1 });
-  const cardWidth = 360;
-  const cardGap = 24;
+  const cardWidth = 340;
+  const cardGap = 20;
 
   useEffect(() => {
     springX.set(-activeIndex * (cardWidth + cardGap));
@@ -722,16 +695,18 @@ const ProfileShowcase = () => {
 
   return (
     <>
-      <div className="relative w-full py-8 pt-16 overflow-hidden" onMouseEnter={handleHoverStart} onMouseLeave={handleHoverEnd}>
+      <div className="relative w-full py-6 pt-12 overflow-hidden" onMouseEnter={handleHoverStart} onMouseLeave={handleHoverEnd}>
+        {/* Subtle background gradient */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[800px] bg-gradient-radial from-muted/30 via-transparent to-transparent" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-gradient-radial from-muted/20 via-transparent to-transparent" />
         </div>
 
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+        {/* Edge fade gradients */}
+        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
-        <motion.div ref={containerRef} className="relative h-[540px] flex items-center cursor-grab active:cursor-grabbing" drag="x" dragConstraints={{ left: 0, right: 0 }} dragElastic={0.1} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          <motion.div className="flex items-center gap-[24px] px-[calc(50vw-170px)]" style={{ x: currentX }}>
+        <motion.div ref={containerRef} className="relative h-[480px] flex items-center cursor-grab active:cursor-grabbing" drag="x" dragConstraints={{ left: 0, right: 0 }} dragElastic={0.1} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+          <motion.div className="flex items-center gap-[20px] px-[calc(50vw-160px)]" style={{ x: currentX }}>
             {profiles.map((profile, index) => {
               const isActive = index === activeIndex;
               const distance = Math.abs(index - activeIndex);
