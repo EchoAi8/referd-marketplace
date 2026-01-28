@@ -1,8 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import parallaxCityLayer1 from "@/assets/parallax-city-layer-1.png";
-import parallaxCityLayer2 from "@/assets/parallax-city-layer-2.png";
-import parallaxCityLayer4 from "@/assets/parallax-city-layer-4.png";
-import parallaxCityLayer5 from "@/assets/parallax-city-layer-5.png";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Draggable } from "gsap/Draggable";
@@ -632,19 +628,19 @@ const Showcase = () => {
             <div className="parallax__black-line-overflow"></div>
             <div ref={parallaxRef} data-parallax-layers className="parallax__layers">
               <img 
-                src={parallaxCityLayer5}
+                src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795be09b462b2e8ebf71_osmo-parallax-layer-3.webp" 
                 loading="eager" 
                 width="800" 
                 data-parallax-layer="1" 
-                alt="City skyline background" 
+                alt="" 
                 className="parallax__layer-img"
               />
               <img 
-                src={parallaxCityLayer4}
+                src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795b4d5ac529e7d3a562_osmo-parallax-layer-2.webp" 
                 loading="eager" 
                 width="800" 
                 data-parallax-layer="2" 
-                alt="City skyline mid layer" 
+                alt="" 
                 className="parallax__layer-img"
               />
               <div data-parallax-layer="3" className="parallax__layer-title">
@@ -652,19 +648,11 @@ const Showcase = () => {
                 <p className="parallax__subtitle">The People Powered Recruitment Marketplace</p>
               </div>
               <img 
-                src={parallaxCityLayer2}
+                src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795bb5aceca85011ad83_osmo-parallax-layer-1.webp" 
                 loading="eager" 
                 width="800" 
                 data-parallax-layer="4" 
-                alt="City skyline foreground" 
-                className="parallax__layer-img"
-              />
-              <img 
-                src={parallaxCityLayer1}
-                loading="eager" 
-                width="800" 
-                data-parallax-layer="5" 
-                alt="City skyline closest" 
+                alt="" 
                 className="parallax__layer-img"
               />
             </div>
