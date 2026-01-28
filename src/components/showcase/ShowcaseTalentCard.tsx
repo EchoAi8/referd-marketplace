@@ -28,21 +28,16 @@ const ShowcaseTalentCard = ({
   skills = [],
 }: ShowcaseTalentCardProps) => {
   return (
-    <div 
-      className="relative w-full h-full rounded-xl overflow-hidden bg-black"
-      style={{
-        boxShadow: '0 0 20px rgba(255,255,255,0.15), 0 0 40px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.1)'
-      }}
-    >
+    <div className="relative w-full h-full rounded-xl overflow-hidden border border-white/10 shadow-xl bg-card">
       {/* Top Referrer Badge */}
       {topReferrer && (
-        <div className="absolute top-2 left-2 z-30 flex items-center gap-1 px-2 py-0.5 bg-white/90 rounded-full shadow-md">
-          <Sparkles className="w-2.5 h-2.5 text-black" />
-          <span className="text-[8px] font-bold text-black tracking-wide">Top Referrer</span>
+        <div className="absolute top-2 left-2 z-30 flex items-center gap-1 px-2 py-0.5 bg-mustard rounded-full shadow-md">
+          <Sparkles className="w-2.5 h-2.5 text-foreground" />
+          <span className="text-[8px] font-bold text-foreground tracking-wide">Top Referrer</span>
         </div>
       )}
 
-      {/* Full-bleed Profile Photo with dark overlay */}
+      {/* Full-bleed Profile Photo */}
       <div className="absolute inset-0">
         <img
           src={image}
@@ -51,11 +46,9 @@ const ShowcaseTalentCard = ({
           loading="lazy"
           draggable={false}
         />
-        {/* Dark overlay for black/white aesthetic */}
-        <div className="absolute inset-0 bg-black/30" />
-        {/* Bottom gradient for text */}
+        {/* Minimal gradient at bottom only */}
         <div 
-          className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black via-black/80 to-transparent" 
+          className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/50 to-transparent" 
         />
       </div>
 
@@ -67,13 +60,13 @@ const ShowcaseTalentCard = ({
             {name}
           </h3>
           {verified && (
-            <BadgeCheck className="w-3.5 h-3.5 text-white/80 flex-shrink-0" />
+            <BadgeCheck className="w-3.5 h-3.5 text-sage flex-shrink-0" />
           )}
         </div>
 
         {/* Role & Company */}
-        <p className="text-[10px] text-white/70 truncate">{role}</p>
-        <p className="text-[9px] text-white/50 truncate">{company}</p>
+        <p className="text-[10px] text-white/80 truncate">{role}</p>
+        <p className="text-[9px] text-white/60 truncate">{company}</p>
 
         {/* Skills - just 2 */}
         {skills.length > 0 && (
@@ -81,7 +74,7 @@ const ShowcaseTalentCard = ({
             {skills.slice(0, 2).map((skill, i) => (
               <span
                 key={i}
-                className="px-1.5 py-0.5 text-[7px] font-semibold bg-white/10 border border-white/20 text-white/80 rounded-full"
+                className="px-1.5 py-0.5 text-[7px] font-semibold bg-white/20 backdrop-blur-sm text-white rounded-full"
               >
                 {skill}
               </span>
@@ -89,9 +82,6 @@ const ShowcaseTalentCard = ({
           </div>
         )}
       </div>
-
-      {/* Subtle inner border glow */}
-      <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/10 pointer-events-none" />
     </div>
   );
 };
