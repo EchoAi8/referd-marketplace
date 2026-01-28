@@ -31,7 +31,7 @@ const ShowcaseTalentCard = ({
     <div 
       className="relative w-full h-full rounded-xl overflow-hidden bg-black"
       style={{
-        boxShadow: '0 0 20px rgba(255,255,255,0.15), 0 0 40px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.1)'
+        boxShadow: '0 0 30px rgba(255,255,255,0.25), 0 0 60px rgba(255,255,255,0.15), 0 0 100px rgba(255,255,255,0.08), inset 0 0 0 1px rgba(255,255,255,0.2)'
       }}
     >
       {/* Top Referrer Badge */}
