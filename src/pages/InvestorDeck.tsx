@@ -1,92 +1,168 @@
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import PageTransition from "@/components/layout/PageTransition";
-import AnimatedCounter from "@/components/animations/AnimatedCounter";
-import { ArrowRight, TrendingUp, Users, Zap, Shield, PoundSterling, Percent, Target, Rocket, CheckCircle2 } from "lucide-react";
+import { ArrowRight, ArrowDown, Skull, Flame, Zap, Crown, Coins, TrendingUp, Users, Shield, Target, Rocket, X, Check, PoundSterling, BarChart3, Sparkles } from "lucide-react";
 
 const InvestorDeck = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
   const heroRef = useRef(null);
-  const problemRef = useRef(null);
-  const solutionRef = useRef(null);
-  const marketRef = useRef(null);
+  const deathRef = useRef(null);
+  const rebirthRef = useRef(null);
   const modelRef = useRef(null);
-  const tractionRef = useRef(null);
+  const numbersRef = useRef(null);
   const eisRef = useRef(null);
   const askRef = useRef(null);
 
   const heroInView = useInView(heroRef, { once: true });
-  const problemInView = useInView(problemRef, { once: true, margin: "-100px" });
-  const solutionInView = useInView(solutionRef, { once: true, margin: "-100px" });
-  const marketInView = useInView(marketRef, { once: true, margin: "-100px" });
-  const modelInView = useInView(modelRef, { once: true, margin: "-100px" });
-  const tractionInView = useInView(tractionRef, { once: true, margin: "-100px" });
-  const eisInView = useInView(eisRef, { once: true, margin: "-100px" });
-  const askInView = useInView(askRef, { once: true, margin: "-100px" });
+  const deathInView = useInView(deathRef, { once: true, margin: "-20%" });
+  const rebirthInView = useInView(rebirthRef, { once: true, margin: "-20%" });
+  const modelInView = useInView(modelRef, { once: true, margin: "-20%" });
+  const numbersInView = useInView(numbersRef, { once: true, margin: "-20%" });
+  const eisInView = useInView(eisRef, { once: true, margin: "-20%" });
+  const askInView = useInView(askRef, { once: true, margin: "-20%" });
 
   const { scrollYProgress } = useScroll();
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const noiseOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.03, 0.05, 0.03]);
+
+  // Counter animation
+  const Counter = ({ value, prefix = "", suffix = "", delay = 0 }: { value: number; prefix?: string; suffix?: string; delay?: number }) => {
+    const [count, setCount] = useState(0);
+    const ref = useRef(null);
+    const inView = useInView(ref, { once: true });
+
+    useEffect(() => {
+      if (inView) {
+        const timeout = setTimeout(() => {
+          let start = 0;
+          const end = value;
+          const duration = 2000;
+          const increment = end / (duration / 16);
+          
+          const timer = setInterval(() => {
+            start += increment;
+            if (start >= end) {
+              setCount(end);
+              clearInterval(timer);
+            } else {
+              setCount(Math.floor(start));
+            }
+          }, 16);
+          
+          return () => clearInterval(timer);
+        }, delay * 1000);
+        return () => clearTimeout(timeout);
+      }
+    }, [inView, value, delay]);
+
+    return <span ref={ref}>{prefix}{count.toLocaleString()}{suffix}</span>;
+  };
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-foreground text-background">
+      <div className="min-h-screen bg-foreground text-background overflow-hidden" ref={containerRef}>
         <SiteHeader />
+        
+        {/* Noise overlay */}
+        <motion.div 
+          className="fixed inset-0 pointer-events-none z-50"
+          style={{ 
+            opacity: noiseOpacity,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          }}
+        />
 
-        {/* HERO - The Big Ask */}
-        <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24">
-          {/* Animated gradient background */}
-          <motion.div 
-            className="absolute inset-0 opacity-30"
-            style={{ y: backgroundY }}
-          >
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sage/20 rounded-full blur-3xl" />
-            <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-mustard/20 rounded-full blur-3xl" />
-          </motion.div>
+        {/* ===== SLIDE 1: TITLE ===== */}
+        <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+          {/* Animated gradient orbs */}
+          <div className="absolute inset-0">
+            <motion.div 
+              animate={{ 
+                scale: [1, 1.2, 1],
+                x: [0, 50, 0],
+                y: [0, -30, 0],
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-talent/20 rounded-full blur-[120px]"
+            />
+            <motion.div 
+              animate={{ 
+                scale: [1, 1.3, 1],
+                x: [0, -40, 0],
+                y: [0, 40, 0],
+              }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-referrer/20 rounded-full blur-[100px]"
+            />
+            <motion.div 
+              animate={{ 
+                scale: [1, 1.1, 1],
+              }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-brand/15 rounded-full blur-[80px]"
+            />
+          </div>
 
           <div className="container mx-auto px-6 relative z-10">
             <motion.div
-              initial={{ opacity: 0, y: 60 }}
-              animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-center max-w-5xl mx-auto"
+              initial={{ opacity: 0 }}
+              animate={heroInView ? { opacity: 1 } : {}}
+              transition={{ duration: 1.5 }}
+              className="text-center max-w-6xl mx-auto"
             >
+              {/* Pre-title */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="inline-flex items-center gap-3 mb-8"
+              >
+                <div className="h-px w-12 bg-gradient-to-r from-transparent to-talent" />
+                <span className="text-xs uppercase tracking-[0.4em] text-talent font-medium">SEIS/EIS Eligible • Seed Round</span>
+                <div className="h-px w-12 bg-gradient-to-l from-transparent to-talent" />
+              </motion.div>
+
+              {/* Main title - MASSIVE */}
+              <motion.h1
+                initial={{ opacity: 0, y: 60 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="text-[12vw] md:text-[10vw] lg:text-[8vw] font-heading font-bold leading-[0.85] tracking-tight mb-8"
+              >
+                <span className="block text-background">KILL THE</span>
+                <span className="block bg-gradient-to-r from-talent via-referrer to-brand bg-clip-text text-transparent">RECRUITER</span>
+              </motion.h1>
+
+              {/* Subhead */}
+              <motion.p
+                initial={{ opacity: 0, y: 30 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.8 }}
+                className="text-xl md:text-2xl text-background/60 max-w-2xl mx-auto mb-16 font-body"
+              >
+                Recruitment agencies take <span className="text-background font-semibold">30% of your salary</span> and give you nothing. 
+                We're flipping that model and putting money back where it belongs.
+              </motion.p>
+
+              {/* The Ask - Hero */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={heroInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-sage/20 rounded-full mb-8"
+                transition={{ duration: 0.8, delay: 1.1 }}
+                className="flex flex-col md:flex-row items-center justify-center gap-8"
               >
-                <Shield className="w-4 h-4 text-sage" />
-                <span className="text-sm font-semibold text-sage uppercase tracking-wider">SEIS/EIS Eligible</span>
-              </motion.div>
-
-              <h1 className="text-fluid-5xl md:text-fluid-6xl font-heading font-bold mb-6 leading-[0.95]">
-                <span className="text-background">We're Ripping Up</span>
-                <br />
-                <span className="text-sage">The Recruitment</span>
-                <br />
-                <span className="text-background">Rulebook</span>
-              </h1>
-
-              <p className="text-xl md:text-2xl text-background/70 mb-12 max-w-3xl mx-auto">
-                Join the revolution. £1M seed round to democratise hiring and put money back where it belongs—in the pockets of talent and their networks.
-              </p>
-
-              <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 bg-sage text-foreground rounded-full font-heading font-bold text-lg cursor-pointer flex items-center gap-2"
-                >
-                  <PoundSterling className="w-5 h-5" />
-                  £1M Seed Round
-                </motion.div>
-                <div className="text-background/60">
-                  <span className="text-2xl font-heading font-bold text-background">Pre-Money:</span>
-                  <span className="text-2xl font-heading font-bold text-sage ml-2">£4M</span>
+                <div className="px-10 py-6 bg-background text-foreground rounded-2xl">
+                  <p className="text-sm uppercase tracking-wider text-foreground/60 mb-1">Raising</p>
+                  <p className="text-5xl font-heading font-bold">£1M</p>
                 </div>
-              </div>
+                <div className="px-10 py-6 border-2 border-background/20 rounded-2xl">
+                  <p className="text-sm uppercase tracking-wider text-background/60 mb-1">Pre-Money</p>
+                  <p className="text-5xl font-heading font-bold text-talent">£4M</p>
+                </div>
+              </motion.div>
             </motion.div>
           </div>
 
@@ -94,325 +170,374 @@ const InvestorDeck = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.5 }}
-            className="absolute bottom-12 left-1/2 -translate-x-1/2"
+            transition={{ delay: 2 }}
+            className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
           >
+            <span className="text-xs uppercase tracking-wider text-background/40">Scroll to disrupt</span>
             <motion.div
-              animate={{ y: [0, 10, 0] }}
+              animate={{ y: [0, 8, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-6 h-10 border-2 border-background/30 rounded-full flex justify-center"
             >
-              <motion.div className="w-1.5 h-3 bg-sage rounded-full mt-2" />
+              <ArrowDown className="w-5 h-5 text-background/40" />
             </motion.div>
           </motion.div>
         </section>
 
-        {/* THE PROBLEM */}
-        <section ref={problemRef} className="py-32 bg-background text-foreground">
+        {/* ===== SLIDE 2: THE DEATH OF RECRUITMENT ===== */}
+        <section ref={deathRef} className="min-h-screen flex items-center py-32 bg-background text-foreground relative overflow-hidden">
+          {/* Blood splatter decoration */}
+          <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-rose/10 to-transparent" />
+          
           <div className="container mx-auto px-6">
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={problemInView ? { opacity: 1, y: 0 } : {}}
+              initial={{ opacity: 0 }}
+              animate={deathInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.8 }}
-              className="max-w-4xl mx-auto"
+              className="max-w-6xl mx-auto"
             >
-              <p className="text-xs uppercase tracking-[0.3em] text-rose mb-4">The Problem</p>
-              <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold mb-12">
-                Recruitment is <span className="text-rose">Broken</span>
-              </h2>
-
-              <div className="grid md:grid-cols-2 gap-8">
-                {[
-                  { stat: "£35B", label: "UK recruitment industry value", sublabel: "Most goes to agencies, not talent" },
-                  { stat: "30%", label: "Average agency fee", sublabel: "Pricing candidates out of dream jobs" },
-                  { stat: "85%", label: "Of jobs filled via networks", sublabel: "Yet referrers get nothing" },
-                  { stat: "72%", label: "Candidates unhappy with process", sublabel: "Agencies prioritise speed over fit" },
-                ].map((item, index) => (
-                  <motion.div
-                    key={item.label}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={problemInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
-                    className="p-8 bg-rose/5 border border-rose/20 rounded-2xl"
-                  >
-                    <div className="text-4xl md:text-5xl font-heading font-bold text-rose mb-2">{item.stat}</div>
-                    <p className="text-lg font-semibold text-foreground">{item.label}</p>
-                    <p className="text-muted-foreground mt-1">{item.sublabel}</p>
-                  </motion.div>
-                ))}
+              {/* Section header */}
+              <div className="flex items-center gap-4 mb-16">
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={deathInView ? { scale: 1, rotate: 0 } : {}}
+                  transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
+                  className="w-16 h-16 bg-rose rounded-2xl flex items-center justify-center"
+                >
+                  <Skull className="w-8 h-8 text-background" />
+                </motion.div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-rose font-medium">The Problem</p>
+                  <h2 className="text-4xl md:text-5xl font-heading font-bold">Recruitment is Dead</h2>
+                </div>
               </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={problemInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="mt-12 p-8 bg-foreground text-background rounded-3xl"
-              >
-                <p className="text-xl md:text-2xl font-heading italic">
-                  "My agency just priced me out of my dream job, charging 30% fees. That's £25k the company could have paid ME!"
-                </p>
-                <p className="text-background/60 mt-4">— Every frustrated job seeker, ever</p>
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* THE SOLUTION */}
-        <section ref={solutionRef} className="py-32 bg-foreground text-background">
-          <div className="container mx-auto px-6">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={solutionInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8 }}
-              className="max-w-5xl mx-auto text-center"
-            >
-              <p className="text-xs uppercase tracking-[0.3em] text-sage mb-4">The Solution</p>
-              <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold mb-6">
-                Refer'd: <span className="text-sage">People-Powered</span> Hiring
-              </h2>
-              <p className="text-xl text-background/70 mb-16 max-w-3xl mx-auto">
-                We're flipping recruitment on its head. Instead of agencies taking everything, we split the fee three ways—rewarding everyone who makes hiring happen.
-              </p>
-
-              {/* The 35/35/30 Model */}
-              <div className="grid md:grid-cols-3 gap-6 mb-16">
+              {/* Stats Grid */}
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
                 {[
-                  { percent: 35, label: "Talent", desc: "Get paid for landing your own job", color: "bg-talent", icon: Users },
-                  { percent: 35, label: "Referrer", desc: "Monetise your professional network", color: "bg-referrer", icon: Zap },
-                  { percent: 30, label: "Platform", desc: "We keep the lights on", color: "bg-brand", icon: Target },
+                  { stat: "£35B", label: "UK recruitment industry", icon: Coins, color: "rose" },
+                  { stat: "30%", label: "Average agency cut", icon: X, color: "rose" },
+                  { stat: "85%", label: "Jobs filled via networks", icon: Users, color: "talent" },
+                  { stat: "0%", label: "Referrers get paid", icon: X, color: "rose" },
                 ].map((item, index) => (
                   <motion.div
                     key={item.label}
                     initial={{ opacity: 0, y: 40 }}
-                    animate={solutionInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, delay: 0.2 + index * 0.15 }}
-                    className="relative p-8 bg-background/5 backdrop-blur-sm rounded-3xl border border-background/10 overflow-hidden"
+                    animate={deathInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                    className={`p-8 rounded-3xl border-2 ${
+                      item.color === 'rose' ? 'border-rose/30 bg-rose/5' : 'border-talent/30 bg-talent/5'
+                    }`}
                   >
-                    <div className={`absolute top-0 left-0 right-0 h-1 ${item.color}`} />
-                    <item.icon className={`w-10 h-10 mb-4 ${item.color === 'bg-talent' ? 'text-talent' : item.color === 'bg-referrer' ? 'text-referrer' : 'text-brand'}`} />
-                    <div className="text-5xl font-heading font-bold text-background mb-2">
-                      <AnimatedCounter value={item.percent} suffix="%" delay={0.5 + index * 0.2} />
-                    </div>
-                    <p className="text-xl font-heading font-semibold text-background mb-2">{item.label}</p>
-                    <p className="text-background/60">{item.desc}</p>
+                    <item.icon className={`w-8 h-8 mb-4 ${item.color === 'rose' ? 'text-rose' : 'text-talent'}`} />
+                    <p className={`text-5xl font-heading font-bold mb-2 ${item.color === 'rose' ? 'text-rose' : 'text-talent'}`}>
+                      {item.stat}
+                    </p>
+                    <p className="text-foreground/60 font-body">{item.label}</p>
                   </motion.div>
                 ))}
               </div>
 
+              {/* The Problem Quote */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={solutionInView ? { opacity: 1, y: 0 } : {}}
+                initial={{ opacity: 0, x: -50 }}
+                animate={deathInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.8, delay: 0.8 }}
-                className="p-8 bg-sage/10 border border-sage/30 rounded-3xl"
+                className="p-10 bg-foreground text-background rounded-3xl relative overflow-hidden"
               >
-                <p className="text-xl md:text-2xl font-heading">
-                  "I landed my dream job AND got paid <span className="text-sage font-bold">£3,000</span> through Refer'd!"
-                </p>
-                <p className="text-background/60 mt-4">— Happy talent, counting their bonus</p>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-rose/20 rounded-full blur-3xl" />
+                <Flame className="w-10 h-10 text-rose mb-6" />
+                <blockquote className="text-2xl md:text-3xl font-heading font-medium leading-relaxed relative z-10">
+                  "My recruiter just priced me out of my dream job. They're charging <span className="text-rose">£25,000</span> for a few emails. 
+                  <br />That money should be <span className="text-talent">MINE</span>."
+                </blockquote>
+                <p className="mt-6 text-background/50 text-sm uppercase tracking-wider">— Every frustrated candidate, everywhere</p>
               </motion.div>
             </motion.div>
           </div>
         </section>
 
-        {/* MARKET OPPORTUNITY */}
-        <section ref={marketRef} className="py-32 bg-background text-foreground">
+        {/* ===== SLIDE 3: THE REBIRTH - OUR MODEL ===== */}
+        <section ref={rebirthRef} className="min-h-screen flex items-center py-32 bg-foreground text-background relative">
           <div className="container mx-auto px-6">
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={marketInView ? { opacity: 1, y: 0 } : {}}
+              initial={{ opacity: 0 }}
+              animate={rebirthInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.8 }}
-              className="max-w-5xl mx-auto"
+              className="max-w-6xl mx-auto"
             >
-              <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-4">Market Opportunity</p>
-              <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold mb-16">
-                A <span className="text-sage">Massive</span> Market Ripe for Disruption
-              </h2>
+              {/* Section header */}
+              <div className="flex items-center gap-4 mb-16">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={rebirthInView ? { scale: 1 } : {}}
+                  transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
+                  className="w-16 h-16 bg-talent rounded-2xl flex items-center justify-center"
+                >
+                  <Zap className="w-8 h-8 text-foreground" />
+                </motion.div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-talent font-medium">The Solution</p>
+                  <h2 className="text-4xl md:text-5xl font-heading font-bold">Refer'd: The Anti-Agency</h2>
+                </div>
+              </div>
 
+              {/* The Big Idea */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={rebirthInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="text-center mb-20"
+              >
+                <p className="text-xl md:text-2xl text-background/70 max-w-3xl mx-auto font-body">
+                  Instead of agencies keeping everything, we <span className="text-background font-semibold">split the fee three ways</span>. 
+                  Talent gets paid. Referrers get paid. Everyone wins.
+                </p>
+              </motion.div>
+
+              {/* The 35/35/30 Split - Visual */}
               <div className="grid md:grid-cols-3 gap-8 mb-16">
                 {[
-                  { value: 35, prefix: "£", suffix: "B", label: "UK Recruitment Market", sub: "Growing 5% YoY" },
-                  { value: 500, prefix: "£", suffix: "B+", label: "Global TAM", sub: "Fragmented, ripe for disruption" },
-                  { value: 40, suffix: "%", label: "Employee Referral Success Rate", sub: "vs 7% from job boards" },
+                  { 
+                    percent: 35, 
+                    label: "TALENT", 
+                    desc: "Get paid for landing your own job. Yes, really.", 
+                    color: "talent",
+                    example: "£3,500",
+                    icon: Crown 
+                  },
+                  { 
+                    percent: 35, 
+                    label: "REFERRER", 
+                    desc: "Your network is worth money. Cash it in.", 
+                    color: "referrer",
+                    example: "£3,500",
+                    icon: Users 
+                  },
+                  { 
+                    percent: 30, 
+                    label: "PLATFORM", 
+                    desc: "We keep the lights on and the revolution going.", 
+                    color: "brand",
+                    example: "£3,000",
+                    icon: Rocket 
+                  },
                 ].map((item, index) => (
                   <motion.div
                     key={item.label}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={marketInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
-                    className="text-center p-8 bg-gray-50 rounded-3xl"
+                    initial={{ opacity: 0, y: 60, rotateX: 15 }}
+                    animate={rebirthInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
+                    transition={{ duration: 0.8, delay: 0.4 + index * 0.15 }}
+                    className={`relative p-10 rounded-3xl border-2 overflow-hidden group
+                      ${item.color === 'talent' ? 'border-talent/40 bg-talent/5' : ''}
+                      ${item.color === 'referrer' ? 'border-referrer/40 bg-referrer/5' : ''}
+                      ${item.color === 'brand' ? 'border-brand/40 bg-brand/5' : ''}
+                    `}
                   >
-                    <div className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-2">
-                      <AnimatedCounter value={item.value} prefix={item.prefix} suffix={item.suffix} delay={0.4 + index * 0.15} />
+                    {/* Glow effect */}
+                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500
+                      ${item.color === 'talent' ? 'bg-gradient-to-br from-talent/20 to-transparent' : ''}
+                      ${item.color === 'referrer' ? 'bg-gradient-to-br from-referrer/20 to-transparent' : ''}
+                      ${item.color === 'brand' ? 'bg-gradient-to-br from-brand/20 to-transparent' : ''}
+                    `} />
+                    
+                    <item.icon className={`w-10 h-10 mb-6 relative z-10
+                      ${item.color === 'talent' ? 'text-talent' : ''}
+                      ${item.color === 'referrer' ? 'text-referrer' : ''}
+                      ${item.color === 'brand' ? 'text-brand' : ''}
+                    `} />
+                    
+                    <p className={`text-7xl font-heading font-bold mb-2 relative z-10
+                      ${item.color === 'talent' ? 'text-talent' : ''}
+                      ${item.color === 'referrer' ? 'text-referrer' : ''}
+                      ${item.color === 'brand' ? 'text-brand' : ''}
+                    `}>
+                      <Counter value={item.percent} suffix="%" delay={0.5 + index * 0.2} />
+                    </p>
+                    
+                    <p className="text-lg font-heading font-bold uppercase tracking-wider mb-3 relative z-10">{item.label}</p>
+                    <p className="text-background/60 font-body relative z-10">{item.desc}</p>
+                    
+                    <div className="mt-6 pt-6 border-t border-background/10 relative z-10">
+                      <p className="text-sm text-background/40 uppercase tracking-wider">On £10k fee</p>
+                      <p className={`text-2xl font-heading font-bold
+                        ${item.color === 'talent' ? 'text-talent' : ''}
+                        ${item.color === 'referrer' ? 'text-referrer' : ''}
+                        ${item.color === 'brand' ? 'text-brand' : ''}
+                      `}>{item.example}</p>
                     </div>
-                    <p className="text-lg font-semibold text-foreground">{item.label}</p>
-                    <p className="text-muted-foreground text-sm mt-1">{item.sub}</p>
                   </motion.div>
                 ))}
               </div>
 
-              <div className="grid md:grid-cols-2 gap-8">
+              {/* Happy ending quote */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={rebirthInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.9 }}
+                className="p-10 bg-talent/10 border-2 border-talent/30 rounded-3xl text-center"
+              >
+                <Sparkles className="w-10 h-10 text-talent mx-auto mb-6" />
+                <blockquote className="text-2xl md:text-3xl font-heading font-medium">
+                  "I landed my dream job AND got paid <span className="text-talent font-bold">£3,500</span> for it. 
+                  <br />Recruitment will never be the same."
+                </blockquote>
+                <p className="mt-6 text-background/50 text-sm uppercase tracking-wider">— Actual Refer'd talent</p>
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ===== SLIDE 4: BUSINESS MODEL ===== */}
+        <section ref={modelRef} className="min-h-screen flex items-center py-32 bg-background text-foreground">
+          <div className="container mx-auto px-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={modelInView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.8 }}
+              className="max-w-6xl mx-auto"
+            >
+              {/* Section header */}
+              <div className="flex items-center gap-4 mb-16">
                 <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={marketInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  className="p-8 bg-foreground text-background rounded-3xl"
+                  initial={{ scale: 0 }}
+                  animate={modelInView ? { scale: 1 } : {}}
+                  transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
+                  className="w-16 h-16 bg-foreground rounded-2xl flex items-center justify-center"
                 >
-                  <TrendingUp className="w-10 h-10 text-sage mb-4" />
-                  <h3 className="text-2xl font-heading font-bold mb-4">Why Now?</h3>
-                  <ul className="space-y-3 text-background/80">
-                    <li className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-sage flex-shrink-0 mt-0.5" />
-                      <span>Remote work explosion = global talent pools</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-sage flex-shrink-0 mt-0.5" />
-                      <span>Gen Z demands transparency & fairness</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-sage flex-shrink-0 mt-0.5" />
-                      <span>LinkedIn normalised networking for jobs</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-sage flex-shrink-0 mt-0.5" />
-                      <span>Companies cutting recruitment costs</span>
-                    </li>
-                  </ul>
+                  <BarChart3 className="w-8 h-8 text-background" />
+                </motion.div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-foreground/50 font-medium">Business Model</p>
+                  <h2 className="text-4xl md:text-5xl font-heading font-bold">Two Revenue Engines</h2>
+                </div>
+              </div>
+
+              <div className="grid lg:grid-cols-2 gap-8">
+                {/* Engine 1: Platform Fee */}
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={modelInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                  className="p-10 bg-foreground text-background rounded-3xl"
+                >
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-12 h-12 bg-talent rounded-xl flex items-center justify-center">
+                      <Coins className="w-6 h-6 text-foreground" />
+                    </div>
+                    <h3 className="text-2xl font-heading font-bold">Success Fees</h3>
+                  </div>
+                  
+                  <p className="text-4xl font-heading font-bold text-talent mb-4">30% Platform Take</p>
+                  <p className="text-background/70 mb-8 font-body">
+                    Every successful placement = revenue. No placement? No fee. We only win when everyone wins.
+                  </p>
+                  
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-4 bg-background/5 rounded-xl">
+                      <span className="text-background/60">Average fee per hire</span>
+                      <span className="font-heading font-bold text-xl">£10,000</span>
+                    </div>
+                    <div className="flex justify-between items-center p-4 bg-background/5 rounded-xl">
+                      <span className="text-background/60">Platform revenue</span>
+                      <span className="font-heading font-bold text-xl text-talent">£3,000</span>
+                    </div>
+                    <div className="flex justify-between items-center p-4 bg-background/5 rounded-xl">
+                      <span className="text-background/60">Gross margin</span>
+                      <span className="font-heading font-bold text-xl text-talent">~70%</span>
+                    </div>
+                  </div>
                 </motion.div>
 
+                {/* Engine 2: Subscriptions */}
                 <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={marketInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                  className="p-8 bg-sage/10 border border-sage/30 rounded-3xl"
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={modelInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="p-10 border-2 border-foreground/10 rounded-3xl"
                 >
-                  <Rocket className="w-10 h-10 text-sage mb-4" />
-                  <h3 className="text-2xl font-heading font-bold mb-4">Our Unfair Advantage</h3>
-                  <ul className="space-y-3 text-foreground/80">
-                    <li className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-sage flex-shrink-0 mt-0.5" />
-                      <span>First mover in three-way split model</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-sage flex-shrink-0 mt-0.5" />
-                      <span>AI-powered salary intelligence</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-sage flex-shrink-0 mt-0.5" />
-                      <span>Network effects create moat</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-sage flex-shrink-0 mt-0.5" />
-                      <span>Premium subscriptions drive recurring revenue</span>
-                    </li>
-                  </ul>
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-12 h-12 bg-referrer rounded-xl flex items-center justify-center">
+                      <TrendingUp className="w-6 h-6 text-foreground" />
+                    </div>
+                    <h3 className="text-2xl font-heading font-bold">Premium Subscriptions</h3>
+                  </div>
+                  
+                  <p className="text-foreground/70 mb-8 font-body">
+                    Recurring revenue from power users who want priority placement, analytics, and advanced features.
+                  </p>
+                  
+                  <div className="space-y-4">
+                    {[
+                      { name: "Free", price: "£0", features: "Unlimited referrals, basic tracking" },
+                      { name: "Pro", price: "£49/mo", features: "Priority placement, analytics, dedicated support", featured: true },
+                      { name: "Enterprise", price: "Custom", features: "API, white-label, team features" },
+                    ].map((plan) => (
+                      <div 
+                        key={plan.name}
+                        className={`p-4 rounded-xl ${plan.featured ? 'bg-referrer/10 border-2 border-referrer/30' : 'bg-foreground/5'}`}
+                      >
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="font-heading font-bold">{plan.name}</span>
+                          <span className={`font-heading font-bold ${plan.featured ? 'text-referrer' : ''}`}>{plan.price}</span>
+                        </div>
+                        <p className="text-sm text-foreground/50">{plan.features}</p>
+                      </div>
+                    ))}
+                  </div>
                 </motion.div>
               </div>
-            </motion.div>
-          </div>
-        </section>
 
-        {/* BUSINESS MODEL */}
-        <section ref={modelRef} className="py-32 bg-foreground text-background">
-          <div className="container mx-auto px-6">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={modelInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8 }}
-              className="max-w-5xl mx-auto"
-            >
-              <p className="text-xs uppercase tracking-[0.3em] text-sage mb-4">Business Model</p>
-              <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold mb-6">
-                Two Revenue Streams, <span className="text-sage">Infinite Potential</span>
-              </h2>
-              <p className="text-xl text-background/70 mb-16 max-w-3xl">
-                We monetise through success fees AND premium subscriptions—creating both transactional and recurring revenue.
-              </p>
-
-              {/* Revenue Stream 1: Platform Fee */}
+              {/* Market Size */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 40 }}
                 animate={modelInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="mb-12 p-8 bg-background/5 border border-background/10 rounded-3xl"
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="mt-12 grid md:grid-cols-3 gap-6"
               >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 bg-sage rounded-full flex items-center justify-center">
-                    <Percent className="w-6 h-6 text-foreground" />
+                {[
+                  { value: 35, prefix: "£", suffix: "B", label: "UK Market", sub: "Growing 5% YoY" },
+                  { value: 500, prefix: "£", suffix: "B+", label: "Global TAM", sub: "Fragmented, ripe for disruption" },
+                  { value: 40, suffix: "%", label: "Referral Success Rate", sub: "vs 7% from job boards" },
+                ].map((item, index) => (
+                  <div key={item.label} className="p-8 bg-foreground/5 rounded-2xl text-center">
+                    <p className="text-4xl font-heading font-bold text-foreground mb-2">
+                      <Counter value={item.value} prefix={item.prefix} suffix={item.suffix} delay={0.7 + index * 0.1} />
+                    </p>
+                    <p className="font-heading font-semibold">{item.label}</p>
+                    <p className="text-sm text-foreground/50 mt-1">{item.sub}</p>
                   </div>
-                  <h3 className="text-2xl font-heading font-bold">Success Fee: 30% Platform Take</h3>
-                </div>
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="p-6 bg-foreground/5 rounded-2xl">
-                    <p className="text-3xl font-heading font-bold text-sage">£10k</p>
-                    <p className="text-background/70">Average referral fee</p>
-                  </div>
-                  <div className="p-6 bg-foreground/5 rounded-2xl">
-                    <p className="text-3xl font-heading font-bold text-sage">£3k</p>
-                    <p className="text-background/70">Platform revenue per hire</p>
-                  </div>
-                  <div className="p-6 bg-foreground/5 rounded-2xl">
-                    <p className="text-3xl font-heading font-bold text-sage">70%</p>
-                    <p className="text-background/70">Gross margin</p>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Revenue Stream 2: Subscriptions */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={modelInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="p-8 bg-sage/10 border border-sage/30 rounded-3xl"
-              >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 bg-sage rounded-full flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-foreground" />
-                  </div>
-                  <h3 className="text-2xl font-heading font-bold">Premium Subscriptions</h3>
-                </div>
-                
-                <div className="grid md:grid-cols-3 gap-6">
-                  {[
-                    { name: "Starter", price: "Free", features: ["Unlimited referrals", "Basic tracking", "Email notifications"] },
-                    { name: "Pro", price: "£49/mo", features: ["Priority placement", "Advanced analytics", "Dedicated manager"], featured: true },
-                    { name: "Enterprise", price: "Custom", features: ["Team collaboration", "API integrations", "White-label"] },
-                  ].map((plan, index) => (
-                    <div 
-                      key={plan.name}
-                      className={`p-6 rounded-2xl ${plan.featured ? 'bg-sage text-foreground' : 'bg-background/10'}`}
-                    >
-                      <p className="text-sm uppercase tracking-wider mb-2 opacity-70">{plan.name}</p>
-                      <p className="text-2xl font-heading font-bold mb-4">{plan.price}</p>
-                      <ul className="space-y-2 text-sm">
-                        {plan.features.map((f) => (
-                          <li key={f} className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4" />
-                            {f}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
+                ))}
               </motion.div>
             </motion.div>
           </div>
         </section>
 
-        {/* TRACTION & PROJECTIONS */}
-        <section ref={tractionRef} className="py-32 bg-background text-foreground">
+        {/* ===== SLIDE 5: THE NUMBERS ===== */}
+        <section ref={numbersRef} className="min-h-screen flex items-center py-32 bg-foreground text-background">
           <div className="container mx-auto px-6">
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={tractionInView ? { opacity: 1, y: 0 } : {}}
+              initial={{ opacity: 0 }}
+              animate={numbersInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.8 }}
-              className="max-w-5xl mx-auto"
+              className="max-w-6xl mx-auto"
             >
-              <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-4">Traction & Projections</p>
-              <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold mb-16">
-                The Numbers <span className="text-sage">Speak</span>
-              </h2>
+              {/* Section header */}
+              <div className="flex items-center gap-4 mb-16">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={numbersInView ? { scale: 1 } : {}}
+                  transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
+                  className="w-16 h-16 bg-background rounded-2xl flex items-center justify-center"
+                >
+                  <TrendingUp className="w-8 h-8 text-foreground" />
+                </motion.div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-background/50 font-medium">Traction & Projections</p>
+                  <h2 className="text-4xl md:text-5xl font-heading font-bold">The Numbers Don't Lie</h2>
+                </div>
+              </div>
 
+              {/* Current Traction */}
               <div className="grid md:grid-cols-4 gap-6 mb-16">
                 {[
                   { value: 2500000, prefix: "£", suffix: "+", label: "Paid Out" },
@@ -422,94 +547,125 @@ const InvestorDeck = () => {
                 ].map((stat, index) => (
                   <motion.div
                     key={stat.label}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={tractionInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6, delay: 0.1 * index }}
-                    className="text-center p-6 bg-gray-50 rounded-2xl"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={numbersInView ? { opacity: 1, scale: 1 } : {}}
+                    transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                    className="p-8 bg-background/5 border border-background/10 rounded-2xl text-center"
                   >
-                    <div className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-1">
-                      <AnimatedCounter value={stat.value} prefix={stat.prefix} suffix={stat.suffix} delay={0.3 + index * 0.1} />
-                    </div>
-                    <p className="text-sm text-muted-foreground uppercase tracking-wider">{stat.label}</p>
+                    <p className="text-4xl md:text-5xl font-heading font-bold text-talent mb-2">
+                      <Counter value={stat.value} prefix={stat.prefix} suffix={stat.suffix} delay={0.4 + index * 0.1} />
+                    </p>
+                    <p className="text-sm uppercase tracking-wider text-background/50">{stat.label}</p>
                   </motion.div>
                 ))}
               </div>
 
               {/* 5-Year Projections */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={tractionInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.5 }}
-                className="p-8 bg-foreground text-background rounded-3xl"
+                initial={{ opacity: 0, y: 40 }}
+                animate={numbersInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="p-10 bg-background text-foreground rounded-3xl"
               >
-                <h3 className="text-2xl font-heading font-bold mb-8">5-Year Revenue Projections</h3>
-                <div className="grid grid-cols-5 gap-4">
+                <h3 className="text-2xl font-heading font-bold mb-8">5-Year Revenue Trajectory</h3>
+                
+                <div className="flex items-end justify-between gap-4 h-64 mb-8">
                   {[
-                    { year: "Y1", revenue: "£500k", users: "10k" },
-                    { year: "Y2", revenue: "£2M", users: "50k" },
-                    { year: "Y3", revenue: "£8M", users: "200k" },
-                    { year: "Y4", revenue: "£25M", users: "500k" },
-                    { year: "Y5", revenue: "£75M", users: "1.5M" },
+                    { year: "Y1", revenue: "£500K", height: "15%" },
+                    { year: "Y2", revenue: "£2M", height: "30%" },
+                    { year: "Y3", revenue: "£8M", height: "50%" },
+                    { year: "Y4", revenue: "£25M", height: "70%" },
+                    { year: "Y5", revenue: "£75M", height: "100%" },
                   ].map((item, index) => (
-                    <div key={item.year} className="text-center">
-                      <div className="relative mb-4">
-                        <div 
-                          className="bg-sage rounded-t-lg mx-auto w-12"
-                          style={{ height: `${40 + index * 30}px` }}
-                        />
+                    <motion.div
+                      key={item.year}
+                      initial={{ height: 0 }}
+                      animate={numbersInView ? { height: item.height } : {}}
+                      transition={{ duration: 1, delay: 0.8 + index * 0.15, ease: [0.16, 1, 0.3, 1] }}
+                      className="flex-1 bg-gradient-to-t from-talent to-referrer rounded-t-xl relative group"
+                    >
+                      <div className="absolute -top-16 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="bg-foreground text-background px-3 py-1 rounded-lg text-sm font-heading font-bold whitespace-nowrap">
+                          {item.revenue}
+                        </div>
                       </div>
-                      <p className="text-sm text-background/60">{item.year}</p>
-                      <p className="text-lg font-heading font-bold text-sage">{item.revenue}</p>
-                      <p className="text-xs text-background/50">{item.users} users</p>
-                    </div>
+                    </motion.div>
                   ))}
+                </div>
+                
+                <div className="flex justify-between">
+                  {["Y1", "Y2", "Y3", "Y4", "Y5"].map((year) => (
+                    <span key={year} className="text-sm font-heading font-medium text-foreground/50">{year}</span>
+                  ))}
+                </div>
+                
+                <div className="mt-8 pt-8 border-t border-foreground/10 grid grid-cols-3 gap-8 text-center">
+                  <div>
+                    <p className="text-3xl font-heading font-bold text-talent">£75M</p>
+                    <p className="text-sm text-foreground/50 uppercase tracking-wider">Y5 Revenue</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-heading font-bold text-referrer">1.5M</p>
+                    <p className="text-sm text-foreground/50 uppercase tracking-wider">Y5 Users</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-heading font-bold text-brand">150x</p>
+                    <p className="text-sm text-foreground/50 uppercase tracking-wider">Growth Multiple</p>
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
           </div>
         </section>
 
-        {/* EIS / SEIS BENEFITS */}
-        <section ref={eisRef} className="py-32 bg-foreground text-background">
+        {/* ===== SLIDE 6: TAX BENEFITS ===== */}
+        <section ref={eisRef} className="min-h-screen flex items-center py-32 bg-background text-foreground">
           <div className="container mx-auto px-6">
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={eisInView ? { opacity: 1, y: 0 } : {}}
+              initial={{ opacity: 0 }}
+              animate={eisInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.8 }}
-              className="max-w-5xl mx-auto"
+              className="max-w-6xl mx-auto"
             >
-              <div className="flex items-center gap-4 mb-6">
-                <Shield className="w-10 h-10 text-sage" />
+              {/* Section header */}
+              <div className="flex items-center gap-4 mb-16">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={eisInView ? { scale: 1 } : {}}
+                  transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
+                  className="w-16 h-16 bg-talent rounded-2xl flex items-center justify-center"
+                >
+                  <Shield className="w-8 h-8 text-foreground" />
+                </motion.div>
                 <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-sage">Tax-Efficient Investment</p>
-                  <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold">
-                    SEIS & EIS <span className="text-sage">Eligible</span>
-                  </h2>
+                  <p className="text-xs uppercase tracking-[0.3em] text-talent font-medium">Tax-Efficient Investment</p>
+                  <h2 className="text-4xl md:text-5xl font-heading font-bold">SEIS & EIS Eligible</h2>
                 </div>
               </div>
-              <p className="text-xl text-background/70 mb-12 max-w-3xl">
+
+              <p className="text-xl text-foreground/70 mb-12 max-w-3xl font-body">
                 Maximise your returns with government-backed tax reliefs. Your investment works harder for you.
               </p>
 
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="grid md:grid-cols-2 gap-8 mb-12">
                 {/* SEIS */}
                 <motion.div
                   initial={{ opacity: 0, x: -30 }}
                   animate={eisInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="p-8 bg-sage/10 border border-sage/30 rounded-3xl"
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                  className="p-10 bg-talent/10 border-2 border-talent/30 rounded-3xl"
                 >
-                  <h3 className="text-2xl font-heading font-bold mb-6 text-sage">SEIS Benefits</h3>
+                  <h3 className="text-2xl font-heading font-bold mb-6 text-talent">SEIS Benefits</h3>
                   <ul className="space-y-4">
                     {[
-                      "50% income tax relief on investments up to £200k",
-                      "CGT exemption on gains if held 3+ years",
-                      "Loss relief up to 86.5% of investment",
-                      "CGT reinvestment relief",
-                    ].map((benefit) => (
-                      <li key={benefit} className="flex items-start gap-3">
-                        <CheckCircle2 className="w-5 h-5 text-sage flex-shrink-0 mt-0.5" />
-                        <span className="text-background/80">{benefit}</span>
+                      { icon: Check, text: "50% income tax relief on investments up to £200k" },
+                      { icon: Check, text: "CGT exemption on gains if held 3+ years" },
+                      { icon: Check, text: "Loss relief up to 86.5% of investment" },
+                      { icon: Check, text: "CGT reinvestment relief available" },
+                    ].map((benefit, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <benefit.icon className="w-5 h-5 text-talent flex-shrink-0 mt-1" />
+                        <span className="text-foreground/80 font-body">{benefit.text}</span>
                       </li>
                     ))}
                   </ul>
@@ -519,104 +675,157 @@ const InvestorDeck = () => {
                 <motion.div
                   initial={{ opacity: 0, x: 30 }}
                   animate={eisInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  className="p-8 bg-background/5 border border-background/10 rounded-3xl"
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="p-10 bg-referrer/10 border-2 border-referrer/30 rounded-3xl"
                 >
-                  <h3 className="text-2xl font-heading font-bold mb-6 text-mustard">EIS Benefits</h3>
+                  <h3 className="text-2xl font-heading font-bold mb-6 text-referrer">EIS Benefits</h3>
                   <ul className="space-y-4">
                     {[
-                      "30% income tax relief on investments up to £1M",
-                      "CGT exemption on gains if held 3+ years",
-                      "Inheritance tax relief after 2 years",
-                      "Loss relief against income or CGT",
-                    ].map((benefit) => (
-                      <li key={benefit} className="flex items-start gap-3">
-                        <CheckCircle2 className="w-5 h-5 text-mustard flex-shrink-0 mt-0.5" />
-                        <span className="text-background/80">{benefit}</span>
+                      { icon: Check, text: "30% income tax relief on investments up to £1M" },
+                      { icon: Check, text: "CGT exemption on gains if held 3+ years" },
+                      { icon: Check, text: "Inheritance tax relief after 2 years" },
+                      { icon: Check, text: "Loss relief against income or CGT" },
+                    ].map((benefit, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <benefit.icon className="w-5 h-5 text-referrer flex-shrink-0 mt-1" />
+                        <span className="text-foreground/80 font-body">{benefit.text}</span>
                       </li>
                     ))}
                   </ul>
                 </motion.div>
               </div>
 
+              {/* Example calculation */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={eisInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.5 }}
-                className="mt-12 p-6 bg-sage text-foreground rounded-2xl text-center"
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="p-8 bg-foreground text-background rounded-2xl"
               >
-                <p className="text-lg font-heading font-semibold">
-                  Example: Invest £50k → Receive £15k tax relief → Effective investment of £35k
-                </p>
+                <h4 className="text-lg font-heading font-bold mb-6 text-center">Example: £50,000 SEIS Investment</h4>
+                <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
+                  <div className="text-center">
+                    <p className="text-3xl font-heading font-bold">£50,000</p>
+                    <p className="text-sm text-background/50">Investment</p>
+                  </div>
+                  <ArrowRight className="w-6 h-6 text-talent rotate-90 md:rotate-0" />
+                  <div className="text-center">
+                    <p className="text-3xl font-heading font-bold text-talent">-£25,000</p>
+                    <p className="text-sm text-background/50">Tax Relief (50%)</p>
+                  </div>
+                  <ArrowRight className="w-6 h-6 text-talent rotate-90 md:rotate-0" />
+                  <div className="text-center">
+                    <p className="text-3xl font-heading font-bold text-talent">£25,000</p>
+                    <p className="text-sm text-background/50">Effective Cost</p>
+                  </div>
+                </div>
               </motion.div>
             </motion.div>
           </div>
         </section>
 
-        {/* THE ASK */}
-        <section ref={askRef} className="py-32 bg-background text-foreground relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-sage rounded-full blur-3xl" />
-            <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-mustard rounded-full blur-3xl" />
+        {/* ===== SLIDE 7: THE ASK ===== */}
+        <section ref={askRef} className="min-h-screen flex items-center py-32 bg-foreground text-background relative overflow-hidden">
+          {/* Animated background */}
+          <div className="absolute inset-0">
+            <motion.div 
+              animate={{ 
+                scale: [1, 1.3, 1],
+                rotate: [0, 180, 360],
+              }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-conic from-talent via-referrer to-brand opacity-10 blur-[100px] rounded-full"
+            />
           </div>
 
           <div className="container mx-auto px-6 relative z-10">
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={askInView ? { opacity: 1, y: 0 } : {}}
+              initial={{ opacity: 0 }}
+              animate={askInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.8 }}
               className="max-w-4xl mx-auto text-center"
             >
-              <p className="text-xs uppercase tracking-[0.3em] text-sage mb-4">The Ask</p>
-              <h2 className="text-fluid-5xl md:text-fluid-6xl font-heading font-bold mb-8">
-                Join the <span className="text-sage">Revolution</span>
-              </h2>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={askInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                <p className="text-xs uppercase tracking-[0.4em] text-talent font-medium mb-6">The Ask</p>
+                <h2 className="text-5xl md:text-7xl font-heading font-bold mb-8">
+                  Join the
+                  <br />
+                  <span className="bg-gradient-to-r from-talent via-referrer to-brand bg-clip-text text-transparent">Revolution</span>
+                </h2>
+              </motion.div>
 
-              <div className="grid md:grid-cols-2 gap-8 mb-12">
-                <div className="p-8 bg-foreground text-background rounded-3xl">
-                  <PoundSterling className="w-12 h-12 text-sage mx-auto mb-4" />
-                  <p className="text-4xl font-heading font-bold text-sage mb-2">£1M</p>
-                  <p className="text-xl font-semibold mb-1">Seed Round</p>
-                  <p className="text-background/60">SEIS/EIS Eligible</p>
+              {/* Investment cards */}
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                animate={askInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="grid md:grid-cols-2 gap-8 mb-16"
+              >
+                <div className="p-10 bg-background text-foreground rounded-3xl">
+                  <PoundSterling className="w-12 h-12 text-talent mx-auto mb-4" />
+                  <p className="text-6xl font-heading font-bold text-talent mb-2">£1M</p>
+                  <p className="text-xl font-heading font-semibold">Seed Round</p>
+                  <p className="text-foreground/50 mt-2">SEIS/EIS Eligible</p>
                 </div>
-                <div className="p-8 bg-sage/10 border border-sage/30 rounded-3xl">
-                  <Target className="w-12 h-12 text-sage mx-auto mb-4" />
-                  <p className="text-4xl font-heading font-bold text-sage mb-2">£4M</p>
-                  <p className="text-xl font-semibold mb-1">Pre-Money Valuation</p>
-                  <p className="text-muted-foreground">20% equity for round</p>
+                <div className="p-10 border-2 border-background/20 rounded-3xl">
+                  <Target className="w-12 h-12 text-referrer mx-auto mb-4" />
+                  <p className="text-6xl font-heading font-bold text-referrer mb-2">£4M</p>
+                  <p className="text-xl font-heading font-semibold">Pre-Money</p>
+                  <p className="text-background/50 mt-2">20% equity for round</p>
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="mb-12">
-                <h3 className="text-2xl font-heading font-bold mb-6">Use of Funds</h3>
+              {/* Use of Funds */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={askInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="mb-16"
+              >
+                <h3 className="text-xl font-heading font-bold mb-8">Use of Funds</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {[
-                    { percent: "40%", label: "Product & Engineering" },
-                    { percent: "30%", label: "Growth Marketing" },
-                    { percent: "20%", label: "Sales & Partnerships" },
-                    { percent: "10%", label: "Operations" },
+                    { percent: "40%", label: "Product & Engineering", color: "talent" },
+                    { percent: "30%", label: "Growth Marketing", color: "referrer" },
+                    { percent: "20%", label: "Sales & Partnerships", color: "brand" },
+                    { percent: "10%", label: "Operations", color: "background" },
                   ].map((item) => (
-                    <div key={item.label} className="p-4 bg-gray-50 rounded-xl">
-                      <p className="text-2xl font-heading font-bold text-sage">{item.percent}</p>
-                      <p className="text-sm text-muted-foreground">{item.label}</p>
+                    <div key={item.label} className="p-6 bg-background/5 border border-background/10 rounded-xl">
+                      <p className={`text-3xl font-heading font-bold mb-2 ${
+                        item.color === 'talent' ? 'text-talent' :
+                        item.color === 'referrer' ? 'text-referrer' :
+                        item.color === 'brand' ? 'text-brand' : 'text-background'
+                      }`}>{item.percent}</p>
+                      <p className="text-sm text-background/60">{item.label}</p>
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
-              <motion.a
-                href="mailto:invest@referd.com"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-3 px-10 py-5 bg-sage text-foreground rounded-full font-heading font-bold text-xl"
+              {/* CTA */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={askInView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.8, delay: 0.8 }}
               >
-                <span>Let's Talk</span>
-                <ArrowRight className="w-6 h-6" />
-              </motion.a>
-
-              <p className="text-muted-foreground mt-8 text-sm">
-                invest@referd.com • Deck available on request
-              </p>
+                <motion.a
+                  href="mailto:invest@referd.com"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex items-center gap-4 px-12 py-6 bg-gradient-to-r from-talent to-referrer text-foreground rounded-full font-heading font-bold text-xl"
+                >
+                  <span>Let's Build the Future</span>
+                  <ArrowRight className="w-6 h-6" />
+                </motion.a>
+                
+                <p className="text-background/40 mt-8 text-sm">
+                  invest@referd.com • Full deck available on request
+                </p>
+              </motion.div>
             </motion.div>
           </div>
         </section>

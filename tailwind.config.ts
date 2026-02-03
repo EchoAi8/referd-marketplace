@@ -111,8 +111,8 @@ export default {
         },
       },
       fontFamily: {
-        heading: ['Syne', 'sans-serif'],
-        body: ['Syne', 'sans-serif'],
+        heading: ['Space Grotesk', 'sans-serif'],
+        body: ['Outfit', 'sans-serif'],
         mono: ['SF Mono', 'Monaco', 'Inconsolata', 'monospace'],
       },
       fontSize: {

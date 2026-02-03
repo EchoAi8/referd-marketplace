@@ -176,7 +176,7 @@ html.theme-transitioning *::after {
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     margin: 0;
     padding: 0;
     cursor: none;
