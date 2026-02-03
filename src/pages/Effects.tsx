@@ -3,8 +3,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
 import { Observer } from "gsap/Observer";
-import TwoStepNavigation from "@/components/navigation/TwoStepNavigation";
-import SiteFooter from "@/components/layout/SiteFooter";
 
 gsap.registerPlugin(ScrollTrigger, Flip, Observer);
 
@@ -19,25 +17,15 @@ const marqueeImages = [
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
 ];
 
-// Logo images for logo wall
-const logoImages = [
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae93e3accd4e1dc3cc_google-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae3a3e64e8a49b8a1c_apple-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae2e19cd5115bb2bf4_meta-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae9a2be422de3ddc63_amazon-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eaea73f4e0f4a93f5e0_microsoft-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae9f5fb21f39c1e8e1_netflix-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae9a5ec5a3eb8ed2f2_spotify-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eaef91f2a8de8cb2a85_stripe-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae9b6eb03c2f4ca53f_slack-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae63e8b3a40b2f7e4d_airbnb-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae4b0f9ec2f3f8d2a1_uber-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae7e2c5d8a0f3b9e2c_figma-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae1d6e8f3a7b2c4d5e_notion-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae8f7a2b3c4d5e6f70_vercel-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae9a0b1c2d3e4f5a6b_linear-logo.svg",
-  "https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/678a1eae2c3d4e5f6a7b8c9d_framer-logo.svg",
-];
+// Logo SVGs for logo wall
+const logoSvgs = Array.from({ length: 16 }, (_, i) => (
+  <svg key={i} viewBox="0 0 120 40" className="logo-wall__logo-img">
+    <rect width="120" height="40" fill="transparent" />
+    <text x="60" y="25" textAnchor="middle" fill="currentColor" fontSize="12" fontWeight="bold">
+      BRAND {i + 1}
+    </text>
+  </svg>
+));
 
 const Effects = () => {
   const bgZoomContainerRef = useRef<HTMLDivElement>(null);
@@ -110,7 +98,6 @@ const Effects = () => {
           end: "bottom top"
         });
 
-        // Flip.fit returns object, we need to handle it differently
         const flipTween = Flip.fit(contentEl, endEl, {
           duration: zoomScrollRange,
           ease: "none",
@@ -426,23 +413,26 @@ const Effects = () => {
       });
     }
 
-    setup();
+    // Delay setup to ensure DOM is ready
+    requestAnimationFrame(() => {
+      setup();
+    });
 
     const scrollTriggerInstance = ScrollTrigger.create({
       trigger: root,
       start: 'top bottom',
       end: 'bottom top',
-      onEnter: () => tl.play(),
-      onLeave: () => tl.pause(),
-      onEnterBack: () => tl.play(),
-      onLeaveBack: () => tl.pause()
+      onEnter: () => tl?.play(),
+      onLeave: () => tl?.pause(),
+      onEnterBack: () => tl?.play(),
+      onLeaveBack: () => tl?.pause()
     });
 
-    const handleVisibility = () => document.hidden ? tl.pause() : tl.play();
+    const handleVisibility = () => document.hidden ? tl?.pause() : tl?.play();
     document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
-      tl.kill();
+      tl?.kill();
       scrollTriggerInstance.kill();
       document.removeEventListener('visibilitychange', handleVisibility);
     };
@@ -489,10 +479,7 @@ const Effects = () => {
 
   return (
     <div className="effects-page">
-      {/* Navigation */}
-      <TwoStepNavigation />
-
-      {/* 1. Background Zoom Effect */}
+      {/* 1. Background Zoom Effect - Exact structure from original */}
       <section data-bg-zoom-init className="background-zoom" ref={bgZoomContainerRef}>
         <h2 className="background-zoom__h">
           Image to Background <span className="background-zoom__h1-span">(Zoom)</span>
@@ -506,7 +493,7 @@ const Effects = () => {
               alt=""
               className="background-zoom__img"
             />
-            <p className="background-zoom__pod">REFERD</p>
+            <p className="background-zoom__pod">PØDRICK</p>
             <div className="background-zoom__play">
               <svg viewBox="0 0 64 64" fill="none" className="background-zoom__play-svg">
                 <circle cx="32" cy="32" r="31" stroke="currentColor" strokeWidth="2" />
@@ -523,24 +510,22 @@ const Effects = () => {
           <p className="background-zoom__h is--margin-top">
             This is the after phase of the <span className="background-zoom__h1-span">(Zoom)</span>
           </p>
-          <p className="text-2xl text-foreground/60">more...</p>
-          <p className="text-2xl text-foreground/60">and more!</p>
+          <p className="background-zoom__p">more...</p>
+          <p className="background-zoom__p">and more!</p>
         </div>
       </section>
 
-      {/* After section */}
+      {/* After section for bg zoom */}
       <section className="background-zoom-after">
-        <p className="text-4xl md:text-6xl font-heading font-bold text-center">
-          And we reached the end!
+        <p className="background-zoom-after__h">
+          PØDRICK
         </p>
-        <p className="background-zoom-after__pod">REFERD</p>
+        <p className="background-zoom-after__sub">And we reached the end!</p>
+        <p className="background-zoom-after__pod">PØDRICK</p>
       </section>
 
-      {/* 2. Draggable Marquee */}
-      <section className="py-32 bg-background">
-        <h2 className="text-center text-3xl md:text-5xl font-heading font-bold mb-16 px-6">
-          Draggable Marquee
-        </h2>
+      {/* 2. Draggable Marquee - Exact structure */}
+      <section className="draggable-marquee-section">
         <div
           ref={marqueeRef}
           data-draggable-marquee-init
@@ -562,12 +547,8 @@ const Effects = () => {
         </div>
       </section>
 
-      {/* 3. Accelerating Globe */}
-      <section className="py-32 bg-foreground text-background flex flex-col items-center justify-center">
-        <h2 className="text-center text-3xl md:text-5xl font-heading font-bold mb-16 px-6">
-          Accelerating Globe
-        </h2>
-        <p className="text-center text-muted-foreground mb-8">Scroll to accelerate the rotation</p>
+      {/* 3. Accelerating Globe - Exact structure */}
+      <section className="globe-section">
         <div ref={globeRef} data-accelerating-globe className="globe">
           <div className="globe__before" />
           <div className="globe__back">
@@ -596,20 +577,22 @@ const Effects = () => {
         </div>
       </section>
 
-      {/* 4. Logo Wall Cycle */}
-      <section className="py-32 bg-muted/30">
-        <h2 className="text-center text-3xl md:text-5xl font-heading font-bold mb-16 px-6">
-          Logo Wall Cycle
-        </h2>
+      {/* 4. Logo Wall Cycle - Exact structure */}
+      <section className="logo-wall-section">
         <div ref={logoWallRef} data-logo-wall-cycle-init data-logo-wall-shuffle="true" className="logo-wall">
           <div className="logo-wall__collection">
             <div data-logo-wall-list className="logo-wall__list">
-              {logoImages.map((src, i) => (
+              {Array.from({ length: 16 }, (_, i) => (
                 <div key={i} data-logo-wall-item className="logo-wall__item">
                   <div data-logo-wall-target-parent className="logo-wall__logo">
                     <div className="logo-wall__logo-before" />
                     <div data-logo-wall-target className="logo-wall__logo-target">
-                      <img src={src} alt="" className="logo-wall__logo-img" />
+                      <svg viewBox="0 0 120 40" className="logo-wall__logo-img">
+                        <rect width="120" height="40" fill="transparent" />
+                        <text x="60" y="25" textAnchor="middle" fill="currentColor" fontSize="12" fontWeight="bold">
+                          BRAND {i + 1}
+                        </text>
+                      </svg>
                     </div>
                   </div>
                 </div>
@@ -619,70 +602,72 @@ const Effects = () => {
         </div>
       </section>
 
-      {/* 5. Footer Parallax */}
-      <main className="demo-main">
-        <section className="demo-header">
-          <div className="demo-header__nav-row">
-            <div className="demo-header__logo">
-              <span className="font-heading font-bold text-4xl">Referd</span>
+      {/* 5. Footer Parallax - Exact structure */}
+      <main className="footer-parallax-main">
+        <section className="footer-parallax-header">
+          <div className="footer-parallax-header__nav-row">
+            <div className="footer-parallax-header__logo">
+              <svg viewBox="0 0 30 22" fill="currentColor" style={{ width: '1.875em', height: '1.375em' }}>
+                <path d="M 14.203 21.25 L 0 21.25 L 0 0.75 L 6.484 0.75 L 6.484 15.766 L 14.203 15.766 Z M 23.516 21.25 L 23.516 15.766 L 30 15.766 L 30 0.75 L 14.203 0.75 L 14.203 6.234 L 23.516 6.234 L 23.516 10.281 L 19.859 10.281 L 19.859 15.766 L 19.859 21.25 Z" />
+              </svg>
             </div>
-            <p data-underline-link="" className="demo-header__nav-a">Navigation</p>
+            <p className="footer-parallax-header__nav-link">Navigation</p>
           </div>
-          <div className="demo-header__title-row">
-            <h1 className="demo-header__h1">The footer marks the end of the scroll, but not the end of the story.</h1>
+          <div className="footer-parallax-header__title-row">
+            <h1 className="footer-parallax-header__h1">The footer marks the end of the scroll, but not the end of the story.</h1>
           </div>
-          <div className="demo-header__info-row">
-            <div className="demo-header__col">
-              <p className="demo-eyebrow">( Concept )</p>
+          <div className="footer-parallax-header__info-row">
+            <div className="footer-parallax-header__col">
+              <p className="footer-parallax-eyebrow">( Concept )</p>
             </div>
-            <div className="demo-header__col">
-              <p className="demo-p">Parallax adds a sense of depth and motion that feels natural to the human eye. By shifting elements at different speeds, we create a layered world that reacts to scroll.</p>
-              <p data-underline-link="" className="demo-eyebrow">Scroll down ↓</p>
+            <div className="footer-parallax-header__col">
+              <p className="footer-parallax-p">Parallax adds a sense of depth and motion that feels natural to the human eye. By shifting elements at different speeds, we create a layered world that reacts to scroll. It's subtle, but powerful — turning static sections into dynamic experiences.</p>
+              <p className="footer-parallax-eyebrow">Scroll down ↓</p>
             </div>
-            <div className="demo-header__col">
+            <div className="footer-parallax-header__col">
               <img
                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=300&fit=crop"
                 loading="lazy"
                 alt=""
-                className="demo-header__img"
+                className="footer-parallax-header__img"
               />
             </div>
           </div>
         </section>
 
-        <div ref={footerParallaxRef} data-footer-parallax className="footer-wrap">
-          <div data-footer-parallax-dark className="footer-dark-overlay" />
-          <footer data-footer-parallax-inner className="demo-footer">
-            <div className="demo-footer__links-row">
-              <div className="demo-footer__col">
-                <p className="demo-eyebrow">( Pages )</p>
-                <div className="demo-footer__links">
-                  <a data-underline-link="" href="/" className="demo-footer__a">Home</a>
-                  <a data-underline-link="" href="/about" className="demo-footer__a">About</a>
-                  <a data-underline-link="" href="/work" className="demo-footer__a">Work</a>
-                  <a data-underline-link="" href="/brands" className="demo-footer__a">Brands</a>
-                  <a data-underline-link="" href="/auth" className="demo-footer__a">Login</a>
+        <div ref={footerParallaxRef} data-footer-parallax className="footer-parallax-wrap">
+          <div data-footer-parallax-dark className="footer-parallax-dark" />
+          <footer data-footer-parallax-inner className="footer-parallax-footer">
+            <div className="footer-parallax-footer__links-row">
+              <div className="footer-parallax-footer__col">
+                <p className="footer-parallax-eyebrow">( Pages )</p>
+                <div className="footer-parallax-footer__links">
+                  <a href="/" className="footer-parallax-footer__a">Home</a>
+                  <a href="/about" className="footer-parallax-footer__a">Resources</a>
+                  <a href="/work" className="footer-parallax-footer__a">About</a>
+                  <a href="/brands" className="footer-parallax-footer__a">Platform</a>
+                  <a href="/auth" className="footer-parallax-footer__a">Login</a>
                 </div>
               </div>
-              <div className="demo-footer__col">
-                <p className="demo-eyebrow">( Socials )</p>
-                <div className="demo-footer__links">
-                  <a data-underline-link="" href="#" className="demo-footer__a">LinkedIn</a>
-                  <a data-underline-link="" href="#" className="demo-footer__a">Instagram</a>
-                  <a data-underline-link="" href="#" className="demo-footer__a">X/Twitter</a>
+              <div className="footer-parallax-footer__col">
+                <p className="footer-parallax-eyebrow">( Socials )</p>
+                <div className="footer-parallax-footer__links">
+                  <a href="#" className="footer-parallax-footer__a">LinkedIn</a>
+                  <a href="#" className="footer-parallax-footer__a">Instagram</a>
+                  <a href="#" className="footer-parallax-footer__a">X/Twitter</a>
                 </div>
               </div>
-              <div className="demo-footer__col">
-                <p className="demo-eyebrow">( Contact )</p>
-                <div className="demo-footer__links">
-                  <a data-underline-link="" href="mailto:hello@referd.com" className="demo-footer__a">hello@referd.com</a>
-                  <a data-underline-link="" href="#" className="demo-footer__a">Book a Demo</a>
+              <div className="footer-parallax-footer__col">
+                <p className="footer-parallax-eyebrow">( Contact )</p>
+                <div className="footer-parallax-footer__links">
+                  <a href="mailto:hello@osmo.supply" className="footer-parallax-footer__a">hello@osmo.supply</a>
+                  <a href="tel:+31612345678" className="footer-parallax-footer__a">+31 6 12 34 56 78</a>
                 </div>
               </div>
             </div>
-            <div className="demo-footer__logo-row">
-              <p className="demo-eyebrow">Not your typical platform</p>
-              <span className="demo-footer__logo-text">REFERD</span>
+            <div className="footer-parallax-footer__logo-row">
+              <p className="footer-parallax-eyebrow">Not your typical platform</p>
+              <span className="footer-parallax-footer__logo-text">REFERD</span>
             </div>
           </footer>
         </div>
