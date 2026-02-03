@@ -749,12 +749,86 @@ html.theme-transitioning *::after {
   }
 }
 
-/* Footer Parallax Demo */
-.demo-main {
+/* Section Wrappers for Effects Page */
+.draggable-marquee-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: hsl(var(--background));
+  padding: 4rem 0;
+}
+
+.globe-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: hsl(var(--foreground));
+  padding: 4rem 0;
+}
+
+.logo-wall-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  background-color: hsl(var(--muted) / 0.3);
+  padding: 4rem 0;
+}
+
+/* Background Zoom After extras */
+.background-zoom__p {
+  font-size: 1.5rem;
+  color: hsl(var(--foreground) / 0.6);
+}
+
+.background-zoom-after {
+  color: hsl(83 25% 25%);
+  background-color: #f4f4f4;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100dvh;
+  padding-left: 1em;
+  padding-right: 1em;
+  display: flex;
+  position: relative;
+}
+
+.background-zoom-after__h {
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: clamp(4rem, 15vw, 10rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: hsl(83 25% 25% / 0.15);
+}
+
+.background-zoom-after__sub {
+  font-size: 1.5rem;
+  color: hsl(83 25% 25% / 0.7);
+  margin-top: 2rem;
+}
+
+.background-zoom-after__pod {
+  color: #ff4800;
+  text-align: center;
+  letter-spacing: -0.02em;
+  width: 100%;
+  font-size: 1.25em;
+  font-weight: 900;
+  line-height: 1;
+  position: absolute;
+  bottom: 1.25em;
+}
+
+/* Footer Parallax Section - Exact original */
+.footer-parallax-main {
   background-color: hsl(var(--background));
 }
 
-.demo-header {
+.footer-parallax-header {
   background-color: hsl(var(--background));
   padding: 2rem;
   min-height: 100vh;
@@ -762,7 +836,7 @@ html.theme-transitioning *::after {
   flex-direction: column;
 }
 
-.demo-header__nav-row {
+.footer-parallax-header__nav-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -771,17 +845,17 @@ html.theme-transitioning *::after {
   margin-bottom: 4rem;
 }
 
-.demo-header__logo {
+.footer-parallax-header__logo {
   color: hsl(var(--foreground));
 }
 
-.demo-header__nav-a {
+.footer-parallax-header__nav-link {
   color: hsl(var(--muted-foreground));
   cursor: pointer;
   position: relative;
 }
 
-.demo-header__nav-a::after {
+.footer-parallax-header__nav-link::after {
   content: '';
   position: absolute;
   bottom: -2px;
@@ -793,11 +867,11 @@ html.theme-transitioning *::after {
   transition: transform 0.3s ease;
 }
 
-.demo-header__nav-a:hover::after {
+.footer-parallax-header__nav-link:hover::after {
   transform: scaleX(1);
 }
 
-.demo-header__title-row {
+.footer-parallax-header__title-row {
   flex: 1;
   display: flex;
   align-items: center;
@@ -805,7 +879,7 @@ html.theme-transitioning *::after {
   padding: 4rem 0;
 }
 
-.demo-header__h1 {
+.footer-parallax-header__h1 {
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
   font-size: clamp(2rem, 5vw, 4rem);
   font-weight: 500;
@@ -815,7 +889,7 @@ html.theme-transitioning *::after {
   color: hsl(var(--foreground));
 }
 
-.demo-header__info-row {
+.footer-parallax-header__info-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
@@ -824,44 +898,44 @@ html.theme-transitioning *::after {
 }
 
 @media screen and (max-width: 768px) {
-  .demo-header__info-row {
+  .footer-parallax-header__info-row {
     grid-template-columns: 1fr;
   }
 }
 
-.demo-header__col {
+.footer-parallax-header__col {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.demo-header__img {
+.footer-parallax-header__img {
   width: 100%;
   aspect-ratio: 4/3;
   object-fit: cover;
   border-radius: 0.5rem;
 }
 
-.demo-eyebrow {
+.footer-parallax-eyebrow {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: hsl(var(--muted-foreground));
 }
 
-.demo-p {
+.footer-parallax-p {
   font-size: 1rem;
   line-height: 1.6;
   color: hsl(var(--foreground) / 0.8);
 }
 
-.footer-wrap {
+.footer-parallax-wrap {
   position: relative;
   height: 100vh;
   overflow: hidden;
 }
 
-.footer-dark-overlay {
+.footer-parallax-dark {
   position: absolute;
   top: 0;
   left: 0;
@@ -872,7 +946,7 @@ html.theme-transitioning *::after {
   pointer-events: none;
 }
 
-.demo-footer {
+.footer-parallax-footer {
   background-color: hsl(var(--foreground));
   color: hsl(var(--background));
   padding: 4rem 2rem;
@@ -882,7 +956,7 @@ html.theme-transitioning *::after {
   justify-content: space-between;
 }
 
-.demo-footer__links-row {
+.footer-parallax-footer__links-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
@@ -890,24 +964,24 @@ html.theme-transitioning *::after {
 }
 
 @media screen and (max-width: 768px) {
-  .demo-footer__links-row {
+  .footer-parallax-footer__links-row {
     grid-template-columns: 1fr;
   }
 }
 
-.demo-footer__col {
+.footer-parallax-footer__col {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.demo-footer__links {
+.footer-parallax-footer__links {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.demo-footer__a {
+.footer-parallax-footer__a {
   color: hsl(var(--background) / 0.7);
   text-decoration: none;
   transition: color 0.3s ease;
@@ -915,11 +989,11 @@ html.theme-transitioning *::after {
   display: inline-block;
 }
 
-.demo-footer__a:hover {
+.footer-parallax-footer__a:hover {
   color: hsl(var(--background));
 }
 
-.demo-footer__a::after {
+.footer-parallax-footer__a::after {
   content: '';
   position: absolute;
   bottom: -2px;
@@ -931,11 +1005,11 @@ html.theme-transitioning *::after {
   transition: transform 0.3s ease;
 }
 
-.demo-footer__a:hover::after {
+.footer-parallax-footer__a:hover::after {
   transform: scaleX(1);
 }
 
-.demo-footer__logo-row {
+.footer-parallax-footer__logo-row {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -944,7 +1018,7 @@ html.theme-transitioning *::after {
   border-top: 1px solid hsl(var(--background) / 0.2);
 }
 
-.demo-footer__logo-text {
+.footer-parallax-footer__logo-text {
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
   font-size: clamp(4rem, 15vw, 12rem);
   font-weight: 700;
