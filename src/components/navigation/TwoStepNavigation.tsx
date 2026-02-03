@@ -108,13 +108,9 @@ const TwoStepNavigation = () => {
 
             <div className="twostep-nav__top">
               <Link to="/" className="twostep-nav__logo" onClick={closeNav}>
-                {/* Referd Wordmark */}
-                <div className="flex items-center gap-1">
-                  <span className="font-heading font-bold text-xl tracking-tight text-current">
-                    Referd
-                  </span>
-                  <span className="text-[hsl(var(--sage))] text-xs align-super">®</span>
-                </div>
+                <span className="font-heading font-semibold text-base tracking-tight">
+                  Referd
+                </span>
               </Link>
 
               <button
@@ -227,10 +223,6 @@ const TwoStepNavigation = () => {
                             <ArrowRight className="w-4 h-4" />
                           </Link>
 
-                          {/* Trust line */}
-                          <p className="twostep-nav__signup-trust">
-                            No credit card required • Free forever for talent
-                          </p>
                         </div>
 
                         {/* Decorative elements */}
