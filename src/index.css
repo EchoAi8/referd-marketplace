@@ -1515,25 +1515,30 @@ html.theme-transitioning *::after {
 }
 
 /* ============================================
-   Hero 3D Carousel Styles
+   Hero Section - Clean & Cinematic
    ============================================ */
 
-/* Hero Carousel Section - Cinematic Multi-Layer 3D */
-.hero-carousel-section {
+.hero-section {
   position: relative;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   overflow: hidden;
-  padding-top: 10vh;
+  padding-top: 12vh;
   background: hsl(var(--foreground));
 }
 
-/* Cinematic ambient glow layers */
-.hero-carousel-section::before {
-  content: '';
+.hero-section__header {
+  position: relative;
+  z-index: 40;
+  text-align: center;
+  pointer-events: none;
+  margin-bottom: 2rem;
+}
+
+.hero-section__glow {
   position: absolute;
   top: 20%;
   left: 50%;
@@ -1543,18 +1548,328 @@ html.theme-transitioning *::after {
   background: radial-gradient(ellipse, hsl(var(--color-talent) / 0.15) 0%, transparent 60%);
   pointer-events: none;
   animation: ambientPulse 4s ease-in-out infinite;
+  z-index: 0;
 }
 
-.hero-carousel-section::after {
+.hero-section::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 30vh;
+  height: 20vh;
   background: linear-gradient(to top, hsl(var(--foreground)) 0%, transparent 100%);
   pointer-events: none;
   z-index: 25;
+}
+
+/* ============================================
+   Simple Hero Carousel
+   ============================================ */
+
+.simple-carousel__wrap {
+  position: relative;
+  width: 100%;
+  height: 55vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.simple-carousel__list {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.simple-carousel__panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14em;
+  height: 20em;
+  margin-left: -7em;
+  margin-top: -10em;
+  transform-style: preserve-3d;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.simple-carousel__item {
+  width: 100%;
+  height: 100%;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  position: relative;
+  backface-visibility: hidden;
+  box-shadow: 
+    0 0 50px hsl(var(--color-talent) / 0.35),
+    0 0 100px hsl(var(--color-talent) / 0.15),
+    0 25px 50px -10px rgba(0, 0, 0, 0.6);
+  transition: box-shadow 0.3s ease;
+}
+
+.simple-carousel__item:hover {
+  box-shadow: 
+    0 0 70px hsl(var(--color-talent) / 0.5),
+    0 0 140px hsl(var(--color-talent) / 0.25),
+    0 35px 70px -15px rgba(0, 0, 0, 0.7);
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding-top: 10vh;
+  }
+  
+  .simple-carousel__wrap {
+    height: 50vh;
+  }
+  
+  .simple-carousel__panel {
+    width: 11em;
+    height: 16em;
+    margin-left: -5.5em;
+    margin-top: -8em;
+  }
+}
+
+@media (min-width: 1200px) {
+  .simple-carousel__panel {
+    width: 16em;
+    height: 22em;
+    margin-left: -8em;
+    margin-top: -11em;
+  }
+}
+
+/* ============================================
+   Parallax Closing Section
+   ============================================ */
+
+.parallax-closing {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: hsl(var(--foreground));
+}
+
+.parallax-closing__visuals {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.parallax-closing__layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 120%;
+  top: -20%;
+}
+
+.parallax-closing__bg-gradient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center 30%, hsl(var(--color-talent) / 0.1) 0%, transparent 60%);
+}
+
+.parallax-closing__shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+  filter: blur(80px);
+}
+
+.parallax-closing__shape--1 {
+  width: 50vw;
+  height: 50vw;
+  top: 10%;
+  left: -10%;
+  background: hsl(var(--color-talent));
+}
+
+.parallax-closing__shape--2 {
+  width: 40vw;
+  height: 40vw;
+  bottom: 20%;
+  right: -5%;
+  background: hsl(var(--color-referrer));
+}
+
+.parallax-closing__glow {
+  position: absolute;
+  width: 30vw;
+  height: 50vh;
+  filter: blur(100px);
+  opacity: 0.2;
+}
+
+.parallax-closing__glow--left {
+  left: 10%;
+  top: 30%;
+  background: hsl(var(--color-talent));
+}
+
+.parallax-closing__glow--right {
+  right: 10%;
+  bottom: 30%;
+  background: hsl(var(--color-brand));
+}
+
+.parallax-closing__content {
+  position: relative;
+  z-index: 10;
+  padding: 4rem 2rem;
+}
+
+.parallax-closing__inner {
+  max-width: 48rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.parallax-closing__eyebrow {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: hsl(var(--color-talent));
+  border: 1px solid hsl(var(--color-talent) / 0.4);
+  border-radius: 100px;
+  background: hsl(var(--color-talent) / 0.1);
+}
+
+.parallax-closing__title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.parallax-closing__desc {
+  font-size: 1.125rem;
+  color: hsl(var(--color-gray-400));
+  max-width: 36rem;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+
+.parallax-closing__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.parallax-closing__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.parallax-closing__cta--primary {
+  background: hsl(var(--color-talent));
+  color: hsl(var(--foreground));
+  box-shadow: 0 0 30px hsl(var(--color-talent) / 0.4);
+}
+
+.parallax-closing__cta--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 50px hsl(var(--color-talent) / 0.6);
+}
+
+.parallax-closing__cta--secondary {
+  background: transparent;
+  color: white;
+  border: 1px solid hsl(var(--color-gray-600));
+}
+
+.parallax-closing__cta--secondary:hover {
+  border-color: white;
+  background: hsl(var(--color-gray-800));
+}
+
+.parallax-closing__stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.parallax-closing__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.parallax-closing__stat-value {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+}
+
+.parallax-closing__stat-label {
+  font-size: 0.75rem;
+  color: hsl(var(--color-gray-500));
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.parallax-closing__stat-divider {
+  width: 1px;
+  height: 2.5rem;
+  background: hsl(var(--color-gray-700));
+}
+
+.parallax-closing__fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 15vh;
+  background: linear-gradient(to top, hsl(var(--foreground)) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 20;
+}
+
+@media (max-width: 768px) {
+  .parallax-closing__stats {
+    gap: 1.5rem;
+  }
+  
+  .parallax-closing__stat-divider {
+    display: none;
+  }
+  
+  .parallax-closing__stat-value {
+    font-size: 1.5rem;
+  }
 }
 
 @keyframes ambientPulse {
