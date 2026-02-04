@@ -80,6 +80,9 @@ const HeroCarousel3D = ({
       const dragDistance = window.innerWidth * 3;
       let startProg = 0;
 
+      // Scale based on layer for depth effect
+      const layerScale = layer === "front" ? 1 : layer === "mid" ? 0.7 : 0.5;
+
       carouselPanels.forEach(p => {
         p.style.transformOrigin = `50% 50% ${-radius}px`;
       });
@@ -87,8 +90,8 @@ const HeroCarousel3D = ({
       const baseDuration = 35 / speedMultiplier;
       spin = gsap.fromTo(
         carouselPanels,
-        { rotationY: (i: number) => (i * 360) / carouselPanels.length },
-        { rotationY: '-=360', duration: baseDuration, ease: 'none', repeat: -1 }
+        { rotationY: (i: number) => (i * 360) / carouselPanels.length, scale: layerScale },
+        { rotationY: '-=360', scale: layerScale, duration: baseDuration, ease: 'none', repeat: -1 }
       );
 
       spin.progress(1000);

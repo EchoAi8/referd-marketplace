@@ -1577,31 +1577,30 @@ html.theme-transitioning *::after {
 /* Individual carousel layers at different depths */
 .img-carousel__wrap {
   position: absolute;
-  perspective: 1400px;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   transform-style: preserve-3d;
+  pointer-events: none;
 }
 
 .img-carousel__wrap--front {
   z-index: 30;
+  pointer-events: auto;
 }
 
 .img-carousel__wrap--mid {
   z-index: 20;
-  transform: translateZ(-180px) scale(0.7);
-  opacity: 0.45;
-  filter: blur(1.5px);
+  opacity: 0.5;
+  filter: blur(1px);
 }
 
 .img-carousel__wrap--back {
   z-index: 10;
-  transform: translateZ(-350px) scale(0.45);
-  opacity: 0.2;
-  filter: blur(3px);
+  opacity: 0.25;
+  filter: blur(2px);
 }
 
 .img-carousel__list {
@@ -1697,7 +1696,7 @@ html.theme-transitioning *::after {
   }
   
   .img-carousel__wrap--mid {
-    transform: translateZ(-100px) scale(0.65);
+    opacity: 0.4;
   }
   
   .img-carousel__wrap--back {

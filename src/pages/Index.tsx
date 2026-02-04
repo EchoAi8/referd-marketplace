@@ -4,6 +4,7 @@ import PageTransition from "@/components/layout/PageTransition";
 import { GridOverlay } from "@/components/animations/GridTransition";
 import HeroCarousel3D from "@/components/showcase/HeroCarousel3D";
 import HeroCarouselCTAs from "@/components/showcase/HeroCarouselCTAs";
+import demoVideo from "@/assets/market-value-xray-demo.mp4";
 
 // Front layer - Main talent carousel with branding and video
 const frontLayerPanels = [
@@ -17,7 +18,7 @@ const frontLayerPanels = [
   { id: 4, items: [
     { name: "Elena Rodriguez", role: "VP of Marketing", company: "Notion", image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: true, skills: ["Growth Marketing", "Brand"] },
   ]},
-  { id: 5, type: "video" as const, title: "How It Works", subtitle: "See the magic" },
+  { id: 5, type: "video" as const, videoSrc: demoVideo, title: "How It Works", subtitle: "See the magic" },
   { id: 6, items: [
     { name: "David Kim", role: "Principal Data Scientist", company: "OpenAI", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=600&fit=crop&crop=top", verified: true, topReferrer: false, skills: ["Machine Learning", "Python"] },
   ]},
