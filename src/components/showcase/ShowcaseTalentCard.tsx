@@ -29,7 +29,8 @@ const ShowcaseTalentCard = ({
 }: ShowcaseTalentCardProps) => {
   return (
     <div 
-      className="showcase-card relative w-full h-full rounded-2xl overflow-hidden bg-black"
+      className="showcase-card relative rounded-2xl overflow-hidden bg-black"
+      style={{ width: '100%', height: '100%' }}
     >
       {/* Referd Green Glow Effect */}
       <div 

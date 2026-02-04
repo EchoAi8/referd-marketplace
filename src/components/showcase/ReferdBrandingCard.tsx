@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
  */
 const ReferdBrandingCard = () => {
   return (
-    <div className="showcase-card relative w-full h-full rounded-2xl overflow-hidden">
+    <div className="showcase-card relative rounded-2xl overflow-hidden bg-black" style={{ width: '100%', height: '100%' }}>
       {/* Referd Green Glow Effect - More intense for branding */}
       <div 
         className="absolute -inset-2 rounded-2xl opacity-80 blur-2xl animate-pulse pointer-events-none"

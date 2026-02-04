@@ -1569,10 +1569,16 @@ html.theme-transitioning *::after {
 
 .img-carousel__item {
   width: 100%;
-  aspect-ratio: 3/4;
+  height: 100%;
   border-radius: 1rem;
-  overflow: visible;
+  overflow: hidden;
   position: relative;
+  backface-visibility: hidden;
+}
+
+.showcase-card {
+  width: 100%;
+  height: 100%;
 }
 
 /* Responsive adjustments */
