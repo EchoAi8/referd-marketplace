@@ -1513,3 +1513,120 @@ html.theme-transitioning *::after {
   height: 100%;
   object-fit: cover;
 }
+
+/* ============================================
+   Hero 3D Carousel Styles
+   ============================================ */
+
+.hero-carousel-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: hsl(var(--foreground));
+  overflow: hidden;
+  padding-top: 12vh;
+}
+
+.img-carousel__wrap {
+  perspective: 1200px;
+  width: 100%;
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.img-carousel__list {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(-5deg);
+}
+
+.img-carousel__panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14em; /* Bigger cards */
+  height: 20em; /* Taller aspect ratio */
+  margin-left: -7em;
+  margin-top: -10em;
+  transform-style: preserve-3d;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Space between cards */
+}
+
+.img-carousel__panel--single {
+  justify-content: center;
+}
+
+.img-carousel__item {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 1rem;
+  overflow: visible;
+  position: relative;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .img-carousel__panel {
+    width: 11em;
+    height: 16em;
+    margin-left: -5.5em;
+    margin-top: -8em;
+  }
+}
+
+@media (min-width: 1200px) {
+  .img-carousel__panel {
+    width: 16em;
+    height: 22em;
+    margin-left: -8em;
+    margin-top: -11em;
+  }
+}
+
+/* Hero CTA buttons */
+.hero-cta-button {
+  background: hsl(var(--foreground));
+  border-color: hsl(var(--color-gray-600));
+  color: hsl(var(--background));
+}
+
+.hero-cta-button--talent {
+  border-color: hsl(var(--color-talent) / 0.6);
+  color: hsl(var(--color-talent));
+}
+
+.hero-cta-button--talent:hover {
+  background: hsl(var(--color-talent) / 0.15);
+  border-color: hsl(var(--color-talent));
+}
+
+.hero-cta-button--referrer {
+  border-color: hsl(var(--color-referrer) / 0.6);
+  color: hsl(var(--color-referrer));
+}
+
+.hero-cta-button--referrer:hover {
+  background: hsl(var(--color-referrer) / 0.15);
+  border-color: hsl(var(--color-referrer));
+}
+
+.hero-cta-button--brand {
+  border-color: hsl(var(--color-brand) / 0.6);
+  color: hsl(var(--color-brand));
+}
+
+.hero-cta-button--brand:hover {
+  background: hsl(var(--color-brand) / 0.15);
+  border-color: hsl(var(--color-brand));
+}
