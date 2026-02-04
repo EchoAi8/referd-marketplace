@@ -224,6 +224,16 @@ const Index = () => {
             <main>
               {/* Hero 3D Carousel Section */}
               <section className="hero-carousel-section">
+                {/* Hero Title */}
+                <div className="absolute top-[12vh] left-0 right-0 z-20 text-center pointer-events-none">
+                  <h1 className="font-heading font-black text-4xl md:text-6xl lg:text-7xl text-white tracking-tight mb-2">
+                    Referd<span className="text-talent">®</span>
+                  </h1>
+                  <p className="text-white/70 text-base md:text-lg font-medium">
+                    The People Powered <span className="text-talent">Recruitment Marketplace</span>
+                  </p>
+                </div>
+
                 {/* 3D Talent Carousel */}
                 <div className="img-carousel__wrap">
                   <div ref={wrapRef} data-3d-carousel-wrap="" className="img-carousel__list">
