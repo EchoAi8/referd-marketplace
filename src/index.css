@@ -1518,6 +1518,7 @@ html.theme-transitioning *::after {
    Hero 3D Carousel Styles
    ============================================ */
 
+/* Hero Carousel Section - Cinematic Multi-Layer 3D */
 .hero-carousel-section {
   position: relative;
   min-height: 100vh;
@@ -1525,20 +1526,82 @@ html.theme-transitioning *::after {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: hsl(var(--foreground));
   overflow: hidden;
-  padding-top: 12vh;
+  padding-top: 10vh;
+  background: hsl(var(--foreground));
 }
 
-.img-carousel__wrap {
-  perspective: 1200px;
-  width: 100%;
+/* Cinematic ambient glow layers */
+.hero-carousel-section::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80vw;
   height: 60vh;
+  background: radial-gradient(ellipse, hsl(var(--color-talent) / 0.15) 0%, transparent 60%);
+  pointer-events: none;
+  animation: ambientPulse 4s ease-in-out infinite;
+}
+
+.hero-carousel-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30vh;
+  background: linear-gradient(to top, hsl(var(--foreground)) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 25;
+}
+
+@keyframes ambientPulse {
+  0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
+}
+
+/* Multi-layer carousel container */
+.hero-carousel-container {
+  position: relative;
+  width: 100%;
+  height: 65vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
   transform-style: preserve-3d;
+  perspective: 1800px;
+}
+
+/* Individual carousel layers at different depths */
+.img-carousel__wrap {
+  position: absolute;
+  perspective: 1400px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+}
+
+.img-carousel__wrap--front {
+  z-index: 30;
+}
+
+.img-carousel__wrap--mid {
+  z-index: 20;
+  transform: translateZ(-180px) scale(0.7);
+  opacity: 0.45;
+  filter: blur(1.5px);
+}
+
+.img-carousel__wrap--back {
+  z-index: 10;
+  transform: translateZ(-350px) scale(0.45);
+  opacity: 0.2;
+  filter: blur(3px);
 }
 
 .img-carousel__list {
@@ -1546,24 +1609,20 @@ html.theme-transitioning *::after {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transform: rotateX(-5deg);
+  transform: rotateX(-8deg);
 }
 
 .img-carousel__panel {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 14em; /* Bigger cards */
-  height: 20em; /* Taller aspect ratio */
-  margin-left: -7em;
-  margin-top: -10em;
+  width: 15em;
+  height: 22em;
+  margin-left: -7.5em;
+  margin-top: -11em;
   transform-style: preserve-3d;
   display: flex;
   flex-direction: column;
-  gap: 1rem; /* Space between cards */
-}
-
-.img-carousel__panel--single {
   justify-content: center;
 }
 
@@ -1573,11 +1632,21 @@ html.theme-transitioning *::after {
   border-radius: 1.5rem;
   overflow: hidden;
   position: relative;
-  box-shadow: 
-    0 0 40px hsl(var(--color-talent) / 0.3),
-    0 0 80px hsl(var(--color-talent) / 0.15),
-    0 25px 50px -12px rgba(0, 0, 0, 0.5);
   backface-visibility: hidden;
+  box-shadow: 
+    0 0 60px hsl(var(--color-talent) / 0.4),
+    0 0 120px hsl(var(--color-talent) / 0.2),
+    0 0 200px hsl(var(--color-talent) / 0.1),
+    0 30px 60px -15px rgba(0, 0, 0, 0.7);
+  transition: box-shadow 0.3s ease;
+}
+
+.img-carousel__item:hover {
+  box-shadow: 
+    0 0 80px hsl(var(--color-talent) / 0.6),
+    0 0 160px hsl(var(--color-talent) / 0.3),
+    0 0 240px hsl(var(--color-talent) / 0.15),
+    0 40px 80px -20px rgba(0, 0, 0, 0.8);
 }
 
 .showcase-card {
@@ -1585,23 +1654,77 @@ html.theme-transitioning *::after {
   height: 100%;
 }
 
+/* Video card special styling */
+.video-showcase-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: hsl(var(--foreground));
+}
+
+.video-showcase-card video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+}
+
+.video-showcase-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, hsl(var(--foreground)) 0%, transparent 40%);
+  pointer-events: none;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .hero-carousel-section {
+    padding-top: 8vh;
+  }
+  
+  .hero-carousel-container {
+    height: 55vh;
+  }
+  
   .img-carousel__panel {
     width: 11em;
     height: 16em;
     margin-left: -5.5em;
     margin-top: -8em;
   }
+  
+  .img-carousel__wrap--mid {
+    transform: translateZ(-100px) scale(0.65);
+  }
+  
+  .img-carousel__wrap--back {
+    display: none;
+  }
 }
 
 @media (min-width: 1200px) {
   .img-carousel__panel {
-    width: 16em;
-    height: 22em;
-    margin-left: -8em;
-    margin-top: -11em;
+    width: 17em;
+    height: 24em;
+    margin-left: -8.5em;
+    margin-top: -12em;
   }
+}
+
+/* Hero Title cinematic styling */
+.hero-title {
+  text-shadow: 
+    0 0 40px hsl(var(--color-talent) / 0.5),
+    0 0 80px hsl(var(--color-talent) / 0.3);
+  animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+  0%, 100% { text-shadow: 0 0 40px hsl(var(--color-talent) / 0.5), 0 0 80px hsl(var(--color-talent) / 0.3); }
+  50% { text-shadow: 0 0 60px hsl(var(--color-talent) / 0.7), 0 0 120px hsl(var(--color-talent) / 0.4); }
 }
 
 /* Hero CTA buttons */
@@ -1609,34 +1732,42 @@ html.theme-transitioning *::after {
   background: hsl(var(--foreground));
   border-color: hsl(var(--color-gray-600));
   color: hsl(var(--background));
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
 }
 
 .hero-cta-button--talent {
   border-color: hsl(var(--color-talent) / 0.6);
   color: hsl(var(--color-talent));
+  box-shadow: 0 0 20px hsl(var(--color-talent) / 0.2);
 }
 
 .hero-cta-button--talent:hover {
   background: hsl(var(--color-talent) / 0.15);
   border-color: hsl(var(--color-talent));
+  box-shadow: 0 0 40px hsl(var(--color-talent) / 0.4);
 }
 
 .hero-cta-button--referrer {
   border-color: hsl(var(--color-referrer) / 0.6);
   color: hsl(var(--color-referrer));
+  box-shadow: 0 0 20px hsl(var(--color-referrer) / 0.2);
 }
 
 .hero-cta-button--referrer:hover {
   background: hsl(var(--color-referrer) / 0.15);
   border-color: hsl(var(--color-referrer));
+  box-shadow: 0 0 40px hsl(var(--color-referrer) / 0.4);
 }
 
 .hero-cta-button--brand {
   border-color: hsl(var(--color-brand) / 0.6);
   color: hsl(var(--color-brand));
+  box-shadow: 0 0 20px hsl(var(--color-brand) / 0.2);
 }
 
 .hero-cta-button--brand:hover {
   background: hsl(var(--color-brand) / 0.15);
   border-color: hsl(var(--color-brand));
+  box-shadow: 0 0 40px hsl(var(--color-brand) / 0.4);
 }
