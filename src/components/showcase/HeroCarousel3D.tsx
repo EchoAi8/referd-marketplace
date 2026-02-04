@@ -137,42 +137,51 @@ const HeroCarousel3D = ({
         draggableInstance = draggable;
       }
 
-      intro = gsap.timeline({
-        scrollTrigger: {
-          trigger: wrap,
-          start: 'top 80%',
-          end: 'bottom top',
-          scrub: false,
-          toggleActions: 'play resume play play'
-        },
-        defaults: { ease: 'expo.inOut' }
-      });
-      intro
-        .fromTo(spin, { timeScale: 15 }, { timeScale: 1, duration: 2 })
-        .fromTo(wrap, { scale: 0.5, rotation: 12 }, { scale: 1, rotation: layer === "front" ? 5 : 0, duration: 1.2 }, '<')
-        .fromTo(content, { autoAlpha: 0 }, { autoAlpha: 1, stagger: { amount: 0.8, from: 'random' } }, '<');
+      // Only create ScrollTrigger intro on front layer to prevent multiple triggers
+      if (layer === "front") {
+        intro = gsap.timeline({
+          scrollTrigger: {
+            trigger: wrap,
+            start: 'top 80%',
+            end: 'bottom top',
+            scrub: false,
+            toggleActions: 'play resume play play'
+          },
+          defaults: { ease: 'expo.inOut' }
+        });
+        intro
+          .fromTo(spin, { timeScale: 15 }, { timeScale: 1, duration: 2 })
+          .fromTo(wrap, { scale: 0.5, rotation: 5 }, { scale: 1, rotation: 5, duration: 1.2 }, '<')
+          .fromTo(content, { autoAlpha: 0 }, { autoAlpha: 1, stagger: { amount: 0.8, from: 'random' } }, '<');
+      } else {
+        // For mid/back layers, just fade in the content without ScrollTrigger
+        gsap.fromTo(content, { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.5, delay: 0.5 });
+      }
 
-      observerInstance = Observer.create({
-        target: window,
-        type: 'wheel,scroll,touch',
-        onChangeY: self => {
-          const v = gsap.utils.clamp(-60, 60, self.velocityY * 0.005);
-          spin!.timeScale(v * speedMultiplier);
-          const resting = (v < 0 ? -1 : 1) * speedMultiplier;
+      // Only create scroll-velocity Observer on front layer to prevent competing animations
+      if (layer === "front") {
+        observerInstance = Observer.create({
+          target: window,
+          type: 'wheel,scroll,touch',
+          onChangeY: self => {
+            const v = gsap.utils.clamp(-60, 60, self.velocityY * 0.005);
+            spin!.timeScale(v * speedMultiplier);
+            const resting = (v < 0 ? -1 : 1) * speedMultiplier;
 
-          gsap.fromTo(
-            { value: v },
-            { value: v },
-            {
-              value: resting,
-              duration: 1.2,
-              onUpdate() {
-                spin!.timeScale(this.targets()[0].value);
+            gsap.fromTo(
+              { value: v },
+              { value: v },
+              {
+                value: resting,
+                duration: 1.2,
+                onUpdate() {
+                  spin!.timeScale(this.targets()[0].value);
+                }
               }
-            }
-          );
-        }
-      });
+            );
+          }
+        });
+      }
     };
 
     create();
