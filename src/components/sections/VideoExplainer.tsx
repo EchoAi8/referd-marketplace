@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { Play, Pause, Volume2, VolumeX } from "lucide-react";
+import explainerVideo from "@/assets/referd-explainer-teaser.mp4";
 
 const VideoExplainer = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -88,8 +89,8 @@ const VideoExplainer = () => {
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
             >
-              {/* Placeholder — swap with real explainer video URL */}
-              <source src="" type="video/mp4" />
+              {/* Explainer teaser — swap with full 60s video when ready */}
+              <source src={explainerVideo} type="video/mp4" />
             </video>
 
             {/* Play overlay */}
