@@ -13,7 +13,6 @@ interface PixelatedImageRevealProps {
 
 const BRAND_COLORS = [
   "hsl(var(--color-sage))",
-  "hsl(var(--color-sage-dark))",
   "hsl(var(--color-rose))",
   "hsl(var(--foreground))",
 ];
