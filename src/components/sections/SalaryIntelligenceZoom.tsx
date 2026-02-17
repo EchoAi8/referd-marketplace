@@ -188,11 +188,11 @@ const SalaryIntelligenceZoom = () => {
             🔥 LIMITED ACCESS
           </motion.span>
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold leading-[0.95] tracking-tight max-w-[10em] mx-auto">
-            Market Value
-            <span className="text-sage"> X-Ray™</span>
+            Salary
+            <span className="text-sage"> Intelligence</span>
           </h2>
           <p className="mt-4 text-background/60 text-lg max-w-xl mx-auto">
-            The #1 salary intelligence tool used by 50,000+ professionals
+            The #1 salary benchmarking tool used by 50,000+ professionals
           </p>
         </div>
 
@@ -295,7 +295,7 @@ const SalaryIntelligenceZoom = () => {
               strength={0.4}
               onClick={() => navigateWithTransition("/salary-intelligence")}
             >
-              🔥 Get Your Free X-Ray Report
+              🔥 Get Your Free Salary Report
             </MagneticButton>
             <MagneticButton
               className="px-8 py-4 border-2 border-foreground/20 text-foreground rounded-full font-semibold hover:bg-foreground/5 transition-all"
@@ -371,11 +371,11 @@ const SalaryIntelligenceZoom = () => {
                 </div>
 
                 <div className="text-right">
-                  <h3 className="text-background font-heading font-bold text-lg">
-                    Market Value X-Ray™ Demo
-                  </h3>
-                  <p className="text-background/60 text-sm">
-                    See your salary intelligence in action
+                    <h3 className="text-background font-heading font-bold text-lg">
+                      Salary Intelligence Demo
+                    </h3>
+                    <p className="text-background/60 text-sm">
+                      See your salary benchmarking in action
                   </p>
                 </div>
               </div>

@@ -4,13 +4,7 @@ import MagneticButton from "@/components/animations/MagneticButton";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
 import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
-import {
-  Lock,
-  ArrowRight,
-  Shield,
-  ChevronDown,
-} from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { ArrowRight, Shield } from "lucide-react";
 import { toast } from "sonner";
 import {
   Select,
@@ -19,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useSmoothScroll } from "@/hooks/useSmoothScroll";
 
 interface SalaryResult {
   currentSalary: number;
@@ -32,16 +25,9 @@ interface SalaryResult {
 }
 
 const INDUSTRIES = [
-  "Technology",
-  "Finance & Banking",
-  "Healthcare",
-  "Legal",
-  "Marketing & Advertising",
-  "Consulting",
-  "E-commerce",
-  "Manufacturing",
-  "Real Estate",
-  "Media & Entertainment",
+  "Technology", "Finance & Banking", "Healthcare", "Legal",
+  "Marketing & Advertising", "Consulting", "E-commerce",
+  "Manufacturing", "Real Estate", "Media & Entertainment",
 ];
 
 const COMPANY_SIZES = [
@@ -52,35 +38,35 @@ const COMPANY_SIZES = [
   { value: "5000+", label: "Enterprise (5K+)" },
 ];
 
+/* Always-dark section wrapper — uses raw color tokens so it stays dark regardless of theme */
+const DarkSection = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <section
+    className={`relative ${className}`}
+    style={{ backgroundColor: "hsl(0 0% 0%)", color: "hsl(0 0% 100%)" }}
+  >
+    {children}
+  </section>
+);
+
 const SalaryIntelligence = () => {
   const { navigateWithTransition } = useGridNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<SalaryResult | null>(null);
-
   const heroRef = useRef<HTMLDivElement>(null);
-  const narrativeRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
 
-  const { smoothProgress: heroSmooth } = useSmoothScroll({
+  const { scrollYProgress: heroProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
 
-  const heroOpacity = useTransform(heroSmooth, [0, 0.6], [1, 0]);
-  const heroScale = useTransform(heroSmooth, [0, 0.6], [1, 0.92]);
-  const heroTextY = useTransform(heroSmooth, [0, 0.6], [0, 120]);
-  const heroSubY = useTransform(heroSmooth, [0, 0.6], [0, 80]);
+  const heroOpacity = useTransform(heroProgress, [0, 0.6], [1, 0]);
+  const heroScale = useTransform(heroProgress, [0, 0.6], [1, 0.92]);
+  const heroTextY = useTransform(heroProgress, [0, 0.6], [0, 120]);
 
   const [formData, setFormData] = useState({
-    jobTitle: "",
-    location: "",
-    yearsExperience: "",
-    industry: "",
-    baseSalary: "",
-    bonus: "",
-    equity: "",
-    benefits: "",
-    companySize: "",
+    jobTitle: "", location: "", yearsExperience: "", industry: "",
+    baseSalary: "", bonus: "", equity: "", benefits: "", companySize: "",
   });
 
   const handleInputChange = (field: string, value: string) => {
@@ -96,13 +82,11 @@ const SalaryIntelligence = () => {
   };
 
   const handleAnalyze = async () => {
-    const totalComp = calculateTotalComp();
-
     if (!formData.jobTitle || !formData.industry || !formData.baseSalary) {
       toast.error("Please fill in Job Title, Industry, and Base Salary");
       return;
     }
-
+    const totalComp = calculateTotalComp();
     const analysisData = {
       jobTitle: formData.jobTitle,
       location: formData.location || "United Kingdom",
@@ -111,74 +95,72 @@ const SalaryIntelligence = () => {
       currentSalary: totalComp || parseInt(formData.baseSalary.replace(/[^0-9]/g, "")),
       companySize: formData.companySize || "51-200",
     };
-
     sessionStorage.setItem("pendingMarketPulseAnalysis", JSON.stringify(analysisData));
     navigateWithTransition("/auth?redirect=/dashboard&analysis=pending");
-    toast.info("Please sign in to view your personalised Market Pulse report");
+    toast.info("Please sign in to view your personalised report");
   };
 
   useEffect(() => {
-    document.title = "Market Value X-Ray™ | Free Salary Intelligence | Referd";
+    document.title = "Salary Intelligence | Free Salary Benchmarking | Referd";
     let metaDesc = document.querySelector('meta[name="description"]');
     if (!metaDesc) {
       metaDesc = document.createElement("meta");
       metaDesc.setAttribute("name", "description");
       document.head.appendChild(metaDesc);
     }
-    metaDesc.setAttribute("content", "Discover your true market value with Market Value X-Ray. AI-powered salary benchmarking across 120+ industries.");
+    metaDesc.setAttribute("content", "Discover your true market value with Referd Salary Intelligence. AI-powered salary benchmarking across 120+ industries.");
     return () => { document.title = "Referd"; };
   }, []);
 
   return (
     <PageLayout>
       {/* ─── HERO ─── */}
-      <section
-        ref={heroRef}
-        className="relative h-screen min-h-[600px] bg-foreground overflow-hidden flex flex-col justify-end"
-      >
-        {/* Subtle grid texture */}
+      <DarkSection className="h-screen min-h-[600px] overflow-hidden flex flex-col justify-end">
+        <div ref={heroRef} className="absolute inset-0" />
+        
+        {/* Subtle grid */}
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
-            backgroundImage: `
-              linear-gradient(hsl(var(--color-sage) / 0.3) 1px, transparent 1px),
-              linear-gradient(90deg, hsl(var(--color-sage) / 0.3) 1px, transparent 1px)
-            `,
+            backgroundImage: `linear-gradient(hsl(var(--color-sage) / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--color-sage) / 0.3) 1px, transparent 1px)`,
             backgroundSize: "60px 60px",
           }}
         />
-
-        {/* Ambient glow */}
         <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full bg-sage/5 blur-[200px] pointer-events-none" />
 
-        {/* Hero content */}
         <motion.div
           style={{ opacity: heroOpacity, scale: heroScale }}
           className="relative z-10 container mx-auto px-6 pb-20 md:pb-28"
         >
           <motion.div style={{ y: heroTextY }}>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="font-mono text-xs uppercase tracking-[0.3em] mb-6 text-sage/60"
+            >
+              Salary Intelligence
+            </motion.p>
+
             <motion.h1
               initial={{ opacity: 0, y: 80 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[15vw] sm:text-[12vw] md:text-[10vw] lg:text-[8vw] font-heading font-bold text-background leading-[0.85] tracking-tighter"
+              className="text-[15vw] sm:text-[12vw] md:text-[10vw] lg:text-[8vw] font-heading font-bold leading-[0.85] tracking-tighter"
             >
-              Market Value
+              Know Your
               <br />
-              <span className="text-sage">X-Ray</span>
-              <span className="text-background/40">™</span>
+              <span className="text-sage">Worth</span>
             </motion.h1>
-          </motion.div>
 
-          <motion.div style={{ y: heroSubY }}>
             <motion.p
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-6 text-xl md:text-2xl text-background/50 max-w-xl leading-relaxed"
+              className="mt-6 text-xl md:text-2xl max-w-xl leading-relaxed"
+              style={{ color: "hsl(0 0% 100% / 0.5)" }}
             >
-              Stop guessing. Start knowing. Real-time salary benchmarking
-              powered by machine learning across 120+ industries.
+              Real-time salary benchmarking powered by AI across 120+ industries.
             </motion.p>
 
             <motion.div
@@ -192,7 +174,7 @@ const SalaryIntelligence = () => {
                 strength={0.4}
                 onClick={() => formRef.current?.scrollIntoView({ behavior: "smooth" })}
               >
-                Get Your Free X-Ray
+                Get Your Free Report
                 <ArrowRight className="w-5 h-5 ml-2 inline" />
               </MagneticButton>
             </motion.div>
@@ -204,7 +186,6 @@ const SalaryIntelligence = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
-          style={{ opacity: useTransform(heroSmooth, [0, 0.15], [1, 0]) }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
         >
           <motion.div
@@ -212,33 +193,28 @@ const SalaryIntelligence = () => {
             transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
             className="flex flex-col items-center gap-2"
           >
-            <span className="text-xs uppercase tracking-[0.2em] text-background/30 font-mono">Scroll</span>
+            <span className="text-xs uppercase tracking-[0.2em] font-mono" style={{ color: "hsl(0 0% 100% / 0.3)" }}>Scroll</span>
             <motion.div
-              className="w-px h-8 bg-gradient-to-b from-background/40 to-transparent"
+              className="w-px h-8"
+              style={{ background: "linear-gradient(to bottom, hsl(0 0% 100% / 0.4), transparent)" }}
               animate={{ scaleY: [1, 0.5, 1] }}
               transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
             />
           </motion.div>
         </motion.div>
-      </section>
+      </DarkSection>
 
-      {/* ─── NARRATIVE: Word reveal stats ─── */}
-      <section ref={narrativeRef} className="relative bg-foreground py-32 md:py-40">
-        {/* Top gradient from hero */}
-        <div className="absolute -top-1 left-0 right-0 h-32 bg-gradient-to-b from-foreground to-transparent pointer-events-none z-10" />
-
+      {/* ─── NARRATIVE ─── */}
+      <DarkSection className="py-32 md:py-40">
         <div className="container mx-auto px-6 max-w-4xl">
           <NarrativeReveal />
         </div>
-      </section>
+      </DarkSection>
 
-      {/* ─── FORM SECTION ─── */}
-      <section
-        ref={formRef}
-        className="relative bg-foreground py-24 md:py-32 overflow-hidden"
-      >
-        <div className="absolute top-0 left-0 right-0 h-px bg-background/5" />
-
+      {/* ─── FORM ─── */}
+      <DarkSection className="py-24 md:py-32 overflow-hidden">
+        <div ref={formRef} className="absolute -top-32" />
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ backgroundColor: "hsl(0 0% 100% / 0.05)" }} />
         <div className="container mx-auto px-6 max-w-5xl relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             {/* Left: Sticky explanation */}
@@ -252,22 +228,21 @@ const SalaryIntelligence = () => {
               <span className="text-sage/60 font-mono text-xs mb-4 block uppercase tracking-[0.3em]">
                 How It Works
               </span>
-              <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold text-background leading-[0.95] tracking-tight mb-6">
+              <h2 className="text-4xl md:text-5xl font-heading font-bold leading-[0.95] tracking-tight mb-6">
                 Your Salary,
                 <br />
                 <span className="text-sage">Decoded</span>
               </h2>
-              <p className="text-background/40 text-lg leading-relaxed mb-10">
+              <p className="text-lg leading-relaxed mb-10" style={{ color: "hsl(0 0% 100% / 0.4)" }}>
                 Enter your compensation details. Our AI analyses millions of
                 data points in real-time to benchmark you against the market.
               </p>
 
-              {/* Minimal steps */}
               <div className="space-y-8">
                 {[
                   { num: "01", title: "Input Your Data", desc: "Enter your compensation or import from LinkedIn" },
                   { num: "02", title: "AI Analysis", desc: "ML pipeline processes 500K+ data points instantly" },
-                  { num: "03", title: "Get Your X-Ray", desc: "Personalised benchmarks, insights & job matches" },
+                  { num: "03", title: "Get Your Report", desc: "Personalised benchmarks, insights & job matches" },
                 ].map((step, i) => (
                   <motion.div
                     key={step.num}
@@ -279,14 +254,14 @@ const SalaryIntelligence = () => {
                   >
                     <span className="text-sage/30 font-mono text-sm mt-1">{step.num}</span>
                     <div>
-                      <h3 className="text-background font-heading font-bold text-lg">{step.title}</h3>
-                      <p className="text-background/30 text-sm">{step.desc}</p>
+                      <h3 className="font-heading font-bold text-lg">{step.title}</h3>
+                      <p className="text-sm" style={{ color: "hsl(0 0% 100% / 0.3)" }}>{step.desc}</p>
                     </div>
                   </motion.div>
                 ))}
               </div>
 
-              <div className="flex items-center gap-2 mt-10 text-background/20 text-xs font-mono uppercase tracking-wider">
+              <div className="flex items-center gap-2 mt-10 text-xs font-mono uppercase tracking-wider" style={{ color: "hsl(0 0% 100% / 0.2)" }}>
                 <Shield className="w-3 h-3" />
                 <span>Bank-level encryption</span>
               </div>
@@ -299,132 +274,70 @@ const SalaryIntelligence = () => {
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <div className="bg-background/[0.03] backdrop-blur-sm rounded-2xl border border-background/[0.06] p-8">
-                <h3 className="text-background font-heading font-bold text-xl mb-1">
-                  Benchmark Analysis
-                </h3>
-                <p className="text-background/30 text-sm mb-6">
-                  Enter your compensation data
-                </p>
+              <div
+                className="rounded-2xl p-8 backdrop-blur-sm"
+                style={{
+                  backgroundColor: "hsl(0 0% 100% / 0.03)",
+                  border: "1px solid hsl(0 0% 100% / 0.06)",
+                }}
+              >
+                <h3 className="font-heading font-bold text-xl mb-1">Benchmark Analysis</h3>
+                <p className="text-sm mb-6" style={{ color: "hsl(0 0% 100% / 0.3)" }}>Enter your compensation data</p>
 
                 <div className="space-y-4">
-                  {/* Role Info */}
                   <div className="grid grid-cols-2 gap-3">
+                    <FormField label="Job Title *" placeholder="e.g., Senior Engineer" value={formData.jobTitle} onChange={(v) => handleInputChange("jobTitle", v)} />
                     <div>
-                      <label className="block text-background/40 text-xs mb-1.5 font-mono uppercase tracking-wider">
-                        Job Title *
-                      </label>
-                      <Input
-                        placeholder="e.g., Senior Engineer"
-                        value={formData.jobTitle}
-                        onChange={(e) => handleInputChange("jobTitle", e.target.value)}
-                        className="bg-background/[0.05] border-background/10 text-background placeholder:text-background/20 h-10 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-background/40 text-xs mb-1.5 font-mono uppercase tracking-wider">
-                        Industry *
-                      </label>
-                      <Select
-                        value={formData.industry}
-                        onValueChange={(value) => handleInputChange("industry", value)}
-                      >
-                        <SelectTrigger className="bg-background/[0.05] border-background/10 text-background h-10 text-sm">
+                      <label className="block text-xs mb-1.5 font-mono uppercase tracking-wider" style={{ color: "hsl(0 0% 100% / 0.4)" }}>Industry *</label>
+                      <Select value={formData.industry} onValueChange={(v) => handleInputChange("industry", v)}>
+                        <SelectTrigger
+                          className="h-10 text-sm"
+                          style={{ backgroundColor: "hsl(0 0% 100% / 0.05)", borderColor: "hsl(0 0% 100% / 0.1)", color: "hsl(0 0% 100%)" }}
+                        >
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent>
-                          {INDUSTRIES.map((ind) => (
-                            <SelectItem key={ind} value={ind}>{ind}</SelectItem>
-                          ))}
+                          {INDUSTRIES.map((ind) => <SelectItem key={ind} value={ind}>{ind}</SelectItem>)}
                         </SelectContent>
                       </Select>
                     </div>
+                    <FormField label="Location" placeholder="e.g., London" value={formData.location} onChange={(v) => handleInputChange("location", v)} />
                     <div>
-                      <label className="block text-background/40 text-xs mb-1.5 font-mono uppercase tracking-wider">
-                        Location
-                      </label>
-                      <Input
-                        placeholder="e.g., London"
-                        value={formData.location}
-                        onChange={(e) => handleInputChange("location", e.target.value)}
-                        className="bg-background/[0.05] border-background/10 text-background placeholder:text-background/20 h-10 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-background/40 text-xs mb-1.5 font-mono uppercase tracking-wider">
-                        Company Size
-                      </label>
-                      <Select
-                        value={formData.companySize}
-                        onValueChange={(value) => handleInputChange("companySize", value)}
-                      >
-                        <SelectTrigger className="bg-background/[0.05] border-background/10 text-background h-10 text-sm">
+                      <label className="block text-xs mb-1.5 font-mono uppercase tracking-wider" style={{ color: "hsl(0 0% 100% / 0.4)" }}>Company Size</label>
+                      <Select value={formData.companySize} onValueChange={(v) => handleInputChange("companySize", v)}>
+                        <SelectTrigger
+                          className="h-10 text-sm"
+                          style={{ backgroundColor: "hsl(0 0% 100% / 0.05)", borderColor: "hsl(0 0% 100% / 0.1)", color: "hsl(0 0% 100%)" }}
+                        >
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent>
-                          {COMPANY_SIZES.map((size) => (
-                            <SelectItem key={size.value} value={size.value}>{size.label}</SelectItem>
-                          ))}
+                          {COMPANY_SIZES.map((s) => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
 
-                  {/* Divider */}
-                  <div className="h-px bg-background/5" />
+                  <div className="h-px" style={{ backgroundColor: "hsl(0 0% 100% / 0.05)" }} />
 
-                  {/* Compensation */}
                   <div>
-                    <span className="text-background/30 text-xs font-mono uppercase tracking-wider mb-3 block">
-                      Compensation Breakdown
-                    </span>
+                    <span className="text-xs font-mono uppercase tracking-wider mb-3 block" style={{ color: "hsl(0 0% 100% / 0.3)" }}>Compensation Breakdown</span>
                     <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-background/40 text-xs mb-1.5">Base Salary (£) *</label>
-                        <Input
-                          placeholder="75,000"
-                          value={formData.baseSalary}
-                          onChange={(e) => handleInputChange("baseSalary", e.target.value)}
-                          className="bg-background/[0.05] border-background/10 text-background placeholder:text-background/20 h-10 text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-background/40 text-xs mb-1.5">Annual Bonus (£)</label>
-                        <Input
-                          placeholder="10,000"
-                          value={formData.bonus}
-                          onChange={(e) => handleInputChange("bonus", e.target.value)}
-                          className="bg-background/[0.05] border-background/10 text-background placeholder:text-background/20 h-10 text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-background/40 text-xs mb-1.5">Equity/RSUs (£/yr)</label>
-                        <Input
-                          placeholder="15,000"
-                          value={formData.equity}
-                          onChange={(e) => handleInputChange("equity", e.target.value)}
-                          className="bg-background/[0.05] border-background/10 text-background placeholder:text-background/20 h-10 text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-background/40 text-xs mb-1.5">Benefits Value (£)</label>
-                        <Input
-                          placeholder="5,000"
-                          value={formData.benefits}
-                          onChange={(e) => handleInputChange("benefits", e.target.value)}
-                          className="bg-background/[0.05] border-background/10 text-background placeholder:text-background/20 h-10 text-sm"
-                        />
-                      </div>
+                      <FormField label="Base Salary (£) *" placeholder="75,000" value={formData.baseSalary} onChange={(v) => handleInputChange("baseSalary", v)} />
+                      <FormField label="Annual Bonus (£)" placeholder="10,000" value={formData.bonus} onChange={(v) => handleInputChange("bonus", v)} />
+                      <FormField label="Equity/RSUs (£/yr)" placeholder="15,000" value={formData.equity} onChange={(v) => handleInputChange("equity", v)} />
+                      <FormField label="Benefits Value (£)" placeholder="5,000" value={formData.benefits} onChange={(v) => handleInputChange("benefits", v)} />
                     </div>
 
                     {calculateTotalComp() > 0 && (
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
-                        className="mt-4 pt-3 border-t border-background/5"
+                        className="mt-4 pt-3"
+                        style={{ borderTop: "1px solid hsl(0 0% 100% / 0.05)" }}
                       >
                         <div className="flex justify-between items-center">
-                          <span className="text-background/40 text-sm">Total Compensation</span>
+                          <span className="text-sm" style={{ color: "hsl(0 0% 100% / 0.4)" }}>Total Compensation</span>
                           <span className="text-sage font-heading font-bold text-lg">
                             £{calculateTotalComp().toLocaleString()}
                           </span>
@@ -433,19 +346,7 @@ const SalaryIntelligence = () => {
                     )}
                   </div>
 
-                  {/* Experience */}
-                  <div>
-                    <label className="block text-background/40 text-xs mb-1.5 font-mono uppercase tracking-wider">
-                      Years of Experience
-                    </label>
-                    <Input
-                      type="number"
-                      placeholder="5"
-                      value={formData.yearsExperience}
-                      onChange={(e) => handleInputChange("yearsExperience", e.target.value)}
-                      className="bg-background/[0.05] border-background/10 text-background placeholder:text-background/20 h-10 text-sm"
-                    />
-                  </div>
+                  <FormField label="Years of Experience" placeholder="5" type="number" value={formData.yearsExperience} onChange={(v) => handleInputChange("yearsExperience", v)} />
                 </div>
 
                 <MagneticButton
@@ -463,26 +364,21 @@ const SalaryIntelligence = () => {
                       Processing...
                     </>
                   ) : (
-                    <>
-                      Run Analysis
-                      <ArrowRight className="w-5 h-5" />
-                    </>
+                    <>Run Analysis <ArrowRight className="w-5 h-5" /></>
                   )}
                 </MagneticButton>
 
-                <p className="text-background/20 text-xs text-center mt-3 font-mono uppercase tracking-wider">
+                <p className="text-xs text-center mt-3 font-mono uppercase tracking-wider" style={{ color: "hsl(0 0% 100% / 0.2)" }}>
                   Encrypted · 10 sec analysis · Free
                 </p>
               </div>
             </motion.div>
           </div>
         </div>
-      </section>
+      </DarkSection>
 
       {/* ─── SOCIAL PROOF ─── */}
       <section className="relative py-24 bg-background overflow-hidden">
-        <div className="absolute -top-20 left-0 right-0 h-40 bg-gradient-to-b from-foreground via-foreground/50 to-transparent pointer-events-none z-10" />
-
         <div className="container mx-auto px-6 max-w-4xl relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -491,11 +387,11 @@ const SalaryIntelligence = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold leading-tight mb-4">
+            <h2 className="text-4xl md:text-5xl font-heading font-bold leading-tight mb-4 text-foreground">
               Join <span className="text-sage">50,000+</span> Professionals
             </h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-              Average salary increase of £12,000 within 6 months of using Market Value X-Ray™.
+              Average salary increase of £12,000 within 6 months of using Salary Intelligence.
             </p>
           </motion.div>
 
@@ -513,9 +409,7 @@ const SalaryIntelligence = () => {
                 transition={{ delay: i * 0.1 }}
                 className="p-6 rounded-2xl border border-border bg-card"
               >
-                <p className="text-foreground/70 text-sm mb-4 leading-relaxed italic">
-                  "{t.quote}"
-                </p>
+                <p className="text-foreground/70 text-sm mb-4 leading-relaxed italic">"{t.quote}"</p>
                 <div>
                   <p className="font-heading font-bold text-foreground">{t.name}</p>
                   <p className="text-muted-foreground text-xs">{t.role}</p>
@@ -527,8 +421,7 @@ const SalaryIntelligence = () => {
       </section>
 
       {/* ─── FINAL CTA ─── */}
-      <section className="relative py-32 bg-foreground overflow-hidden">
-        <div className="absolute -top-1 left-0 right-0 h-32 bg-gradient-to-b from-background to-transparent pointer-events-none z-10" />
+      <DarkSection className="py-32 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-sage/5 blur-[200px] pointer-events-none" />
 
         <div className="container mx-auto px-6 max-w-3xl text-center relative z-10">
@@ -538,12 +431,12 @@ const SalaryIntelligence = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-fluid-4xl md:text-fluid-5xl font-heading font-bold text-background leading-tight mb-6">
+            <h2 className="text-4xl md:text-5xl font-heading font-bold leading-tight mb-6">
               Stop Leaving Money
               <br />
               On The Table
             </h2>
-            <p className="text-xl text-background/40 mb-10 max-w-xl mx-auto">
+            <p className="text-xl mb-10 max-w-xl mx-auto" style={{ color: "hsl(0 0% 100% / 0.4)" }}>
               Your market value changes every day. Make sure you're always one step ahead.
             </p>
 
@@ -553,10 +446,10 @@ const SalaryIntelligence = () => {
                 strength={0.4}
                 onClick={() => formRef.current?.scrollIntoView({ behavior: "smooth" })}
               >
-                Get Your Free X-Ray Report
+                Get Your Free Report
               </MagneticButton>
               <MagneticButton
-                className="px-8 py-4 border border-background/10 text-background/60 rounded-full font-semibold hover:text-background hover:border-background/20 transition-all"
+                className="px-8 py-4 rounded-full font-semibold transition-all"
                 strength={0.4}
                 onClick={() => navigateWithTransition("/how-it-works")}
               >
@@ -569,15 +462,38 @@ const SalaryIntelligence = () => {
         <p className="absolute bottom-5 w-full text-center text-sage/40 text-lg font-heading font-bold tracking-tight">
           REFERD®
         </p>
-      </section>
+      </DarkSection>
     </PageLayout>
   );
 };
 
-/* ─── Narrative word-reveal section ─── */
+/* ─── Form field (always-dark context) ─── */
+const FormField = ({
+  label, placeholder, value, onChange, type = "text",
+}: {
+  label: string; placeholder: string; value: string; onChange: (v: string) => void; type?: string;
+}) => (
+  <div>
+    <label className="block text-xs mb-1.5 font-mono uppercase tracking-wider" style={{ color: "hsl(0 0% 100% / 0.4)" }}>{label}</label>
+    <Input
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="h-10 text-sm"
+      style={{
+        backgroundColor: "hsl(0 0% 100% / 0.05)",
+        borderColor: "hsl(0 0% 100% / 0.1)",
+        color: "hsl(0 0% 100%)",
+      }}
+    />
+  </div>
+);
+
+/* ─── Narrative word-reveal ─── */
 const NarrativeReveal = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const { smoothProgress } = useSmoothScroll({
+  const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start 0.8", "end 0.3"],
   });
@@ -587,49 +503,30 @@ const NarrativeReveal = () => {
   return (
     <div ref={ref} className="py-16">
       <p className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold leading-[1.3] tracking-tight">
-        {words.map((word, i) => {
-          const start = i / words.length;
-          const end = start + 1 / words.length;
-
-          return (
-            <NarrativeWord key={i} word={word} progress={smoothProgress} start={start} end={end} index={i} />
-          );
-        })}
+        {words.map((word, i) => (
+          <NarrativeWord key={i} word={word} progress={scrollYProgress} start={i / words.length} end={(i + 1) / words.length} />
+        ))}
       </p>
     </div>
   );
 };
 
 const NarrativeWord = ({
-  word,
-  progress,
-  start,
-  end,
-  index,
+  word, progress, start, end,
 }: {
-  word: string;
-  progress: any;
-  start: number;
-  end: number;
-  index: number;
+  word: string; progress: any; start: number; end: number;
 }) => {
   const opacity = useTransform(progress, [start, end], [0.15, 1]);
-
-  // Highlight key terms with brand colors
   const highlights: Record<string, string> = {
-    "67%": "text-sage",
-    "underpaid.": "text-rose",
-    "120+": "text-sage",
-    "seconds.": "text-sage",
+    "67%": "hsl(var(--color-sage))",
+    "underpaid.": "hsl(var(--color-rose))",
+    "120+": "hsl(var(--color-sage))",
+    "seconds.": "hsl(var(--color-sage))",
   };
-
-  const highlightClass = highlights[word] || "text-background";
+  const color = highlights[word] || "hsl(0 0% 100%)";
 
   return (
-    <motion.span
-      style={{ opacity }}
-      className={`inline-block mr-[0.3em] ${highlightClass}`}
-    >
+    <motion.span style={{ opacity, color }} className="inline-block mr-[0.3em]">
       {word}
     </motion.span>
   );
