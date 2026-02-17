@@ -6,7 +6,9 @@ import { GridOverlay } from "@/components/animations/GridTransition";
 import HeroSection from "@/components/sections/HeroSection";
 import ShockingStatsOpener from "@/components/sections/ShockingStatsOpener";
 import SolutionReveal from "@/components/sections/SolutionReveal";
+import VideoExplainer from "@/components/sections/VideoExplainer";
 import OriginStory from "@/components/sections/OriginStory";
+import JoinTheHerdCounter from "@/components/sections/JoinTheHerdCounter";
 import AboutSection from "@/components/sections/AboutSection";
 import StickyHowItWorks from "@/components/sections/StickyHowItWorks";
 import StatsSection from "@/components/sections/StatsSection";
@@ -54,7 +56,13 @@ const Index = () => {
               {/* 3. Solution Reveal - The Answer (parallax overlap) */}
               <SolutionReveal />
               
-              {/* 4. Origin Story - The Journey (Airbnb-style timeline) */}
+              {/* 4. Video Explainer - How it works in 60s */}
+              <VideoExplainer />
+              
+              {/* 5. Join the Herd - Live signup counter */}
+              <JoinTheHerdCounter />
+              
+              {/* 6. Origin Story - The Journey (Airbnb-style timeline) */}
               <OriginStory />
               
               {/* 5. The Movement - Word reveal with highlighted terms */}
