@@ -87,6 +87,8 @@ const VideoExplainer = () => {
   useEffect(() => {
     if (pausedByUser || !playerContainerRef.current) return;
 
+    let playPromise: Promise<void> | null = null;
+
     const checkVisibility = () => {
       if (!playerContainerRef.current || !playerRef.current) return;
       const rect = playerContainerRef.current.getBoundingClientRect();
@@ -94,7 +96,12 @@ const VideoExplainer = () => {
       if (inView && !playing) {
         vimeoPlay();
       } else if (!inView && playing) {
-        playerRef.current.pause();
+        // Avoid interrupting a pending play()
+        if (playPromise) {
+          playPromise.then(() => playerRef.current?.pause()).catch(() => {});
+        } else {
+          playerRef.current.pause().catch(() => {});
+        }
       }
     };
 
@@ -119,9 +126,11 @@ const VideoExplainer = () => {
     setActivated(true);
     setPlaying(true);
     playerRef.current.setVolume(0).then(() => {
-      playerRef.current!.play();
+      playerRef.current!.play().catch(() => {
+        // Silently handle interrupted play requests
+      });
       if (!muted) playerRef.current!.setVolume(1);
-    });
+    }).catch(() => {});
   }, [muted]);
 
   const vimeoPause = useCallback(() => {
