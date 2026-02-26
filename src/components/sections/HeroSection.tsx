@@ -18,21 +18,23 @@ const HeroSection = () => {
   });
 
   // Parallax transforms
-  const heroOpacity = useTransform(smoothProgress, [0, 0.6], [1, 0]);
-  const heroScale = useTransform(smoothProgress, [0, 0.6], [1, 0.92]);
-  const canvasY = useTransform(smoothProgress, [0, 1], [0, 200]);
-  const logoY = useTransform(smoothProgress, [0, 0.5], [0, -60]);
-  const logoScale = useTransform(smoothProgress, [0, 0.5], [1, 0.88]);
-  const contentY = useTransform(smoothProgress, [0, 0.5], [0, 100]);
+  const heroOpacity = useTransform(smoothProgress, [0, 0.7], [1, 0]);
+  const heroScale = useTransform(smoothProgress, [0, 0.7], [1, 0.95]);
+  const canvasY = useTransform(smoothProgress, [0, 1], [0, 150]);
+  const logoY = useTransform(smoothProgress, [0, 0.5], [0, -80]);
+  const logoScale = useTransform(smoothProgress, [0, 0.5], [1, 0.9]);
+  const contentY = useTransform(smoothProgress, [0, 0.5], [0, 80]);
+  const cardY = useTransform(smoothProgress, [0, 0.6], [0, -40]);
+  const cardRotate = useTransform(smoothProgress, [0, 0.5], [0, -3]);
 
   return (
     <section ref={containerRef} className="relative h-screen bg-foreground overflow-hidden">
-      {/* Network Canvas + Profile Grid backdrop */}
-      <motion.div 
-        style={{ opacity: heroOpacity, scale: heroScale, y: canvasY }} 
+      {/* Network Canvas backdrop */}
+      <motion.div
+        style={{ opacity: heroOpacity, scale: heroScale, y: canvasY }}
         className="absolute inset-0 pointer-events-auto"
       >
-        <HeroProfileGridBackdrop className="opacity-70" />
+        <HeroProfileGridBackdrop className="opacity-50" />
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -41,99 +43,240 @@ const HeroSection = () => {
         >
           <InteractiveNetworkCanvas />
         </motion.div>
-        
+
         {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-foreground/40 via-transparent to-foreground/80 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-foreground/20 via-transparent to-foreground/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-foreground/60 via-foreground/20 to-foreground/90 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-foreground/30 via-transparent to-foreground/30 pointer-events-none" />
       </motion.div>
 
-      {/* Content */}
-      <div className="relative z-10 h-full flex flex-col justify-end pb-16 sm:pb-20 md:pb-24 px-4 sm:px-6 md:px-12 pointer-events-none">
-        {/* Logo */}
-        <motion.div style={{ y: logoY, scale: logoScale }} className="origin-bottom-left mb-6">
-          <motion.h1
-            initial={{ y: 80 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[14vw] sm:text-[12vw] md:text-[10vw] lg:text-[8vw] font-heading font-bold text-background leading-[0.85] tracking-tighter"
-          >
-            {"Referd".split("").map((char, i) => (
-              <motion.span
-                key={i}
-                initial={{ opacity: 0, y: 60 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.1 + i * 0.04, ease: [0.16, 1, 0.3, 1] }}
-                className="inline-block"
+      {/* Content - split layout */}
+      <div className="relative z-10 h-full flex flex-col lg:flex-row items-end lg:items-end justify-between pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 md:px-12 pointer-events-none">
+        {/* Left: Title + copy + CTAs */}
+        <div className="flex-1 flex flex-col justify-end">
+          {/* REFERD - massive */}
+          <motion.div style={{ y: logoY, scale: logoScale }} className="origin-bottom-left mb-4">
+            <motion.h1
+              initial={{ y: 100 }}
+              animate={{ y: 0 }}
+              transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[18vw] sm:text-[15vw] md:text-[13vw] lg:text-[10vw] font-heading font-black text-background leading-[0.8] tracking-[-0.04em] uppercase"
+            >
+              {"REFERD".split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 80 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.05 + i * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                  className="inline-block"
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </motion.h1>
+          </motion.div>
+
+          {/* Tagline + sub */}
+          <motion.div style={{ y: contentY }} className="max-w-2xl">
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="text-xl sm:text-2xl md:text-3xl text-background/90 font-heading font-semibold leading-tight"
+            >
+              The people-powered recruitment marketplace.
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-3 text-background/50 text-sm sm:text-base md:text-lg max-w-lg"
+            >
+              We put the fee where it belongs — in the hands of the people who actually make the hire happen.
+            </motion.p>
+
+            {/* CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.75, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col sm:flex-row gap-3 mt-8 pointer-events-auto"
+            >
+              <DirectionalButton
+                theme="talent"
+                size="lg"
+                onClick={() => navigateWithTransition("/career-intelligence")}
               >
-                {char}
-              </motion.span>
-            ))}
-            <motion.span
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="text-sage text-[0.35em] align-super ml-1"
-            >
-              ®
-            </motion.span>
-          </motion.h1>
-        </motion.div>
+                What Am I Worth?
+              </DirectionalButton>
 
-        {/* Tagline + CTAs */}
-        <motion.div style={{ y: contentY }} className="max-w-3xl">
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="text-2xl sm:text-3xl md:text-4xl text-background/90 font-heading font-semibold leading-tight"
-          >
-            Your network is worth more than any agency.
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-3 text-background/50 text-base sm:text-lg max-w-xl"
-          >
-            Refer. Get hired. Get paid. The 35/35/30 split that kills agencies.
-          </motion.p>
+              <DirectionalButton
+                theme="referrer"
+                size="lg"
+                onClick={() => navigateWithTransition("/opportunities")}
+              >
+                Get Paid To Connect
+              </DirectionalButton>
 
-          {/* CTAs */}
+              <DirectionalButton
+                theme="brand"
+                size="lg"
+                onClick={() => navigateWithTransition("/brands")}
+              >
+                Hire Without The Markup
+              </DirectionalButton>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Right: Platinum Card */}
+        <motion.div
+          style={{ y: cardY, rotate: cardRotate }}
+          className="mt-8 lg:mt-0 lg:ml-12 pointer-events-none flex-shrink-0"
+        >
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col sm:flex-row gap-3 mt-6 pointer-events-auto"
+            initial={{ opacity: 0, y: 60, rotateY: -15 }}
+            animate={{ opacity: 1, y: 0, rotateY: 0 }}
+            transition={{ duration: 1, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <DirectionalButton 
-              theme="talent"
-              size="lg"
-              onClick={() => navigateWithTransition("/career-intelligence")}
-            >
-              Know Your Worth
-            </DirectionalButton>
-            
-            <DirectionalButton
-              theme="referrer"
-              size="lg"
-              onClick={() => navigateWithTransition("/opportunities")}
-            >
-              Refer & Earn
-            </DirectionalButton>
-            
-            <DirectionalButton
-              theme="brand"
-              size="lg"
-              onClick={() => navigateWithTransition("/brands")}
-            >
-              Hire Smarter
-            </DirectionalButton>
+            <PlatinumCard />
           </motion.div>
         </motion.div>
       </div>
 
-      {/* No bottom gradient - seamless dark-to-dark flow into ShockingStats */}
+      {/* Bottom gradient for seamless flow */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-foreground to-transparent pointer-events-none z-20" />
     </section>
+  );
+};
+
+/* ─── Referd Platinum Card ─── */
+const PlatinumCard = () => {
+  return (
+    <div className="relative w-[320px] sm:w-[360px] md:w-[400px] aspect-[1.586/1]">
+      {/* Card body */}
+      <div
+        className="absolute inset-0 rounded-2xl overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, 
+            hsl(0 0% 15%) 0%, 
+            hsl(0 0% 22%) 30%, 
+            hsl(0 0% 18%) 60%, 
+            hsl(0 0% 12%) 100%)`,
+          boxShadow: `
+            0 25px 60px -15px rgba(0,0,0,0.5),
+            0 0 0 1px rgba(255,255,255,0.08),
+            inset 0 1px 0 rgba(255,255,255,0.1)
+          `,
+        }}
+      >
+        {/* Metallic shimmer overlay */}
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            background: `linear-gradient(
+              105deg,
+              transparent 20%,
+              rgba(255,255,255,0.05) 30%,
+              rgba(255,255,255,0.12) 40%,
+              rgba(255,255,255,0.05) 50%,
+              transparent 60%
+            )`,
+          }}
+        />
+
+        {/* Subtle pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              90deg,
+              transparent,
+              transparent 2px,
+              rgba(255,255,255,1) 2px,
+              rgba(255,255,255,1) 3px
+            )`,
+          }}
+        />
+
+        {/* Card content */}
+        <div className="relative h-full p-6 flex flex-col justify-between">
+          {/* Top row */}
+          <div className="flex justify-between items-start">
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.3em] text-background/40 font-medium">
+                Referd
+              </div>
+              <div
+                className="text-xs uppercase tracking-[0.2em] mt-1 font-semibold"
+                style={{
+                  background: `linear-gradient(135deg, hsl(var(--color-sage)) 0%, hsl(var(--color-referrer)) 50%, hsl(var(--color-brand)) 100%)`,
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Platinum
+              </div>
+            </div>
+            {/* Chip */}
+            <div
+              className="w-10 h-8 rounded-md"
+              style={{
+                background: `linear-gradient(135deg, 
+                  hsl(48 70% 65%) 0%, 
+                  hsl(48 50% 50%) 50%, 
+                  hsl(48 70% 60%) 100%)`,
+                boxShadow: `inset 0 0 2px rgba(0,0,0,0.2)`,
+              }}
+            />
+          </div>
+
+          {/* Amount */}
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-background/30 mb-1">
+              Earnings to date
+            </div>
+            <div className="font-heading font-black text-3xl sm:text-4xl text-background tracking-tight">
+              £47,250
+            </div>
+          </div>
+
+          {/* Bottom row */}
+          <div className="flex justify-between items-end">
+            <div>
+              <div className="text-[9px] uppercase tracking-[0.15em] text-background/30">
+                Member since
+              </div>
+              <div className="text-sm text-background/70 font-medium tracking-wide">
+                2024
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-[9px] uppercase tracking-[0.15em] text-background/30">
+                Status
+              </div>
+              <div
+                className="text-sm font-bold tracking-wide"
+                style={{
+                  background: `linear-gradient(90deg, hsl(var(--color-sage)), hsl(var(--color-talent-light)))`,
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Active
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Glow effect behind card */}
+      <div
+        className="absolute -inset-4 rounded-3xl opacity-20 blur-2xl -z-10"
+        style={{
+          background: `radial-gradient(ellipse at center, hsl(var(--color-sage) / 0.4), transparent 70%)`,
+        }}
+      />
+    </div>
   );
 };
 
