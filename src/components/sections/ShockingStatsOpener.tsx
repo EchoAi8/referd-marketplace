@@ -56,10 +56,8 @@ const ShockingStatsOpener = () => {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen bg-foreground text-background py-24 md:py-32 overflow-hidden -mt-32"
+      className="relative min-h-screen bg-foreground text-background py-24 md:py-32 overflow-hidden"
     >
-      {/* Seamless continuation from hero - no visible break */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-foreground pointer-events-none z-10" />
       
       {/* Animated background pattern */}
       <motion.div 
@@ -169,8 +167,8 @@ const ShockingStatsOpener = () => {
         </motion.div>
       </motion.div>
 
-      {/* Bottom overlap into next section */}
-      <div className="absolute -bottom-1 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
+      {/* Bottom gradient fade into SolutionReveal */}
+      <div className="absolute -bottom-1 left-0 right-0 h-40 bg-gradient-to-t from-muted/30 via-background/80 to-transparent pointer-events-none z-10" />
     </section>
   );
 };
