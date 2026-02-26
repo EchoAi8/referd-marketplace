@@ -30,7 +30,7 @@ const shockingStats = [
     sublabel: "Money that could go to people",
     icon: TrendingDown,
     source: "REC Industry Report 2023",
-    color: "text-mustard",
+    color: "text-brand",
   },
   {
     value: 45,
@@ -56,10 +56,10 @@ const ShockingStatsOpener = () => {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen bg-foreground text-background py-24 md:py-32 overflow-hidden"
+      className="relative min-h-screen bg-foreground text-background py-24 md:py-32 overflow-hidden -mt-32"
     >
-      {/* Parallax overlap from hero - creates seamless transition */}
-      <div className="absolute -top-32 left-0 right-0 h-64 bg-gradient-to-b from-foreground/0 via-foreground/80 to-foreground pointer-events-none z-10" />
+      {/* Seamless continuation from hero - no visible break */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-foreground pointer-events-none z-10" />
       
       {/* Animated background pattern */}
       <motion.div 

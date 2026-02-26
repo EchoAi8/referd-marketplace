@@ -1,4 +1,4 @@
-import SiteHeader from "@/components/layout/SiteHeader";
+import TwoStepNavigation from "@/components/navigation/TwoStepNavigation";
 import SiteFooter from "@/components/layout/SiteFooter";
 import PageTransition from "@/components/layout/PageTransition";
 import { GridOverlay } from "@/components/animations/GridTransition";
@@ -14,13 +14,9 @@ const PageLayout = ({ children, showGridOverlay = true }: PageLayoutProps) => {
   return (
     <>
       {showGridOverlay && <GridOverlay />}
+      <TwoStepNavigation />
       <PageTransition>
         <div className="min-h-screen bg-background">
-          <SiteHeader />
-
-          {/* Dim vignette layer for immersive menu effect */}
-          <div className="menu-vignette" aria-hidden="true" />
-
           {/* Shell for blur/scale effect when menu opens */}
           <div className="site-shell">
             <main>{children}</main>
