@@ -17,8 +17,8 @@ const storyBeats = [
     year: "2020",
     title: "The Realisation",
     icon: Lightbulb,
-    color: "text-mustard",
-    bgColor: "bg-mustard/20",
+    color: "text-referrer",
+    bgColor: "bg-referrer/20",
     content: "The best hires always came from referrals. Not agencies. Not job boards. People who actually knew the candidates. Yet these referrers got nothing. We thought: what if we flipped the script?",
   },
   {

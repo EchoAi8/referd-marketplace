@@ -37,10 +37,10 @@ const SolutionReveal = () => {
   return (
     <section
       ref={containerRef}
-      className="relative py-24 md:py-32 bg-muted/30 overflow-hidden"
+      className="relative py-24 md:py-32 bg-background overflow-hidden"
     >
-      {/* Parallax overlap effect */}
-      <div className="absolute -top-20 left-0 right-0 h-40 bg-gradient-to-b from-background via-background/50 to-transparent pointer-events-none z-10" />
+      {/* Top overlap from ShockingStats dark section */}
+      <div className="absolute -top-1 left-0 right-0 h-32 bg-gradient-to-b from-foreground to-transparent pointer-events-none z-10" />
 
       <motion.div
         style={{ scale, opacity }}
@@ -205,8 +205,8 @@ const SolutionReveal = () => {
         </motion.div>
       </motion.div>
 
-      {/* Bottom overlap */}
-      <div className="absolute -bottom-1 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
+      {/* Bottom overlap into VideoExplainer */}
+      <div className="absolute -bottom-1 left-0 right-0 h-40 bg-gradient-to-t from-muted/50 to-transparent pointer-events-none z-10" />
     </section>
   );
 };

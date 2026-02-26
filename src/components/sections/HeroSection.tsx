@@ -26,7 +26,7 @@ const HeroSection = () => {
   const contentY = useTransform(smoothProgress, [0, 0.5], [0, 100]);
 
   return (
-    <section ref={containerRef} className="relative h-[85vh] bg-foreground overflow-hidden flex-shrink-0">
+    <section ref={containerRef} className="relative h-screen bg-foreground overflow-hidden">
       {/* Network Canvas + Profile Grid backdrop */}
       <motion.div 
         style={{ opacity: heroOpacity, scale: heroScale, y: canvasY }} 
@@ -132,8 +132,7 @@ const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Bottom gradient fade into next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-foreground to-transparent pointer-events-none z-20" />
+      {/* No bottom gradient - seamless dark-to-dark flow into ShockingStats */}
     </section>
   );
 };

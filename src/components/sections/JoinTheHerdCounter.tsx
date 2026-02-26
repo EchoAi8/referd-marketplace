@@ -22,8 +22,8 @@ const JoinTheHerdCounter = () => {
       ref={ref}
       className="relative py-16 md:py-20 bg-foreground text-background overflow-hidden"
     >
-      {/* Parallax overlap from previous section */}
-      <div className="absolute -top-20 left-0 right-0 h-40 bg-gradient-to-b from-background via-background/50 to-transparent pointer-events-none z-10" />
+      {/* Top overlap from VideoExplainer */}
+      <div className="absolute -top-16 left-0 right-0 h-32 bg-gradient-to-b from-foreground to-transparent pointer-events-none z-10" />
 
       <div className="container mx-auto px-6">
         <motion.div
