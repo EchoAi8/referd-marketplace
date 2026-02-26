@@ -1,45 +1,40 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import AnimatedCounter from "@/components/animations/AnimatedCounter";
-import { TrendingDown, Users, DollarSign, Clock, AlertTriangle } from "lucide-react";
+import { Zap, Users, Banknote, Rocket } from "lucide-react";
 
-const shockingStats = [
+const stats = [
+  {
+    value: 35,
+    suffix: "%",
+    label: "Goes to the referrer",
+    sublabel: "Because your network has value",
+    icon: Users,
+    color: "text-referrer",
+  },
+  {
+    value: 35,
+    suffix: "%",
+    label: "Goes to the talent",
+    sublabel: "You deserve a cut of your own hire",
+    icon: Zap,
+    color: "text-talent",
+  },
   {
     value: 30,
     suffix: "%",
-    label: "Agency fee on YOUR salary",
-    sublabel: "The industry standard that's robbing talent",
-    icon: DollarSign,
-    source: "CIPD 2024",
-    color: "text-rose",
-  },
-  {
-    value: 72,
-    suffix: "%",
-    label: "Of hires come from referrals",
-    sublabel: "Yet networks aren't rewarded",
-    icon: Users,
-    source: "LinkedIn Talent Report",
-    color: "text-sage",
-  },
-  {
-    value: 4.1,
-    prefix: "£",
-    suffix: "B",
-    label: "Paid to agencies in the UK alone",
-    sublabel: "Money that could go to people",
-    icon: TrendingDown,
-    source: "REC Industry Report 2023",
+    label: "Keeps us running",
+    sublabel: "No hidden fees. No bullshit.",
+    icon: Rocket,
     color: "text-brand",
   },
   {
-    value: 45,
-    suffix: " days",
-    label: "Average time to hire",
-    sublabel: "Agencies profit from delays",
-    icon: Clock,
-    source: "SHRM Benchmarks",
-    color: "text-referrer",
+    value: 60,
+    suffix: "%",
+    label: "Less than agency fees",
+    sublabel: "We're not even close to their prices",
+    icon: Banknote,
+    color: "text-sage",
   },
 ];
 
@@ -51,17 +46,16 @@ const ShockingStatsOpener = () => {
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const y = useTransform(scrollYProgress, [0, 0.2], [100, 0]);
+  const y = useTransform(scrollYProgress, [0, 0.2], [80, 0]);
 
   return (
     <section
       ref={containerRef}
       className="relative min-h-screen bg-foreground text-background py-24 md:py-32 overflow-hidden"
     >
-      
       {/* Animated background pattern */}
-      <motion.div 
-        className="absolute inset-0 opacity-5"
+      <motion.div
+        className="absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage: `repeating-linear-gradient(
             45deg,
@@ -71,7 +65,7 @@ const ShockingStatsOpener = () => {
             hsl(var(--color-sage)) 41px
           )`,
         }}
-        animate={{ 
+        animate={{
           backgroundPosition: ["0px 0px", "40px 40px"],
         }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -86,25 +80,25 @@ const ShockingStatsOpener = () => {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose/20 mb-6">
-            <AlertTriangle className="w-4 h-4 text-rose" />
-            <span className="text-xs uppercase tracking-[0.2em] text-rose font-semibold">
-              The Uncomfortable Truth
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sage/10 mb-6">
+            <Zap className="w-4 h-4 text-sage" />
+            <span className="text-xs uppercase tracking-[0.2em] text-sage font-semibold">
+              The Referd Split
             </span>
           </div>
-          
+
           <h2 className="text-fluid-5xl md:text-fluid-6xl font-heading font-bold leading-tight max-w-5xl mx-auto">
-            The recruitment industry is{" "}
-            <span className="text-rose">broken</span>.
+            We didn't come here to{" "}
+            <span className="text-sage">play nice</span>.
           </h2>
           <p className="mt-6 text-xl md:text-2xl text-background/60 max-w-3xl mx-auto">
-            And everyone knows it — except the agencies profiting from the chaos.
+            35% to the referrer. 35% to the talent. 30% to us. That's it. No middlemen, no markups, no games.
           </p>
         </motion.div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-          {shockingStats.map((stat, index) => {
+          {stats.map((stat, index) => {
             const IconComponent = stat.icon;
             return (
               <motion.div
@@ -112,10 +106,10 @@ const ShockingStatsOpener = () => {
                 initial={{ opacity: 0, y: 60, scale: 0.9 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ 
-                  duration: 0.7, 
+                transition={{
+                  duration: 0.7,
                   delay: index * 0.1,
-                  ease: [0.16, 1, 0.3, 1] 
+                  ease: [0.16, 1, 0.3, 1],
                 }}
                 className="group relative"
               >
@@ -124,21 +118,17 @@ const ShockingStatsOpener = () => {
                     <div className="w-12 h-12 rounded-xl bg-background/10 flex items-center justify-center">
                       <IconComponent className={`w-6 h-6 ${stat.color}`} />
                     </div>
-                    <span className="text-[10px] text-background/40 uppercase tracking-wider">
-                      {stat.source}
-                    </span>
                   </div>
-                  
+
                   <div className={`text-fluid-4xl md:text-fluid-5xl font-heading font-bold ${stat.color} mb-2`}>
                     <AnimatedCounter
                       value={stat.value}
-                      prefix={stat.prefix}
                       suffix={stat.suffix}
                       duration={2}
                       delay={0.3 + index * 0.15}
                     />
                   </div>
-                  
+
                   <p className="text-lg font-semibold text-background mb-1">
                     {stat.label}
                   </p>
@@ -151,7 +141,7 @@ const ShockingStatsOpener = () => {
           })}
         </div>
 
-        {/* The Question */}
+        {/* Closer */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -160,14 +150,13 @@ const ShockingStatsOpener = () => {
           className="text-center"
         >
           <p className="text-2xl md:text-3xl font-heading font-medium text-background/80 max-w-4xl mx-auto">
-            What if the people who{" "}
-            <span className="text-sage font-bold">actually know</span>{" "}
-            the best candidates got paid instead?
+            Every hire. Every referral.{" "}
+            <span className="text-sage font-bold">Everyone gets paid</span>.
           </p>
         </motion.div>
       </motion.div>
 
-      {/* Bottom gradient fade into SolutionReveal */}
+      {/* Bottom gradient fade into next section */}
       <div className="absolute -bottom-1 left-0 right-0 h-40 bg-gradient-to-t from-muted/30 via-background/80 to-transparent pointer-events-none z-10" />
     </section>
   );
