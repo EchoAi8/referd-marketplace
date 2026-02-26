@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import { motion, useInView } from "framer-motion";
+import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const TwoStepNavigation = () => {
   const [isActive, setIsActive] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(linksRef, { once: true, margin: "-50px" });
+  const location = useLocation();
 
   const toggleNav = () => setIsActive(!isActive);
   const closeNav = () => setIsActive(false);
@@ -19,6 +19,11 @@ const TwoStepNavigation = () => {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isActive]);
+
+  // Close on route change
+  useEffect(() => {
+    closeNav();
+  }, [location.pathname]);
 
   // Animation variants for staggered entrance
   const containerVariants = {
@@ -57,6 +62,22 @@ const TwoStepNavigation = () => {
     },
   };
 
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "How It Works", href: "/how-it-works" },
+    { label: "Career Intelligence", href: "/career-intelligence" },
+    { label: "Opportunities", href: "/opportunities" },
+    { label: "Brands", href: "/brands" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
+  ];
+
+  const socialLinks = [
+    { label: "LinkedIn", href: "https://linkedin.com" },
+    { label: "Twitter/X", href: "https://twitter.com" },
+    { label: "Instagram", href: "https://instagram.com" },
+  ];
+
   return (
     <nav
       ref={navRef}
@@ -80,12 +101,11 @@ const TwoStepNavigation = () => {
 
             <div className="twostep-nav__top">
               <Link to="/" className="twostep-nav__logo" onClick={closeNav}>
-                {/* Referd Wordmark */}
                 <div className="flex items-center gap-1">
                   <span className="font-heading font-bold text-xl tracking-tight text-current">
                     Referd
                   </span>
-                  <span className="text-[hsl(var(--sage))] text-xs align-super">®</span>
+                  <span className="text-sage text-xs align-super">®</span>
                 </div>
               </Link>
 
@@ -114,26 +134,15 @@ const TwoStepNavigation = () => {
                           initial="hidden"
                           animate={isActive ? "visible" : "hidden"}
                         >
-                          <motion.li className="twostep-nav__li" variants={itemVariants}>
-                            <Link to="/" className="twostep-nav__link" onClick={closeNav}>
-                              <span className="twostep-nav__link-span">Home</span>
-                            </Link>
-                          </motion.li>
-                          <motion.li className="twostep-nav__li" variants={itemVariants}>
-                            <Link to="/work" className="twostep-nav__link" onClick={closeNav}>
-                              <span className="twostep-nav__link-span">Portfolio</span>
-                            </Link>
-                          </motion.li>
-                          <motion.li className="twostep-nav__li" variants={itemVariants}>
-                            <Link to="/about" className="twostep-nav__link" onClick={closeNav}>
-                              <span className="twostep-nav__link-span">About us</span>
-                            </Link>
-                          </motion.li>
-                          <motion.li className="twostep-nav__li" variants={itemVariants}>
-                            <Link to="/how-it-works" className="twostep-nav__link" onClick={closeNav}>
-                              <span className="twostep-nav__link-span">Services</span>
-                            </Link>
-                          </motion.li>
+                          {navLinks.map((link) => (
+                            <motion.li key={link.href} className="twostep-nav__li" variants={itemVariants}>
+                              <Link to={link.href} className="twostep-nav__link" onClick={closeNav}>
+                                <span className={`twostep-nav__link-span ${location.pathname === link.href ? "text-sage" : ""}`}>
+                                  {link.label}
+                                </span>
+                              </Link>
+                            </motion.li>
+                          ))}
                         </motion.ul>
                         <motion.ul
                           className="twostep-nav__ul is--small"
@@ -141,36 +150,18 @@ const TwoStepNavigation = () => {
                           initial="hidden"
                           animate={isActive ? "visible" : "hidden"}
                         >
-                          <motion.li className="twostep-nav__li" variants={socialVariants}>
-                            <a
-                              href="https://instagram.com"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="twostep-nav__link"
-                            >
-                              <span className="twostep-nav__link-eyebrow">Instagram</span>
-                            </a>
-                          </motion.li>
-                          <motion.li className="twostep-nav__li" variants={socialVariants}>
-                            <a
-                              href="https://linkedin.com"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="twostep-nav__link"
-                            >
-                              <span className="twostep-nav__link-eyebrow">LinkedIn</span>
-                            </a>
-                          </motion.li>
-                          <motion.li className="twostep-nav__li" variants={socialVariants}>
-                            <a
-                              href="https://twitter.com"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="twostep-nav__link"
-                            >
-                              <span className="twostep-nav__link-eyebrow">Twitter/X</span>
-                            </a>
-                          </motion.li>
+                          {socialLinks.map((link) => (
+                            <motion.li key={link.label} className="twostep-nav__li" variants={socialVariants}>
+                              <a
+                                href={link.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="twostep-nav__link"
+                              >
+                                <span className="twostep-nav__link-eyebrow">{link.label}</span>
+                              </a>
+                            </motion.li>
+                          ))}
                         </motion.ul>
                       </div>
                     </div>
@@ -181,11 +172,23 @@ const TwoStepNavigation = () => {
                       transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
                     >
                       <div className="twostep-nav__visual">
-                        <img
-                          src="https://cdn.prod.website-files.com/6970c1684e330d82d41ba734/6970d4c112ff725efd1230ca_osmo-twostep-nav-image.avif"
-                          alt="Navigation visual"
-                          className="twostep-nav__visual-img"
-                        />
+                        {/* Stats panel instead of image */}
+                        <div className="w-full h-full bg-foreground rounded-md flex flex-col items-center justify-center p-6 gap-4">
+                          <div className="text-center">
+                            <p className="text-sage text-3xl font-heading font-bold">£2.4M+</p>
+                            <p className="text-background/60 text-sm mt-1">Paid Out</p>
+                          </div>
+                          <div className="w-12 h-px bg-background/20" />
+                          <div className="text-center">
+                            <p className="text-referrer text-3xl font-heading font-bold">12,400+</p>
+                            <p className="text-background/60 text-sm mt-1">People Earning</p>
+                          </div>
+                          <div className="w-12 h-px bg-background/20" />
+                          <div className="text-center">
+                            <p className="text-talent text-3xl font-heading font-bold">2,100+</p>
+                            <p className="text-background/60 text-sm mt-1">Hires Made</p>
+                          </div>
+                        </div>
                       </div>
                     </motion.div>
                   </div>
