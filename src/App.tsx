@@ -19,12 +19,11 @@ import HowItWorks from "./pages/HowItWorks";
 import Brands from "./pages/Brands";
 import Opportunities from "./pages/Opportunities";
 import SalaryIntelligence from "./pages/SalaryIntelligence";
-import CareerIntelligence from "./pages/CareerIntelligence";
+import CareerIntelligencePage from "./pages/Showcase";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import ReferrerDashboard from "./pages/ReferrerDashboard";
 import NotFound from "./pages/NotFound";
-import Showcase from "./pages/Showcase";
 import InvestorDeck from "./pages/InvestorDeck";
 
 
@@ -44,11 +43,11 @@ const AnimatedRoutes = () => {
         <Route path="/brands" element={<Brands />} />
         <Route path="/opportunities" element={<Opportunities />} />
         <Route path="/salary-intelligence" element={<SalaryIntelligence />} />
-        <Route path="/career-intelligence" element={<CareerIntelligence />} />
+        <Route path="/career-intelligence" element={<CareerIntelligencePage />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/referrer" element={<ProtectedRoute><ReferrerDashboard /></ProtectedRoute>} />
-        <Route path="/showcase" element={<Showcase />} />
+        <Route path="/showcase" element={<CareerIntelligencePage />} />
         <Route path="/invest" element={<InvestorDeck />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
