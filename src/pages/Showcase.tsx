@@ -56,14 +56,14 @@ const carouselTalent = [
 ];
 
 const crispSlideImages = [
-  'https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&h=800&fit=crop',
-  'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&h=800&fit=crop',
-  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=800&fit=crop',
-  'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200&h=800&fit=crop',
-  'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1200&h=800&fit=crop',
+  'https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d87de67d8f1795c60d_Contemplative%20Portrait%20with%20Bucket%20Hat.avif',
+  'https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d819cbb2dbff9b2a64_Moonlit%20Rocky%20Landscape.avif',
+  'https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d8cc5908532a8fd8c6_Mysterious%20Balaclava%20Portrait.avif',
+  'https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d819cbb2dbff9b2a80_Serene%20Wheat%20Field%20Landscape.avif',
+  'https://cdn.prod.website-files.com/689201b6fcd75d4e39c1bf42/689204d8f2996c45c7f5ec3e_Modern%20House%20on%20Hillside.avif',
 ];
 
-const CareerIntelligencePage = () => {
+const Showcase = () => {
   const wrapRef = useRef<HTMLDivElement>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
   const scrambleLoadRef = useRef<HTMLHeadingElement>(null);
@@ -628,30 +628,30 @@ const CareerIntelligencePage = () => {
             <div className="parallax__black-line-overflow"></div>
             <div ref={parallaxRef} data-parallax-layers className="parallax__layers">
               <img 
-                src="/images/parallax-layer-1.webp" 
+                src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795be09b462b2e8ebf71_osmo-parallax-layer-3.webp" 
                 loading="eager" 
                 width="800" 
                 data-parallax-layer="1" 
-                alt="Referd network nodes background" 
+                alt="" 
                 className="parallax__layer-img"
               />
               <img 
-                src="/images/parallax-layer-2.webp" 
+                src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795b4d5ac529e7d3a562_osmo-parallax-layer-2.webp" 
                 loading="eager" 
                 width="800" 
                 data-parallax-layer="2" 
-                alt="Referd profile cards network" 
+                alt="" 
                 className="parallax__layer-img"
               />
               <div data-parallax-layer="3" className="parallax__layer-title">
-                <h2 className="parallax__title">Know Your Worth</h2>
+                <h2 className="parallax__title">Parallax</h2>
               </div>
               <img 
-                src="/images/parallax-layer-3.webp" 
+                src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795bb5aceca85011ad83_osmo-parallax-layer-1.webp" 
                 loading="eager" 
                 width="800" 
                 data-parallax-layer="4" 
-                alt="Referd cinematic depth layer" 
+                alt="" 
                 className="parallax__layer-img"
               />
             </div>
@@ -673,7 +673,7 @@ const CareerIntelligencePage = () => {
             data-scramble="load" 
             className="scramble-heading"
           >
-            Career Intelligence powered by 500K+ real-time data points
+            This heading will reveal with a basic scrambling effect on page load
           </h1>
         </div>
         <div className="scramble-section u--bg-light">
@@ -682,7 +682,7 @@ const CareerIntelligencePage = () => {
             data-scramble="scroll" 
             className="scramble-heading"
           >
-            Stop guessing what you're worth and start knowing it
+            this is an example of a heading that is triggered by a scrolltrigger
           </h2>
         </div>
         <div className="scramble-section">
@@ -692,11 +692,11 @@ const CareerIntelligencePage = () => {
             data-scramble="scroll" 
             className="scramble-heading"
           >
-            ML-powered salary benchmarking across 120+ industries
+            You can even control the characters that are used during scramble
           </h2>
         </div>
         <div className="scramble-section u--bg-light">
-          <h2 className="scramble-heading">Ready to discover your true market value?</h2>
+          <h2 className="scramble-heading">and here's how to work with scramble text on hover:</h2>
           <a 
             ref={scrambleHoverRef}
             data-scramble-hover="link" 
@@ -705,11 +705,11 @@ const CareerIntelligencePage = () => {
             onClick={(e) => e.preventDefault()}
           >
             <p 
-              data-scramble-text="Your report is waiting" 
+              data-scramble-text="this text can be custom too" 
               data-scramble-hover="target" 
               className="scramble-button-text"
             >
-              Run Free Analysis Now
+              How to scramble on hover
             </p>
           </a>
         </div>
@@ -783,10 +783,10 @@ const CareerIntelligencePage = () => {
 
           <div className="crisp-header__center">
             <h1 className="crisp-header__h1">
-              <span className="crisp-word">Know</span>{' '}
-              <span className="crisp-word">Your</span>{' '}
-              <span className="crisp-word">True</span>{' '}
-              <span className="crisp-word">Value</span>
+              <span className="crisp-word">We</span>{' '}
+              <span className="crisp-word">just</span>{' '}
+              <span className="crisp-word">love</span>{' '}
+              <span className="crisp-word">pixels</span>
             </h1>
           </div>
 
@@ -807,7 +807,7 @@ const CareerIntelligencePage = () => {
                 </button>
               ))}
             </div>
-            <p className="crisp-header__p">Career Intelligence™ by Referd</p>
+            <p className="crisp-header__p">Crisp Loading Animation</p>
           </div>
         </div>
       </div>
@@ -824,15 +824,15 @@ const CareerIntelligencePage = () => {
             <p data-underline-link="" className="demo-header__nav-a">Navigation</p>
           </div>
           <div className="demo-header__title-row">
-            <h1 className="demo-header__h1">Your career deserves more than a guess. It deserves intelligence.</h1>
+            <h1 className="demo-header__h1">The footer marks the end of the scroll, but not the end of the story.</h1>
           </div>
           <div className="demo-header__info-row">
             <div className="demo-header__col">
-              <p className="demo-eyebrow">( The Problem )</p>
+              <p className="demo-eyebrow">( Concept )</p>
             </div>
             <div className="demo-header__col">
-              <p className="demo-p">Most professionals are flying blind on compensation. Referd's ML pipeline analyses 500K+ data points in real-time so you always know where you stand.</p>
-              <p data-underline-link="" className="demo-eyebrow">Discover more ↓</p>
+              <p className="demo-p">Parallax adds a sense of depth and motion that feels natural to the human eye. By shifting elements at different speeds, we create a layered world that reacts to scroll.</p>
+              <p data-underline-link="" className="demo-eyebrow">Scroll down ↓</p>
             </div>
             <div className="demo-header__col">
               <img src="https://cdn.prod.website-files.com/68ecabe37c9bd7423c65df4e/68ecc45be5d83f026c6c91d5_Freshly%20Baked%20Bread.avif" loading="lazy" alt="Bread" className="demo-header__img" />
@@ -845,31 +845,31 @@ const CareerIntelligencePage = () => {
               <div className="demo-footer__col">
                 <p className="demo-eyebrow">( Pages )</p>
                 <div className="demo-footer__links">
-                  <a data-underline-link="" href="/" className="demo-footer__a">Home</a>
-                  <a data-underline-link="" href="/salary-intelligence" className="demo-footer__a">Salary Intelligence</a>
-                  <a data-underline-link="" href="/about" className="demo-footer__a">About</a>
-                  <a data-underline-link="" href="/how-it-works" className="demo-footer__a">How It Works</a>
-                  <a data-underline-link="" href="/auth" className="demo-footer__a">Get Started</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">Home</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">Resources</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">About</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">Platform</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">Login</a>
                 </div>
               </div>
               <div className="demo-footer__col">
                 <p className="demo-eyebrow">( Socials )</p>
                 <div className="demo-footer__links">
                   <a data-underline-link="" href="#" className="demo-footer__a">LinkedIn</a>
-                  <a data-underline-link="" href="#" className="demo-footer__a">X / Twitter</a>
                   <a data-underline-link="" href="#" className="demo-footer__a">Instagram</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">X/Twitter</a>
                 </div>
               </div>
               <div className="demo-footer__col">
                 <p className="demo-eyebrow">( Contact )</p>
                 <div className="demo-footer__links">
-                  <a data-underline-link="" href="mailto:hello@referd.co" className="demo-footer__a">hello@referd.co</a>
-                  <a data-underline-link="" href="/contact" className="demo-footer__a">Get in touch</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">hello@osmo.supply</a>
+                  <a data-underline-link="" href="#" className="demo-footer__a">+31 6 12 34 56 78</a>
                 </div>
               </div>
             </div>
             <div className="demo-footer__logo-row">
-              <p className="demo-eyebrow">People-powered recruitment</p>
+              <p className="demo-eyebrow">Not your typical platform</p>
               <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 1360 164" fill="none" className="demo-footer__logo-svg">
                 <path d="M513.618 8.42969C525.002 8.42974 535.449 10.375 544.96 14.2656C554.471 18.0123 562.756 23.4166 569.817 30.4775C577.022 37.3943 582.57 45.6077 586.461 55.1182C590.352 64.4847 592.297 74.7167 592.297 85.8125C592.297 96.9081 590.352 107.211 586.461 116.722C582.57 126.088 577.022 134.302 569.817 141.363C562.757 148.28 554.47 153.684 544.96 157.574C535.449 161.321 525.002 163.194 513.618 163.194C502.378 163.194 491.93 161.321 482.275 157.574C472.621 153.684 464.191 148.28 456.986 141.363C449.925 134.302 444.378 126.088 440.343 116.722C440.224 116.432 440.108 116.142 439.993 115.852V161.465H401.086V101.375C401.086 94.4582 401.229 88.2619 401.518 82.7861C401.806 77.1663 402.022 72.6991 402.166 69.3848C402.452 65.951 402.597 64.2218 402.599 64.1973C402.591 64.219 402.014 65.8039 400.869 68.9521C399.716 72.1223 398.203 76.3734 396.33 81.7051C394.457 86.8926 392.224 92.6568 389.63 98.9971L364.556 161.465H336.673L311.599 98.9971C309.005 92.8009 306.772 87.0367 304.898 81.7051C303.025 76.3734 301.584 72.1224 300.575 68.9521C299.571 65.7969 299.066 64.2121 299.062 64.1973C299.063 64.221 299.135 65.9503 299.278 69.3848C299.567 72.6991 299.711 77.1663 299.711 82.7861C299.855 88.2619 299.927 94.3865 299.927 101.159V161.465H261.235V135.637C260.39 137.393 259.426 139.086 258.34 140.715C253.44 147.92 246.667 153.468 238.021 157.358C229.52 161.249 219.864 163.194 209.057 163.194C196.376 163.194 185.425 160.888 176.202 156.277C166.98 151.666 159.702 145.254 154.37 137.04C151.914 133.083 149.911 128.803 148.359 124.2C144.879 130.526 140.531 136.248 135.311 141.363C128.25 148.28 119.964 153.683 110.453 157.574C100.943 161.321 90.4952 163.194 79.1113 163.194C67.8715 163.194 57.4233 161.321 47.7686 157.574C38.1141 153.684 29.6844 148.28 22.4795 141.363C15.4185 134.302 9.87077 126.088 5.83594 116.722C1.94525 107.211 4.07364e-05 96.9081 0 85.8125C0 74.7167 1.94521 64.4847 5.83594 55.1182C9.87075 45.6077 15.4187 37.3943 22.4795 30.4775C29.6845 23.4167 38.1139 18.0122 47.7686 14.2656C57.4233 10.3749 67.8715 8.42969 79.1113 8.42969C90.4952 8.42973 100.943 10.3749 110.453 14.2656C119.964 18.0123 128.25 23.4166 135.311 30.4775C142.413 37.2964 147.904 45.3762 151.786 54.7158C151.78 54.3487 151.776 53.9785 151.776 53.6055C151.776 44.5271 154.227 36.6735 159.126 30.0449C164.169 23.2722 170.798 18.0122 179.012 14.2656C187.225 10.375 196.232 8.42975 206.03 8.42969C217.702 8.42969 227.718 10.3749 236.076 14.2656C244.434 18.0122 251.063 23.4884 255.962 30.6934C258.055 33.684 259.812 36.9608 261.235 40.5225V10.1592H314.625L339.698 72.4111C342.292 78.7514 344.382 84.5873 345.967 89.9189C347.696 95.2504 348.993 99.5734 349.857 102.888C350.722 106.058 351.154 107.644 351.154 107.644C351.154 107.644 351.587 106.058 352.451 102.888C353.316 99.5734 354.613 95.2505 356.342 89.9189C358.071 84.5872 360.233 78.8233 362.827 72.627L388.116 10.1592H439.993V55.9746C440.108 55.6885 440.225 55.4027 440.343 55.1182C444.378 45.6077 449.926 37.3943 456.986 30.4775C464.191 23.4167 472.621 18.0122 482.275 14.2656C491.93 10.3749 502.378 8.42969 513.618 8.42969Z" fill="currentColor"></path>
               </svg>
@@ -1692,4 +1692,4 @@ const CareerIntelligencePage = () => {
   );
 };
 
-export default CareerIntelligencePage;
+export default Showcase;
