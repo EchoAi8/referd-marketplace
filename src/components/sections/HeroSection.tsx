@@ -49,17 +49,17 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/30 via-transparent to-foreground/30 pointer-events-none" />
       </motion.div>
 
-      {/* Content - split layout */}
-      <div className="relative z-10 h-full flex flex-col lg:flex-row items-end lg:items-end justify-between pb-16 sm:pb-20 md:pb-28 px-6 sm:px-8 md:px-16 pointer-events-none">
-        {/* Left: Title + copy + CTAs */}
-        <div className="flex-1 flex flex-col justify-end max-w-3xl">
+      {/* Content layout: hard-anchored left copy + top-right card */}
+      <div className="relative z-10 h-full px-6 sm:px-8 md:px-12 lg:px-16 pb-12 sm:pb-16 md:pb-20 lg:pb-24 pointer-events-none">
+        {/* Left: Title + copy + CTAs (locked lower-left) */}
+        <div className="absolute left-6 right-6 sm:left-8 sm:right-8 md:left-12 md:right-12 lg:left-16 lg:right-auto bottom-12 sm:bottom-16 md:bottom-20 lg:bottom-24 max-w-3xl">
           {/* REFERD - massive */}
           <motion.div style={{ y: logoY, scale: logoScale }} className="origin-bottom-left mb-6">
             <motion.h1
               initial={{ y: 100 }}
               animate={{ y: 0 }}
               transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[18vw] sm:text-[15vw] md:text-[13vw] lg:text-[10vw] font-heading font-black text-background leading-[0.85] tracking-[-0.04em] uppercase drop-shadow-[0_0_60px_rgba(255,255,255,0.2)]"
+              className="text-[18vw] sm:text-[15vw] md:text-[12vw] lg:text-[9vw] font-heading font-black text-background leading-[0.85] tracking-[-0.04em] uppercase drop-shadow-[0_0_60px_rgba(255,255,255,0.2)]"
             >
               {"REFERD".split("").map((char, i) => (
                 <motion.span
@@ -81,7 +81,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-background/90 font-heading font-bold leading-[1.1]"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-background/90 font-heading font-bold leading-[1.05]"
             >
               The People Powered Marketplace.
             </motion.p>
@@ -89,9 +89,9 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-4 text-background/50 text-base sm:text-lg md:text-xl max-w-xl leading-relaxed"
+              className="mt-4 text-background/60 text-base sm:text-lg md:text-xl lg:text-2xl max-w-2xl leading-relaxed"
             >
-              Recruitment is <span className="font-bold text-background/80">NO</span> longer corporate owned. Time to <span className="font-bold text-primary">#GatherYourHerd</span> and get Paid with Referd.
+              Recruitment is <span className="font-bold text-background/90">NO</span> longer corporate owned. Time to <span className="font-bold text-primary">#GatherYourHerd</span> and get Paid with Referd.
             </motion.p>
 
             {/* CTAs */}
@@ -128,10 +128,10 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* Right: Platinum Card - positioned higher */}
+        {/* Right: Platinum Card (locked top-right) */}
         <motion.div
           style={{ y: cardY, rotate: cardRotate }}
-          className="mt-8 lg:mt-0 lg:ml-12 lg:mb-32 pointer-events-none flex-shrink-0 self-end lg:self-center"
+          className="absolute top-28 sm:top-32 md:top-36 lg:top-32 right-4 sm:right-6 md:right-10 lg:right-16 pointer-events-none"
         >
           <motion.div
             initial={{ opacity: 0, y: 60, rotateY: -15 }}
