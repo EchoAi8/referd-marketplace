@@ -83,7 +83,7 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="text-xl sm:text-2xl md:text-3xl text-background/90 font-heading font-semibold leading-tight"
             >
-              Your network is worth more than any agency.
+              The People Powered Marketplace.
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -91,7 +91,7 @@ const HeroSection = () => {
               transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="mt-3 text-background/50 text-sm sm:text-base md:text-lg max-w-lg"
             >
-              Earn real money for every introduction. The marketplace that pays talent, referrers, and the people who make hires happen.
+              Recruitment is <span className="font-bold text-background/80">NO</span> longer corporate owned. Time to <span className="font-bold text-primary">#GatherYourHerd</span> and get Paid with Referd.
             </motion.p>
 
             {/* CTAs */}
@@ -106,7 +106,7 @@ const HeroSection = () => {
                 size="lg"
                 onClick={() => navigateWithTransition("/career-intelligence")}
               >
-                What Am I Worth?
+                Know Your Worth
               </DirectionalButton>
 
               <DirectionalButton
@@ -114,7 +114,7 @@ const HeroSection = () => {
                 size="lg"
                 onClick={() => navigateWithTransition("/opportunities")}
               >
-                Get Paid To Connect
+                Refer &amp; Earn
               </DirectionalButton>
 
               <DirectionalButton
@@ -122,7 +122,7 @@ const HeroSection = () => {
                 size="lg"
                 onClick={() => navigateWithTransition("/brands")}
               >
-                Hire Without The Markup
+                Hire Smarter
               </DirectionalButton>
             </motion.div>
           </motion.div>
