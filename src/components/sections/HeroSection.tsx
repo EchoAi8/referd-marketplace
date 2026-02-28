@@ -28,7 +28,7 @@ const HeroSection = () => {
   const cardRotate = useTransform(smoothProgress, [0, 0.5], [0, -3]);
 
   return (
-    <section ref={containerRef} className="relative h-screen bg-foreground overflow-hidden">
+    <section ref={containerRef} className="relative h-screen bg-foreground overflow-hidden pt-24">
       {/* Network Canvas backdrop */}
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale, y: canvasY }}
@@ -59,7 +59,7 @@ const HeroSection = () => {
               initial={{ y: 100 }}
               animate={{ y: 0 }}
               transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[18vw] sm:text-[15vw] md:text-[13vw] lg:text-[10vw] font-heading font-black text-background leading-[0.8] tracking-[-0.04em] uppercase"
+              className="text-[20vw] sm:text-[17vw] md:text-[14vw] lg:text-[11vw] font-heading font-black text-background leading-[0.8] tracking-[-0.04em] uppercase drop-shadow-[0_0_40px_rgba(255,255,255,0.15)]"
             >
               {"REFERD".split("").map((char, i) => (
                 <motion.span
@@ -83,7 +83,7 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="text-xl sm:text-2xl md:text-3xl text-background/90 font-heading font-semibold leading-tight"
             >
-              The people-powered recruitment marketplace.
+              Your network is worth more than any agency.
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -91,7 +91,7 @@ const HeroSection = () => {
               transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="mt-3 text-background/50 text-sm sm:text-base md:text-lg max-w-lg"
             >
-              We put the fee where it belongs — in the hands of the people who actually make the hire happen.
+              Earn real money for every introduction. The marketplace that pays talent, referrers, and the people who make hires happen.
             </motion.p>
 
             {/* CTAs */}
@@ -152,7 +152,7 @@ const HeroSection = () => {
 /* ─── Referd Platinum Card ─── */
 const PlatinumCard = () => {
   return (
-    <div className="relative w-[320px] sm:w-[360px] md:w-[400px] aspect-[1.586/1]">
+    <div className="relative w-[240px] sm:w-[270px] md:w-[300px] aspect-[1.586/1]">
       {/* Card body */}
       <div
         className="absolute inset-0 rounded-2xl overflow-hidden"
@@ -271,9 +271,15 @@ const PlatinumCard = () => {
 
       {/* Glow effect behind card */}
       <div
-        className="absolute -inset-4 rounded-3xl opacity-20 blur-2xl -z-10"
+        className="absolute -inset-8 rounded-3xl opacity-40 blur-3xl -z-10 animate-pulse"
         style={{
-          background: `radial-gradient(ellipse at center, hsl(var(--color-sage) / 0.4), transparent 70%)`,
+          background: `radial-gradient(ellipse at center, hsl(var(--color-sage) / 0.6), hsl(var(--color-referrer) / 0.3) 50%, transparent 80%)`,
+        }}
+      />
+      <div
+        className="absolute -inset-4 rounded-3xl opacity-25 blur-xl -z-10"
+        style={{
+          background: `radial-gradient(ellipse at center, hsl(var(--color-sage) / 0.5), transparent 60%)`,
         }}
       />
     </div>
