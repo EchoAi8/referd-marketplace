@@ -50,16 +50,16 @@ const HeroSection = () => {
       </motion.div>
 
       {/* Content - split layout */}
-      <div className="relative z-10 h-full flex flex-col lg:flex-row items-end lg:items-end justify-between pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 md:px-12 pointer-events-none">
+      <div className="relative z-10 h-full flex flex-col lg:flex-row items-end lg:items-end justify-between pb-16 sm:pb-20 md:pb-28 px-6 sm:px-8 md:px-16 pointer-events-none">
         {/* Left: Title + copy + CTAs */}
-        <div className="flex-1 flex flex-col justify-end">
+        <div className="flex-1 flex flex-col justify-end max-w-3xl">
           {/* REFERD - massive */}
-          <motion.div style={{ y: logoY, scale: logoScale }} className="origin-bottom-left mb-4">
+          <motion.div style={{ y: logoY, scale: logoScale }} className="origin-bottom-left mb-6">
             <motion.h1
               initial={{ y: 100 }}
               animate={{ y: 0 }}
               transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[20vw] sm:text-[17vw] md:text-[14vw] lg:text-[11vw] font-heading font-black text-background leading-[0.8] tracking-[-0.04em] uppercase drop-shadow-[0_0_40px_rgba(255,255,255,0.15)]"
+              className="text-[18vw] sm:text-[15vw] md:text-[13vw] lg:text-[10vw] font-heading font-black text-background leading-[0.85] tracking-[-0.04em] uppercase drop-shadow-[0_0_60px_rgba(255,255,255,0.2)]"
             >
               {"REFERD".split("").map((char, i) => (
                 <motion.span
@@ -81,7 +81,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="text-xl sm:text-2xl md:text-3xl text-background/90 font-heading font-semibold leading-tight"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-background/90 font-heading font-bold leading-[1.1]"
             >
               The People Powered Marketplace.
             </motion.p>
@@ -89,7 +89,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-3 text-background/50 text-sm sm:text-base md:text-lg max-w-lg"
+              className="mt-4 text-background/50 text-base sm:text-lg md:text-xl max-w-xl leading-relaxed"
             >
               Recruitment is <span className="font-bold text-background/80">NO</span> longer corporate owned. Time to <span className="font-bold text-primary">#GatherYourHerd</span> and get Paid with Referd.
             </motion.p>
@@ -99,7 +99,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.75, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col sm:flex-row gap-3 mt-8 pointer-events-auto"
+              className="flex flex-col sm:flex-row gap-3 mt-10 pointer-events-auto"
             >
               <DirectionalButton
                 theme="talent"
@@ -128,10 +128,10 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* Right: Platinum Card */}
+        {/* Right: Platinum Card - positioned higher */}
         <motion.div
           style={{ y: cardY, rotate: cardRotate }}
-          className="mt-8 lg:mt-0 lg:ml-12 pointer-events-none flex-shrink-0"
+          className="mt-8 lg:mt-0 lg:ml-12 lg:mb-32 pointer-events-none flex-shrink-0 self-end lg:self-center"
         >
           <motion.div
             initial={{ opacity: 0, y: 60, rotateY: -15 }}
