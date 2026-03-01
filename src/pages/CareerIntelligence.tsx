@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import MagneticButton from "@/components/animations/MagneticButton";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
 import { BarChart3, TrendingUp, Target, Shield, Compass, LineChart } from "lucide-react";
-import SiteHeader from "@/components/layout/SiteHeader";
+import TwoStepNavigation from "@/components/navigation/TwoStepNavigation";
 import SiteFooter from "@/components/layout/SiteFooter";
 import PageTransition from "@/components/layout/PageTransition";
 import CursorFollower from "@/components/animations/CursorFollower";
@@ -22,7 +22,7 @@ const CareerIntelligence = () => {
   const animationRef = useRef<number>();
 
   useEffect(() => {
-    document.title = "Career Intelligence | Know Your True Market Value | Referd";
+    document.title = "Salary Intelligence | Know Your True Market Value | Referd";
   }, []);
 
   // Canvas animation for the portal
@@ -257,7 +257,7 @@ const CareerIntelligence = () => {
       <CursorFollower />
       <PageTransition>
         <div className="min-h-screen bg-background">
-          <SiteHeader />
+          <TwoStepNavigation />
           
           <div className="menu-vignette" aria-hidden="true" />
           
@@ -286,7 +286,7 @@ const CareerIntelligence = () => {
                     transition={{ duration: 0.8, delay: 0.1 }}
                     className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-bold leading-[0.95] tracking-tight mb-6"
                   >
-                    Career
+                    Salary
                     <span className="text-sage"> Intelligence</span>
                     <span className="text-mustard">™</span>
                   </motion.h1>
