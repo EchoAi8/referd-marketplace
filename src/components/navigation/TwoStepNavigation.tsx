@@ -64,8 +64,7 @@ const TwoStepNavigation = () => {
 
   const navLinks = [
     { label: "Home", href: "/" },
-    { label: "How It Works", href: "/how-it-works" },
-    { label: "Career Intelligence", href: "/career-intelligence" },
+    { label: "Salary Intelligence", href: "/salary-intelligence" },
     { label: "Opportunities", href: "/opportunities" },
     { label: "Brands", href: "/brands" },
     { label: "About", href: "/about" },

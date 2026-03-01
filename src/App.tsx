@@ -41,10 +41,10 @@ const AnimatedRoutes = () => {
         <Route path="/work" element={<Work />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
-        <Route path="/brands" element={<Brands />} />
+        {/* Brands now renders the Showcase page */}
         <Route path="/opportunities" element={<Opportunities />} />
-        <Route path="/salary-intelligence" element={<SalaryIntelligence />} />
-        <Route path="/career-intelligence" element={<CareerIntelligence />} />
+        <Route path="/salary-intelligence" element={<CareerIntelligence />} />
+        <Route path="/brands" element={<Showcase />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/referrer" element={<ProtectedRoute><ReferrerDashboard /></ProtectedRoute>} />
