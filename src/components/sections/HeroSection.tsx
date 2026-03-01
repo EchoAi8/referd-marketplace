@@ -1,9 +1,10 @@
 import { motion, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useSmoothScroll } from "@/hooks/useSmoothScroll";
+import InteractiveNetworkCanvas from "@/components/animations/InteractiveNetworkCanvas";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
+import HeroProfileGridBackdrop from "@/components/sections/hero/HeroProfileGridBackdrop";
 import DirectionalButton from "@/components/ui/DirectionalButton";
-import heroVideo from "@/assets/referd-hero-clip.mp4";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,36 +17,122 @@ const HeroSection = () => {
     damping: 28,
   });
 
-  // Parallax transforms
+  // Multi-layer parallax transforms
   const heroOpacity = useTransform(smoothProgress, [0, 0.7], [1, 0]);
   const heroScale = useTransform(smoothProgress, [0, 0.7], [1, 0.95]);
   const canvasY = useTransform(smoothProgress, [0, 1], [0, 150]);
+  const profileGridY = useTransform(smoothProgress, [0, 1], [0, 80]);
+  const orbLayer1Y = useTransform(smoothProgress, [0, 1], [0, -60]);
+  const orbLayer2Y = useTransform(smoothProgress, [0, 1], [0, 120]);
+  const orbLayer3Y = useTransform(smoothProgress, [0, 1], [0, -30]);
   const logoY = useTransform(smoothProgress, [0, 0.5], [0, -80]);
   const logoScale = useTransform(smoothProgress, [0, 0.5], [1, 0.9]);
   const contentY = useTransform(smoothProgress, [0, 0.5], [0, 80]);
   const cardY = useTransform(smoothProgress, [0, 0.6], [0, -40]);
   const cardRotate = useTransform(smoothProgress, [0, 0.5], [0, -3]);
+  const floatingImgY1 = useTransform(smoothProgress, [0, 1], [0, -100]);
+  const floatingImgY2 = useTransform(smoothProgress, [0, 1], [0, 60]);
+  const floatingImgRotate1 = useTransform(smoothProgress, [0, 1], [-3, 5]);
+  const floatingImgRotate2 = useTransform(smoothProgress, [0, 1], [2, -6]);
 
   return (
     <section ref={containerRef} className="relative h-screen bg-foreground overflow-hidden pt-24">
-      {/* Video backdrop */}
+      {/* Layer 0: Profile Grid backdrop (slowest parallax) */}
+      <motion.div
+        style={{ y: profileGridY, opacity: heroOpacity }}
+        className="absolute inset-0 pointer-events-none"
+      >
+        <HeroProfileGridBackdrop className="opacity-40" />
+      </motion.div>
+
+      {/* Layer 1: Decorative parallax orbs */}
+      <motion.div
+        style={{ y: orbLayer1Y }}
+        className="absolute inset-0 pointer-events-none"
+      >
+        <div className="absolute top-[15%] left-[8%] w-64 h-64 rounded-full opacity-[0.06]"
+          style={{ background: "radial-gradient(circle, hsl(var(--color-sage)), transparent 70%)" }}
+        />
+        <div className="absolute bottom-[25%] right-[5%] w-96 h-96 rounded-full opacity-[0.04]"
+          style={{ background: "radial-gradient(circle, hsl(var(--color-referrer)), transparent 70%)" }}
+        />
+      </motion.div>
+
+      {/* Layer 2: Floating profile photos (parallax depth) */}
+      <motion.div
+        style={{ y: floatingImgY1, rotate: floatingImgRotate1, opacity: heroOpacity }}
+        className="absolute top-[12%] left-[5%] w-20 h-20 md:w-28 md:h-28 rounded-2xl overflow-hidden border border-background/10 shadow-2xl pointer-events-none z-[5] opacity-30"
+      >
+        <img
+          src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&h=200&fit=crop&crop=face"
+          alt="" className="w-full h-full object-cover grayscale"
+        />
+      </motion.div>
+      <motion.div
+        style={{ y: floatingImgY2, rotate: floatingImgRotate2, opacity: heroOpacity }}
+        className="absolute bottom-[30%] right-[8%] w-16 h-16 md:w-24 md:h-24 rounded-2xl overflow-hidden border border-background/10 shadow-2xl pointer-events-none z-[5] opacity-20"
+      >
+        <img
+          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face"
+          alt="" className="w-full h-full object-cover grayscale"
+        />
+      </motion.div>
+
+      {/* Layer 3: Second orb set (faster parallax) */}
+      <motion.div
+        style={{ y: orbLayer2Y }}
+        className="absolute inset-0 pointer-events-none"
+      >
+        <div className="absolute top-[60%] left-[40%] w-48 h-48 rounded-full opacity-[0.05]"
+          style={{ background: "radial-gradient(circle, hsl(var(--color-talent)), transparent 70%)" }}
+        />
+      </motion.div>
+
+      {/* Layer 4: Interactive Network Canvas */}
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale, y: canvasY }}
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-auto"
       >
-        <video
-          src={heroVideo}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-
-        {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-foreground/70 via-foreground/30 to-foreground/90 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-foreground/40 via-transparent to-foreground/40 pointer-events-none" />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full h-full"
+        >
+          <InteractiveNetworkCanvas />
+        </motion.div>
       </motion.div>
+
+      {/* Layer 5: Floating photos at different depth */}
+      <motion.div
+        style={{ y: orbLayer3Y, opacity: heroOpacity }}
+        className="absolute inset-0 pointer-events-none z-[5]"
+      >
+        <motion.div
+          animate={{ y: [0, -12, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[20%] right-[18%] w-14 h-14 md:w-20 md:h-20 rounded-xl overflow-hidden border border-background/10 opacity-25"
+        >
+          <img
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face"
+            alt="" className="w-full h-full object-cover grayscale"
+          />
+        </motion.div>
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute bottom-[40%] left-[15%] w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden border border-background/10 opacity-20"
+        >
+          <img
+            src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face"
+            alt="" className="w-full h-full object-cover grayscale"
+          />
+        </motion.div>
+      </motion.div>
+
+      {/* Gradient overlays */}
+      <div className="absolute inset-0 bg-gradient-to-b from-foreground/60 via-foreground/20 to-foreground/90 pointer-events-none z-[6]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-foreground/30 via-transparent to-foreground/30 pointer-events-none z-[6]" />
 
       {/* Content layout: hard-anchored left copy + top-right card */}
       <div className="relative z-10 h-full px-6 sm:px-8 md:px-12 lg:px-16 pb-12 sm:pb-16 md:pb-20 lg:pb-24 pointer-events-none">
