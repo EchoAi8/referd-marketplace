@@ -1,10 +1,9 @@
 import { motion, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useSmoothScroll } from "@/hooks/useSmoothScroll";
-import InteractiveNetworkCanvas from "@/components/animations/InteractiveNetworkCanvas";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
-import HeroProfileGridBackdrop from "@/components/sections/hero/HeroProfileGridBackdrop";
 import DirectionalButton from "@/components/ui/DirectionalButton";
+import heroVideo from "@/assets/referd-hero-clip.mp4";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -29,24 +28,23 @@ const HeroSection = () => {
 
   return (
     <section ref={containerRef} className="relative h-screen bg-foreground overflow-hidden pt-24">
-      {/* Network Canvas backdrop */}
+      {/* Video backdrop */}
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale, y: canvasY }}
-        className="absolute inset-0 pointer-events-auto"
+        className="absolute inset-0"
       >
-        <HeroProfileGridBackdrop className="opacity-50" />
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full h-full"
-        >
-          <InteractiveNetworkCanvas />
-        </motion.div>
+        <video
+          src={heroVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        />
 
         {/* Gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-foreground/60 via-foreground/20 to-foreground/90 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-foreground/30 via-transparent to-foreground/30 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-foreground/70 via-foreground/30 to-foreground/90 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-foreground/40 via-transparent to-foreground/40 pointer-events-none" />
       </motion.div>
 
       {/* Content layout: hard-anchored left copy + top-right card */}
@@ -83,7 +81,7 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-background/90 font-heading font-bold leading-[1.05]"
             >
-              The People Powered Marketplace.
+              The Recruitment Marketplace.
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -91,7 +89,7 @@ const HeroSection = () => {
               transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="mt-4 text-background/60 text-base sm:text-lg md:text-xl lg:text-2xl max-w-2xl leading-relaxed"
             >
-              Recruitment is <span className="font-bold text-background/90">NO</span> longer corporate owned. Time to <span className="font-bold text-primary">#GatherYourHerd</span> and get Paid with Referd.
+              We didn't come here to play nice. Refer talent, earn real money, and take recruitment back from the gatekeepers. <span className="font-bold text-primary">#GatherYourHerd</span>
             </motion.p>
 
             {/* CTAs */}
