@@ -3,6 +3,7 @@ import SiteFooter from "@/components/layout/SiteFooter";
 import PageTransition from "@/components/layout/PageTransition";
 import CursorFollower from "@/components/animations/CursorFollower";
 import { GridOverlay } from "@/components/animations/GridTransition";
+import ScrollRevealSection from "@/components/animations/ScrollRevealSection";
 import HeroSection from "@/components/sections/HeroSection";
 import RecruitmentIndustry from "@/components/sections/RecruitmentIndustry";
 import RecruitmentBroken from "@/components/sections/RecruitmentBroken";
@@ -12,6 +13,7 @@ import AboutSection from "@/components/sections/AboutSection";
 import FeaturePills from "@/components/sections/FeaturePills";
 import UserJourneyVisualization from "@/components/sections/UserJourneyVisualization";
 import FAQSection from "@/components/sections/FAQSection";
+import SocialProofTicker from "@/components/sections/SocialProofTicker";
 import ContactSection from "@/components/sections/ContactSection";
 import FloatingCTABar from "@/components/sections/FloatingCTABar";
 import SocialShareMenu from "@/components/ui/SocialShareMenu";
@@ -32,37 +34,58 @@ const Index = () => {
               <HeroSection />
 
               {/* 2. Recruitment is massive - Industry stats */}
-              <RecruitmentIndustry />
+              <ScrollRevealSection>
+                <RecruitmentIndustry />
+              </ScrollRevealSection>
 
               {/* 3. But is recruitment broken? */}
-              <RecruitmentBroken />
+              <ScrollRevealSection delay={0.1}>
+                <RecruitmentBroken />
+              </ScrollRevealSection>
 
               {/* 4. The power of referrals - Facts & figures */}
-              <PowerOfReferrals />
+              <ScrollRevealSection>
+                <PowerOfReferrals />
+              </ScrollRevealSection>
 
               {/* 5. The Referd Way - 35/35/30 + Stakeholder breakdown */}
-              <TheReferdWay />
+              <ScrollRevealSection delay={0.1}>
+                <TheReferdWay />
+              </ScrollRevealSection>
 
               {/* 6. The Movement - Word reveal */}
-              <section id="about">
-                <AboutSection />
-              </section>
+              <ScrollRevealSection>
+                <section id="about">
+                  <AboutSection />
+                </section>
+              </ScrollRevealSection>
 
               {/* 7. Why Referd Works */}
-              <FeaturePills />
+              <ScrollRevealSection delay={0.1}>
+                <FeaturePills />
+              </ScrollRevealSection>
 
               {/* 8. How It All Connects - Ecosystem */}
-              <UserJourneyVisualization />
+              <ScrollRevealSection>
+                <UserJourneyVisualization />
+              </ScrollRevealSection>
 
               {/* 9. Common Questions */}
-              <section id="faq">
-                <FAQSection />
-              </section>
+              <ScrollRevealSection>
+                <section id="faq">
+                  <FAQSection />
+                </section>
+              </ScrollRevealSection>
+
+              {/* 9.5 Social Proof - Live Ticker */}
+              <SocialProofTicker />
 
               {/* 10. Get Started */}
-              <section id="contact">
-                <ContactSection />
-              </section>
+              <ScrollRevealSection delay={0.1}>
+                <section id="contact">
+                  <ContactSection />
+                </section>
+              </ScrollRevealSection>
             </main>
 
             <SiteFooter />
