@@ -30,10 +30,6 @@ const HeroSection = () => {
   const contentY = useTransform(smoothProgress, [0, 0.5], [0, 80]);
   const cardY = useTransform(smoothProgress, [0, 0.6], [0, -40]);
   const cardRotate = useTransform(smoothProgress, [0, 0.5], [0, -3]);
-  const floatingImgY1 = useTransform(smoothProgress, [0, 1], [0, -100]);
-  const floatingImgY2 = useTransform(smoothProgress, [0, 1], [0, 60]);
-  const floatingImgRotate1 = useTransform(smoothProgress, [0, 1], [-3, 5]);
-  const floatingImgRotate2 = useTransform(smoothProgress, [0, 1], [2, -6]);
 
   return (
     <section ref={containerRef} className="relative h-screen bg-foreground overflow-hidden pt-24">
@@ -58,25 +54,6 @@ const HeroSection = () => {
         />
       </motion.div>
 
-      {/* Layer 2: Floating profile photos (parallax depth) */}
-      <motion.div
-        style={{ y: floatingImgY1, rotate: floatingImgRotate1, opacity: heroOpacity }}
-        className="absolute top-[12%] left-[5%] w-20 h-20 md:w-28 md:h-28 rounded-2xl overflow-hidden border border-background/10 shadow-2xl pointer-events-none z-[5] opacity-30"
-      >
-        <img
-          src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&h=200&fit=crop&crop=face"
-          alt="" className="w-full h-full object-cover grayscale"
-        />
-      </motion.div>
-      <motion.div
-        style={{ y: floatingImgY2, rotate: floatingImgRotate2, opacity: heroOpacity }}
-        className="absolute bottom-[30%] right-[8%] w-16 h-16 md:w-24 md:h-24 rounded-2xl overflow-hidden border border-background/10 shadow-2xl pointer-events-none z-[5] opacity-20"
-      >
-        <img
-          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face"
-          alt="" className="w-full h-full object-cover grayscale"
-        />
-      </motion.div>
 
       {/* Layer 3: Second orb set (faster parallax) */}
       <motion.div
@@ -103,32 +80,6 @@ const HeroSection = () => {
         </motion.div>
       </motion.div>
 
-      {/* Layer 5: Floating photos at different depth */}
-      <motion.div
-        style={{ y: orbLayer3Y, opacity: heroOpacity }}
-        className="absolute inset-0 pointer-events-none z-[5]"
-      >
-        <motion.div
-          animate={{ y: [0, -12, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[20%] right-[18%] w-14 h-14 md:w-20 md:h-20 rounded-xl overflow-hidden border border-background/10 opacity-25"
-        >
-          <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face"
-            alt="" className="w-full h-full object-cover grayscale"
-          />
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-[40%] left-[15%] w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden border border-background/10 opacity-20"
-        >
-          <img
-            src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face"
-            alt="" className="w-full h-full object-cover grayscale"
-          />
-        </motion.div>
-      </motion.div>
 
       {/* Gradient overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-foreground/60 via-foreground/20 to-foreground/90 pointer-events-none z-[6]" />
