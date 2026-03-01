@@ -17,6 +17,7 @@ import SocialProofTicker from "@/components/sections/SocialProofTicker";
 import ContactSection from "@/components/sections/ContactSection";
 import FloatingCTABar from "@/components/sections/FloatingCTABar";
 import SocialShareMenu from "@/components/ui/SocialShareMenu";
+import FloatingParallaxPhotos from "@/components/animations/FloatingParallaxPhotos";
 
 const Index = () => {
   return (
@@ -33,32 +34,37 @@ const Index = () => {
               {/* 1. Hero - The Hook */}
               <HeroSection />
 
-              {/* 2. Recruitment is massive - Industry stats */}
-              <ScrollRevealSection>
-                <RecruitmentIndustry />
-              </ScrollRevealSection>
+              {/* Sections with floating parallax photos overlapping across boundaries */}
+              <div className="relative">
+                <FloatingParallaxPhotos />
 
-              {/* 3. But is recruitment broken? */}
-              <ScrollRevealSection delay={0.1}>
-                <RecruitmentBroken />
-              </ScrollRevealSection>
+                {/* 2. Recruitment is massive - Industry stats */}
+                <ScrollRevealSection>
+                  <RecruitmentIndustry />
+                </ScrollRevealSection>
 
-              {/* 4. The power of referrals - Facts & figures */}
-              <ScrollRevealSection>
-                <PowerOfReferrals />
-              </ScrollRevealSection>
+                {/* 3. But is recruitment broken? */}
+                <ScrollRevealSection delay={0.1}>
+                  <RecruitmentBroken />
+                </ScrollRevealSection>
 
-              {/* 5. The Referd Way - 35/35/30 + Stakeholder breakdown */}
-              <ScrollRevealSection delay={0.1}>
-                <TheReferdWay />
-              </ScrollRevealSection>
+                {/* 4. The power of referrals - Facts & figures */}
+                <ScrollRevealSection>
+                  <PowerOfReferrals />
+                </ScrollRevealSection>
 
-              {/* 6. The Movement - Word reveal */}
-              <ScrollRevealSection>
-                <section id="about">
-                  <AboutSection />
-                </section>
-              </ScrollRevealSection>
+                {/* 5. The Referd Way - 35/35/30 + Stakeholder breakdown */}
+                <ScrollRevealSection delay={0.1}>
+                  <TheReferdWay />
+                </ScrollRevealSection>
+
+                {/* 6. The Movement - Word reveal */}
+                <ScrollRevealSection>
+                  <section id="about">
+                    <AboutSection />
+                  </section>
+                </ScrollRevealSection>
+              </div>
 
               {/* 7. Why Referd Works */}
               <ScrollRevealSection delay={0.1}>
