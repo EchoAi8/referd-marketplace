@@ -1,108 +1,15 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import WordReveal from "@/components/animations/WordReveal";
-import TiltCard from "@/components/animations/TiltCard";
-import { Sparkles, Zap, Target, TrendingUp, Users, Clock, Award, DollarSign, Rocket, CheckCircle } from "lucide-react";
 
 const AboutSection = () => {
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
-  const statsRef = useRef(null);
-  const statsInView = useInView(statsRef, { once: true, margin: "-50px" });
-
-  // Stats with research backing - CLARIFIED as referrals vs traditional
-  const researchStats = [
-    { 
-      stat: "4x", 
-      label: "More likely to get hired", 
-      sublabel: "vs job board applicants",
-      source: "LinkedIn 2023",
-      icon: TrendingUp,
-      color: "text-sage"
-    },
-    { 
-      stat: "55%", 
-      label: "Faster time-to-hire", 
-      sublabel: "vs traditional recruiting",
-      source: "SHRM Study 2022",
-      icon: Clock,
-      color: "text-mustard"
-    },
-    { 
-      stat: "46%", 
-      label: "Higher retention rate", 
-      sublabel: "after 2 years vs other sources",
-      source: "Jobvite Research",
-      icon: Users,
-      color: "text-rose"
-    },
-  ];
-
-  // Enhanced "Why Referrals Win" data
-  const referralAdvantages = [
-    {
-      icon: Award,
-      title: "45% vs 20%",
-      subtitle: "Retention after 2 years",
-      desc: "Referral hires stay longer than job board hires",
-      source: "Deloitte, 2022",
-      color: "bg-sage"
-    },
-    {
-      icon: DollarSign,
-      title: "25% Higher",
-      subtitle: "Profitability per hire",
-      desc: "Referred employees outperform in revenue generation",
-      source: "Harvard Business Review",
-      color: "bg-mustard"
-    },
-    {
-      icon: Zap,
-      title: "50% Lower",
-      subtitle: "Cost per hire",
-      desc: "Eliminate agency fees and reduce advertising spend",
-      source: "Glassdoor Economic Research",
-      color: "bg-rose"
-    },
-    {
-      icon: Target,
-      title: "70% Match",
-      subtitle: "Cultural fit accuracy",
-      desc: "Referrers pre-screen for team and culture alignment",
-      source: "CIPD Research 2023",
-      color: "bg-forest"
-    },
-  ];
-
-  // Reimagined process - more engaging
-  const ourApproach = [
-    { 
-      icon: Rocket, 
-      title: "Disrupt", 
-      tagline: "Break the mould",
-      desc: "We're tearing up the rulebook. No more 20% agency fees. No more cold applications. Just real people connecting real talent.",
-      gradient: "from-sage/20 to-sage/5"
-    },
-    { 
-      icon: Sparkles, 
-      title: "Democratise", 
-      tagline: "Power to the people",
-      desc: "The recruitment fee now belongs to you — the referrer and the talent. 70% goes directly into your pockets.",
-      gradient: "from-mustard/20 to-mustard/5"
-    },
-    { 
-      icon: Target, 
-      title: "Deliver", 
-      tagline: "Results that matter",
-      desc: "AI-powered matching. Real-time tracking. Instant payouts. We've built the infrastructure for recruitment's future.",
-      gradient: "from-rose/20 to-rose/5"
-    },
-  ];
 
   return (
-    <section ref={containerRef} className="pt-8 md:pt-16 pb-32 md:pb-48 bg-background overflow-hidden relative z-10">
+    <section ref={containerRef} className="pt-8 md:pt-16 pb-32 md:pb-48 bg-foreground text-background overflow-hidden relative z-10">
       {/* Parallax overlap from previous section */}
-      <div className="absolute -top-1 left-0 right-0 h-32 bg-gradient-to-b from-muted/50 to-transparent pointer-events-none z-10" />
+      <div className="absolute -top-16 left-0 right-0 h-32 bg-gradient-to-b from-foreground to-transparent pointer-events-none z-10" />
       
       <div className="container mx-auto px-6 relative z-20">
         {/* About Us Label */}
@@ -110,12 +17,12 @@ const AboutSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-4"
+          className="text-xs uppercase tracking-[0.3em] text-background/50 mb-4"
         >
           The Movement
         </motion.p>
 
-        {/* Epic Word Reveal with HIGHLIGHTED disruptive words - text stays LARGE */}
+        {/* Epic Word Reveal */}
         <div className="min-h-[70vh] md:min-h-[80vh] flex flex-col justify-center mb-8">
           <h2 className="text-fluid-4xl md:text-fluid-5xl lg:text-fluid-6xl font-heading font-bold leading-[1.1] max-w-6xl">
             <WordReveal text="Like" />
@@ -143,7 +50,7 @@ const AboutSection = () => {
             </span>
           </h2>
 
-          {/* Subtext - LARGE and impactful */}
+          {/* Subtext */}
           <div className="mt-12 max-w-5xl">
             <p className="text-2xl md:text-3xl lg:text-4xl font-heading font-semibold leading-relaxed">
               <WordReveal text="Redefining recruitment" delay={0.6} />
@@ -152,7 +59,7 @@ const AboutSection = () => {
               <span className="inline"> </span>
               <WordReveal text="at a time." delay={0.7} />
             </p>
-            <p className="mt-8 text-xl md:text-2xl leading-relaxed text-foreground/80">
+            <p className="mt-8 text-xl md:text-2xl leading-relaxed text-background/80">
               <WordReveal text="The corporate 'Recruitment Fee' is now" delay={0.75} />
               <span className="inline"> </span>
               <span className="text-sage font-bold"><WordReveal text="redistributed" delay={0.8} /></span>
@@ -163,218 +70,10 @@ const AboutSection = () => {
             </p>
           </div>
         </div>
-
-        {/* Section Header for Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-center mb-12"
-        >
-          <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3">The Data Speaks</p>
-          <h3 className="text-2xl md:text-3xl font-heading font-bold text-foreground">
-            Referrals vs Traditional Recruitment
-          </h3>
-        </motion.div>
-
-        {/* Research-backed Stats Bento Grid with Dramatic Pop-in */}
-        <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
-          {researchStats.map((item, index) => {
-            const IconComponent = item.icon;
-            
-            return (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 60, scale: 0.9 }}
-                animate={statsInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-                transition={{ 
-                  duration: 0.8, 
-                  delay: 0.1 + (index * 0.1), 
-                  ease: [0.16, 1, 0.3, 1]
-                }}
-              >
-                <TiltCard 
-                  intensity={8} 
-                  glare={true} 
-                  className="bg-foreground text-background p-8 rounded-3xl h-full"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-full bg-background/10 flex items-center justify-center">
-                      <IconComponent className={`w-6 h-6 ${item.color}`} />
-                    </div>
-                    <span className="text-[10px] text-background/50 uppercase tracking-wider bg-background/10 px-2 py-1 rounded-full">
-                      {item.source}
-                    </span>
-                  </div>
-                  <p className={`text-fluid-4xl md:text-fluid-5xl font-heading font-bold ${item.color} mb-1`}>
-                    {item.stat}
-                  </p>
-                  <p className="text-lg font-semibold text-background mb-1">
-                    {item.label}
-                  </p>
-                  <p className="text-sm text-background/50">
-                    {item.sublabel}
-                  </p>
-                </TiltCard>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Why Referrals Win - EXPANDED with 4 advantage cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 60 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="mb-20"
-        >
-          <div className="text-center mb-10">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3">Research Backed</p>
-            <h3 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
-              Why Referrals Win Every Time
-            </h3>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              The world's leading research institutions agree: employee referrals outperform every other hiring method.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {referralAdvantages.map((item, index) => {
-              const IconComponent = item.icon;
-              return (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.6, delay: 0.3 + (index * 0.08) }}
-                >
-                  <TiltCard intensity={10} glare={true} className="bg-muted/30 p-6 rounded-2xl h-full border border-border/50 hover:border-sage/30 transition-colors">
-                    <div className={`w-12 h-12 rounded-xl ${item.color} flex items-center justify-center mb-4`}>
-                      <IconComponent className="w-6 h-6 text-foreground" />
-                    </div>
-                    <p className="text-2xl font-heading font-bold text-foreground mb-1">{item.title}</p>
-                    <p className="text-sm font-medium text-sage mb-2">{item.subtitle}</p>
-                    <p className="text-sm text-muted-foreground mb-3">{item.desc}</p>
-                    <p className="text-xs text-muted-foreground/60 flex items-center gap-1">
-                      <CheckCircle className="w-3 h-3" /> {item.source}
-                    </p>
-                  </TiltCard>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
-
-        {/* Our Approach - REIMAGINED - More engaging */}
-        <motion.div
-          initial={{ opacity: 0, y: 60 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="mb-20"
-        >
-          <div className="text-center mb-10">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3">Our Approach</p>
-            <h3 className="text-3xl md:text-4xl font-heading font-bold text-foreground">
-              The Refer'd Way
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {ourApproach.map((card, index) => {
-              const IconComponent = card.icon;
-              return (
-                <motion.div
-                  key={card.title}
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ 
-                    duration: 0.7, 
-                    delay: 0.4 + (index * 0.1), 
-                    ease: [0.16, 1, 0.3, 1] 
-                  }}
-                >
-                  <TiltCard 
-                    intensity={10} 
-                    glare={true} 
-                    className={`group bg-gradient-to-br ${card.gradient} p-8 rounded-3xl h-full border border-border/30 hover:border-sage/40 transition-all duration-300`}
-                  >
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="w-16 h-16 rounded-2xl bg-foreground flex items-center justify-center">
-                        <IconComponent className="w-8 h-8 text-background" />
-                      </div>
-                      <div>
-                        <h4 className="text-2xl font-heading font-bold text-foreground">{card.title}</h4>
-                        <p className="text-sm text-sage font-medium">{card.tagline}</p>
-                      </div>
-                    </div>
-                    <p className="text-muted-foreground leading-relaxed text-lg">
-                      {card.desc}
-                    </p>
-                  </TiltCard>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
-
-        {/* The Split Card */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7"
-          >
-            <p className="text-xl md:text-2xl text-foreground/80 leading-relaxed mb-6">
-              Refer'd makes earning money simple and social. Connect your network with job opportunities, refer friends to roles, and earn rewards when they get hired.
-            </p>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Join a community where referrals redefine recruitment, making every connection count.
-            </p>
-          </motion.div>
-          
-          <div className="lg:col-span-5">
-            <motion.div
-              initial={{ opacity: 0, y: 60, scale: 0.95, rotateY: -10 }}
-              animate={isInView ? { opacity: 1, y: 0, scale: 1, rotateY: 0 } : {}}
-              transition={{ duration: 1, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transformPerspective: 1200 }}
-            >
-              <TiltCard intensity={8} glare={true} className="bg-foreground text-background p-8 rounded-3xl shadow-2xl">
-                <p className="text-xs uppercase tracking-[0.2em] text-background/50 mb-6">The Fair Split</p>
-                <div className="space-y-4">
-                  {[
-                    { label: "Referrer", value: "35%", color: "text-sage" },
-                    { label: "Talent", value: "35%", color: "text-mustard" },
-                    { label: "Platform", value: "30%", color: "text-background/50" },
-                  ].map((item, index) => (
-                    <motion.div 
-                      key={item.label}
-                      initial={{ opacity: 0, x: -30 }}
-                      animate={isInView ? { opacity: 1, x: 0 } : {}}
-                      transition={{ delay: 0.8 + (index * 0.1), type: "spring", stiffness: 200 }}
-                      className="flex justify-between items-center"
-                    >
-                      <span className="text-lg">{item.label}</span>
-                      <span className={`text-3xl font-heading font-bold ${item.color}`}>
-                        {item.value}
-                      </span>
-                    </motion.div>
-                  ))}
-                </div>
-                <motion.p 
-                  initial={{ opacity: 0 }}
-                  animate={isInView ? { opacity: 1 } : {}}
-                  transition={{ delay: 1.1 }}
-                  className="mt-6 pt-4 border-t border-background/10 text-sm text-background/60 text-center"
-                >
-                  Everyone wins — that's the Refer'd difference.
-                </motion.p>
-              </TiltCard>
-            </motion.div>
-          </div>
-        </div>
       </div>
+
+      {/* Bottom gradient */}
+      <div className="absolute -bottom-1 left-0 right-0 h-32 bg-gradient-to-t from-muted/30 via-background/80 to-transparent pointer-events-none z-10" />
     </section>
   );
 };
