@@ -43,7 +43,7 @@ const AnimatedRoutes = () => {
         <Route path="/how-it-works" element={<HowItWorks />} />
         {/* Brands now renders the Showcase page */}
         <Route path="/opportunities" element={<Opportunities />} />
-        <Route path="/salary-intelligence" element={<CareerIntelligence />} />
+        <Route path="/salary-intelligence" element={<SalaryIntelligence />} />
         <Route path="/brands" element={<Showcase />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
