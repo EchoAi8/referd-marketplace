@@ -4,19 +4,14 @@ import PageTransition from "@/components/layout/PageTransition";
 import CursorFollower from "@/components/animations/CursorFollower";
 import { GridOverlay } from "@/components/animations/GridTransition";
 import HeroSection from "@/components/sections/HeroSection";
-import ShockingStatsOpener from "@/components/sections/ShockingStatsOpener";
-import SolutionReveal from "@/components/sections/SolutionReveal";
-import VideoExplainer from "@/components/sections/VideoExplainer";
-import OriginStory from "@/components/sections/OriginStory";
-import JoinTheHerdCounter from "@/components/sections/JoinTheHerdCounter";
+import RecruitmentIndustry from "@/components/sections/RecruitmentIndustry";
+import RecruitmentBroken from "@/components/sections/RecruitmentBroken";
+import PowerOfReferrals from "@/components/sections/PowerOfReferrals";
+import TheReferdWay from "@/components/sections/TheReferdWay";
 import AboutSection from "@/components/sections/AboutSection";
-import StickyHowItWorks from "@/components/sections/StickyHowItWorks";
-import StatsSection from "@/components/sections/StatsSection";
 import FeaturePills from "@/components/sections/FeaturePills";
 import UserJourneyVisualization from "@/components/sections/UserJourneyVisualization";
 import FAQSection from "@/components/sections/FAQSection";
-import NewsletterSection from "@/components/sections/NewsletterSection";
-import PricingSection from "@/components/sections/PricingSection";
 import ContactSection from "@/components/sections/ContactSection";
 import FloatingCTABar from "@/components/sections/FloatingCTABar";
 import SocialShareMenu from "@/components/ui/SocialShareMenu";
@@ -33,57 +28,38 @@ const Index = () => {
         <div className="min-h-screen bg-background">
           <div className="site-shell">
             <main>
-              {/* STORY-DRIVEN FLOW: Hero → Shocking Stats → Solution → Origin Story → Movement */}
-              
               {/* 1. Hero - The Hook */}
               <HeroSection />
-              
-              {/* 2. Shocking Stats - The Problem (overlaps from hero) */}
-              <ShockingStatsOpener />
-              
-              {/* 3. Solution Reveal - The Answer (parallax overlap) */}
-              <SolutionReveal />
-              
-              {/* 4. Video Explainer - How it works in 60s */}
-              <VideoExplainer />
-              
-              {/* 5. Join the Herd - Live signup counter */}
-              <JoinTheHerdCounter />
-              
-              {/* 6. Origin Story - The Journey (Airbnb-style timeline) */}
-              <OriginStory />
-              
-              {/* 5. The Movement - Word reveal with highlighted terms */}
+
+              {/* 2. Recruitment is massive - Industry stats */}
+              <RecruitmentIndustry />
+
+              {/* 3. But is recruitment broken? */}
+              <RecruitmentBroken />
+
+              {/* 4. The power of referrals - Facts & figures */}
+              <PowerOfReferrals />
+
+              {/* 5. The Referd Way - 35/35/30 + Stakeholder breakdown */}
+              <TheReferdWay />
+
+              {/* 6. The Movement - Word reveal */}
               <section id="about">
                 <AboutSection />
               </section>
-              
-              {/* 6. How It Works - Sticky explainer */}
-              <StickyHowItWorks />
-              
-              {/* 7. Traction & Social Proof */}
-              <StatsSection />
-              
-              {/* 8. Feature Pills */}
+
+              {/* 7. Why Referd Works */}
               <FeaturePills />
-              
-              {/* 9. User Journey Visualization */}
+
+              {/* 8. How It All Connects - Ecosystem */}
               <UserJourneyVisualization />
-              
-              {/* 10. FAQ */}
+
+              {/* 9. Common Questions */}
               <section id="faq">
                 <FAQSection />
               </section>
-              
-              {/* 11. Newsletter */}
-              <NewsletterSection />
-              
-              {/* 12. Pricing */}
-              <section id="pricing">
-                <PricingSection />
-              </section>
-              
-              {/* 13. Contact */}
+
+              {/* 10. Get Started */}
               <section id="contact">
                 <ContactSection />
               </section>
