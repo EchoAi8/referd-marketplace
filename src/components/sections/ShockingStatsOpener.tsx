@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import AnimatedCounter from "@/components/animations/AnimatedCounter";
-import { Zap, Users, Banknote, Rocket } from "lucide-react";
+import { Zap, Users, Rocket } from "lucide-react";
 
 const stats = [
   {
@@ -27,14 +27,6 @@ const stats = [
     sublabel: "No hidden fees. No bullshit.",
     icon: Rocket,
     color: "text-brand",
-  },
-  {
-    value: 60,
-    suffix: "%",
-    label: "Less than agency fees",
-    sublabel: "We're not even close to their prices",
-    icon: Banknote,
-    color: "text-sage",
   },
 ];
 
@@ -97,7 +89,7 @@ const ShockingStatsOpener = () => {
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
           {stats.map((stat, index) => {
             const IconComponent = stat.icon;
             return (
