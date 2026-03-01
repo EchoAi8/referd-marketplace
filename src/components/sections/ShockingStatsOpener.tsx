@@ -92,7 +92,7 @@ const ShockingStatsOpener = () => {
             <span className="text-sage">play nice</span>.
           </h2>
           <p className="mt-6 text-xl md:text-2xl text-background/60 max-w-3xl mx-auto">
-            35% to the referrer. 35% to the talent. 30% to us. That's it. No middlemen, no markups, no games.
+            35% to the referrer. 35% to the talent. 30% to us. That's it. No middlemen, no markups, no games. The Fee Fairly Distributed!
           </p>
         </motion.div>
 
