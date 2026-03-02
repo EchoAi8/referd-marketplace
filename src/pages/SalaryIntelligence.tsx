@@ -650,10 +650,10 @@ const HeroSection = ({ onScrollToForm }: { onScrollToForm: () => void }) => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-4 text-sm md:text-base max-w-lg leading-relaxed italic"
-            style={{ color: "hsl(0 0% 100% / 0.3)" }}
+            className="mt-5 text-lg md:text-xl max-w-xl leading-relaxed"
+            style={{ color: "hsl(0 0% 100% / 0.7)" }}
           >
-            Think of it like Rightmove for your career — you browse what's out there to see your market value, no intention to move required. Just pure intel.
+            Think of it like <span className="font-bold text-sage">Rightmove for your career</span> — you browse what's out there to see your market value, no intention to move required. Just pure intel.
           </motion.p>
 
           <motion.div
