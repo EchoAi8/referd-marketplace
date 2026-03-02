@@ -11,7 +11,8 @@ import SiteFooter from "@/components/layout/SiteFooter";
 import PageTransition from "@/components/layout/PageTransition";
 import CursorFollower from "@/components/animations/CursorFollower";
 import { GridOverlay } from "@/components/animations/GridTransition";
-import { ArrowRight, Shield, Zap, TrendingUp, Users, Clock, AlertTriangle } from "lucide-react";
+import { ArrowRight, Shield, Zap, TrendingUp, Users, Clock, AlertTriangle, X } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import {
@@ -526,8 +527,65 @@ const SalaryIntelligence = () => {
             <SiteFooter />
           </div>
         </div>
+
+        {/* Floating Sticky CTA */}
+        <SalaryFloatingCTA onScrollToForm={() => formRef.current?.scrollIntoView({ behavior: "smooth" })} />
       </PageTransition>
     </>
+  );
+};
+
+/* ─── Floating Sticky CTA Bar ─── */
+const SalaryFloatingCTA = ({ onScrollToForm }: { onScrollToForm: () => void }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
+  const { scrollY } = useScroll();
+
+  useEffect(() => {
+    const unsubscribe = scrollY.on("change", (latest) => {
+      if (!isDismissed) {
+        setIsVisible(latest > window.innerHeight * 0.8);
+      }
+    });
+    return () => unsubscribe();
+  }, [scrollY, isDismissed]);
+
+  return (
+    <AnimatePresence>
+      {isVisible && !isDismissed && (
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"
+        >
+          <div className="relative flex items-center gap-3 rounded-full px-3 py-2 shadow-2xl backdrop-blur-xl"
+            style={{ backgroundColor: "hsl(0 0% 0% / 0.9)", border: "1px solid hsl(0 0% 100% / 0.1)" }}>
+            <button
+              onClick={() => setIsDismissed(true)}
+              className="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center transition-colors"
+              style={{ backgroundColor: "hsl(0 0% 100% / 0.15)" }}
+              aria-label="Dismiss"
+            >
+              <X className="w-3 h-3" style={{ color: "hsl(0 0% 100%)" }} />
+            </button>
+
+            <span className="hidden sm:inline text-sm font-medium pl-2" style={{ color: "hsl(0 0% 100% / 0.6)" }}>
+              Are you underpaid?
+            </span>
+
+            <button
+              onClick={onScrollToForm}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-300 hover:scale-105 bg-sage text-foreground shadow-[0_0_20px_rgba(139,164,133,0.4)]"
+            >
+              🔥 Get Free Report
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
@@ -586,6 +644,16 @@ const HeroSection = ({ onScrollToForm }: { onScrollToForm: () => void }) => {
             style={{ color: "hsl(0 0% 100% / 0.5)" }}
           >
             67% of professionals are. Find out in 47 seconds — before your employer hopes you never do.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-4 text-sm md:text-base max-w-lg leading-relaxed italic"
+            style={{ color: "hsl(0 0% 100% / 0.3)" }}
+          >
+            Think of it like Rightmove for your career — you browse what's out there to see your market value, no intention to move required. Just pure intel.
           </motion.p>
 
           <motion.div
