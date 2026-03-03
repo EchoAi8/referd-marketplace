@@ -5,6 +5,7 @@ import InteractiveNetworkCanvas from "@/components/animations/InteractiveNetwork
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
 import HeroProfileGridBackdrop from "@/components/sections/hero/HeroProfileGridBackdrop";
 import DirectionalButton from "@/components/ui/DirectionalButton";
+import referdWordmarkLight from "@/assets/referd-wordmark-light.png";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -91,25 +92,18 @@ const HeroSection = () => {
         <div className="absolute left-6 right-6 sm:left-8 sm:right-8 md:left-12 md:right-12 lg:left-16 lg:right-auto bottom-16 sm:bottom-20 md:bottom-24 lg:bottom-28 max-w-3xl">
           {/* REFERD - massive */}
           <motion.div style={{ y: logoY, scale: logoScale }} className="origin-bottom-left mb-4">
-            <motion.h1
-              initial={{ y: 100 }}
-              animate={{ y: 0 }}
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[20vw] sm:text-[16vw] md:text-[13vw] lg:text-[10vw] font-heading font-black text-background leading-[0.85] tracking-[-0.03em]"
-              style={{ textShadow: "0 0 80px rgba(255,255,255,0.3), 0 0 160px rgba(255,255,255,0.1)" }}
             >
-              {"Refer'd".split("").map((char, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, y: 80 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.05 + i * 0.04, ease: [0.16, 1, 0.3, 1] }}
-                  className="inline-block"
-                >
-                  {char}
-                </motion.span>
-              ))}
-            </motion.h1>
+              <img
+                src={referdWordmarkLight}
+                alt="Refer'd"
+                className="w-[70vw] sm:w-[55vw] md:w-[45vw] lg:w-[35vw] max-w-[700px]"
+                style={{ filter: "drop-shadow(0 0 80px rgba(255,255,255,0.3))" }}
+              />
+            </motion.div>
           </motion.div>
 
           {/* Tagline + sub */}
