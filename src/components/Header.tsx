@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import referdLogomark from "@/assets/referd-logomark.png";
-import referdWordmark from "@/assets/referd-wordmark-dark.png";
 
 const Header = () => {
   return (
@@ -9,7 +8,7 @@ const Header = () => {
         {/* Logo */}
         <div className="flex items-center gap-3">
           <img src={referdLogomark} alt="Refer'd" className="w-10 h-10" />
-          <img src={referdWordmark} alt="Refer'd" className="h-6 hidden sm:block" />
+          <span className="font-heading font-bold text-2xl text-forest tracking-tight">Refer'd</span>
         </div>
 
         {/* Navigation */}
