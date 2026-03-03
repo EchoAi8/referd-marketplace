@@ -1,5 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap");
 @tailwind base;
 @tailwind components;
@@ -7,69 +7,72 @@
 
 @layer base {
   :root {
-    /* Primary Colors (Foundation) */
+    /* Primary Brand Colors */
     --color-black: 0 0% 0%;
     --color-white: 0 0% 100%;
-    --color-gray-50: 0 0% 98%;
-    --color-gray-100: 0 0% 96%;
-    --color-gray-200: 0 0% 90%;
-    --color-gray-300: 0 0% 83%;
-    --color-gray-400: 0 0% 64%;
-    --color-gray-500: 0 0% 45%;
-    --color-gray-600: 0 0% 32%;
-    --color-gray-900: 0 0% 9%;
+    --color-gray-50: 27 72% 97%;
+    --color-gray-100: 27 50% 95%;
+    --color-gray-200: 27 30% 90%;
+    --color-gray-300: 27 20% 83%;
+    --color-gray-400: 73 10% 64%;
+    --color-gray-500: 73 10% 45%;
+    --color-gray-600: 73 15% 32%;
+    --color-gray-900: 73 25% 9%;
 
-    /* Brand Accent Colors */
-    --color-sage: 83 69% 72%;
-    --color-sage-light: 83 69% 80%;
-    --color-sage-dark: 83 55% 61%;
-    --color-mustard: 48 100% 50%;
+    /* Brand Accent Colors — from brand guidelines */
+    --color-sage: 83 69% 72%;          /* #C5EA86 */
+    --color-sage-light: 83 69% 82%;
+    --color-sage-dark: 83 55% 58%;
+    --color-mustard: 48 100% 50%;      /* #FFCE00 */
     --color-mustard-light: 48 100% 70%;
     --color-mustard-dark: 48 100% 40%;
-    --color-rose: 330 100% 84%;
+    --color-rose: 330 100% 84%;        /* #FFACD1 */
     --color-rose-light: 330 100% 89%;
     --color-rose-dark: 330 100% 77%;
-    --color-forest: 73 25% 8%;
+    --color-forest: 73 25% 8%;         /* #16190F */
+    --color-claret: 335 100% 27%;      /* #890039 */
+    --color-earth: 12 100% 17%;        /* #571100 */
+    --color-milk: 27 72% 95%;          /* #FBF1E9 */
 
-    /* User Type Colors - UNIFIED pastel palette across ALL components */
-    --color-talent: 150 60% 70%; /* Pastel Green - UNIFIED across CTAs, R button, credit card */
-    --color-talent-light: 150 60% 80%;
-    --color-talent-dark: 150 50% 55%;
-    --color-referrer: 200 75% 75%; /* Pastel Blue - UNIFIED across CTAs, network nodes */
-    --color-referrer-light: 200 75% 85%;
-    --color-referrer-dark: 200 65% 60%;
-    --color-brand: 330 75% 80%; /* Pastel Pink - UNIFIED across CTAs, network nodes */
-    --color-brand-light: 330 75% 88%;
-    --color-brand-dark: 330 65% 70%;
+    /* User Type Colors */
+    --color-talent: 83 69% 72%;        /* Sage — talent */
+    --color-talent-light: 83 69% 82%;
+    --color-talent-dark: 83 55% 58%;
+    --color-referrer: 330 100% 84%;    /* Rose — referrer */
+    --color-referrer-light: 330 100% 89%;
+    --color-referrer-dark: 330 100% 77%;
+    --color-brand: 48 100% 50%;        /* Mustard — brand */
+    --color-brand-light: 48 100% 70%;
+    --color-brand-dark: 48 100% 40%;
 
-    /* Semantic mappings */
-    --background: 240 4% 95%;
-    --foreground: 240 5% 10%;
+    /* Semantic mappings — Milk background, Forest foreground, Sage primary */
+    --background: 27 72% 95%;          /* Milk */
+    --foreground: 73 25% 8%;           /* Forest */
 
-    --card: 0 0% 98%;
-    --card-foreground: 240 5% 10%;
+    --card: 27 72% 97%;
+    --card-foreground: 73 25% 8%;
 
-    --popover: 240 5% 90%;
-    --popover-foreground: 240 5% 10%;
+    --popover: 27 50% 93%;
+    --popover-foreground: 73 25% 8%;
 
-    --primary: 258 89% 66%;
-    --primary-foreground: 250 100% 97%;
+    --primary: 83 69% 72%;             /* Sage */
+    --primary-foreground: 73 25% 8%;   /* Forest */
 
-    --secondary: 240 5% 33%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 330 100% 84%;         /* Rose */
+    --secondary-foreground: 73 25% 8%;
 
-    --muted: 240 4% 83%;
-    --muted-foreground: 240 5% 10%;
+    --muted: 27 30% 88%;
+    --muted-foreground: 73 15% 35%;
 
-    --accent: 269 100% 98%;
-    --accent-foreground: 270 91% 65%;
+    --accent: 48 100% 50%;             /* Mustard */
+    --accent-foreground: 73 25% 8%;
 
-    --destructive: 0 72% 50%;
-    --destructive-foreground: 0 85% 97%;
+    --destructive: 335 100% 27%;       /* Claret */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 240 4% 83%;
-    --input: 240 4% 83%;
-    --ring: 258 89% 66%;
+    --border: 27 20% 85%;
+    --input: 27 20% 85%;
+    --ring: 83 69% 72%;                /* Sage */
 
     /* Border Radius */
     --radius: 0.5rem;
@@ -80,10 +83,10 @@
     --radius-full: 9999px;
 
     /* Shadows */
-    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
+    --shadow-sm: 0 1px 3px 0px hsl(73 25% 8% / 0.06), 0 1px 2px -1px hsl(73 25% 8% / 0.06);
+    --shadow-md: 0 1px 3px 0px hsl(73 25% 8% / 0.08), 0 2px 4px -1px hsl(73 25% 8% / 0.06);
+    --shadow-lg: 0 1px 3px 0px hsl(73 25% 8% / 0.1), 0 4px 6px -1px hsl(73 25% 8% / 0.08);
+    --shadow-xl: 0 1px 3px 0px hsl(73 25% 8% / 0.1), 0 8px 10px -1px hsl(73 25% 8% / 0.1);
 
     /* Transitions */
     --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -105,85 +108,85 @@
     --space-24: 6rem;
 
     /* Gradients */
-    --gradient-hero: linear-gradient(180deg, hsl(var(--color-sage)) 0%, hsl(var(--color-gray-50)) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(var(--color-sage)) 0%, hsl(var(--color-milk)) 100%);
 
     /* Sidebar */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5% 10%;
-    --sidebar-primary: 258 89% 66%;
-    --sidebar-primary-foreground: 250 100% 97%;
-    --sidebar-accent: 240 5% 33%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 4% 83%;
-    --sidebar-ring: 258 89% 66%;
-    --chart-1: 255 91% 76%;
-    --chart-2: 270 95% 75%;
-    --chart-3: 234 89% 73%;
-    --chart-4: 258 89% 66%;
-    --chart-5: 240 3% 46%;
-    --sidebar: 0 0% 98%;
-    --font-sans: 'Montserrat', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-    --font-serif: 'Cormorant Garamond', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+    --sidebar-background: 27 72% 95%;
+    --sidebar-foreground: 73 25% 8%;
+    --sidebar-primary: 83 69% 72%;
+    --sidebar-primary-foreground: 73 25% 8%;
+    --sidebar-accent: 48 100% 50%;
+    --sidebar-accent-foreground: 73 25% 8%;
+    --sidebar-border: 27 20% 85%;
+    --sidebar-ring: 83 69% 72%;
+    --chart-1: 83 69% 72%;
+    --chart-2: 330 100% 84%;
+    --chart-3: 48 100% 50%;
+    --chart-4: 335 100% 27%;
+    --chart-5: 12 100% 17%;
+    --sidebar: 27 72% 97%;
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+    --font-serif: 'Playfair Display', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
     --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+    --shadow-2xs: 0 1px 3px 0px hsl(73 25% 8% / 0.03);
+    --shadow-xs: 0 1px 3px 0px hsl(73 25% 8% / 0.05);
+    --shadow: 0 1px 3px 0px hsl(73 25% 8% / 0.08), 0 1px 2px -1px hsl(73 25% 8% / 0.06);
+    --shadow-2xl: 0 1px 3px 0px hsl(73 25% 8% / 0.2);
     --tracking-normal: 0em;
     --spacing: 0.25rem;
   }
 
   .dark {
-    --background: 240 5% 10%;
-    --foreground: 0 0% 98%;
+    --background: 73 25% 8%;           /* Forest */
+    --foreground: 27 72% 95%;          /* Milk */
 
-    --card: 240 3% 15%;
-    --card-foreground: 0 0% 98%;
+    --card: 73 20% 12%;
+    --card-foreground: 27 72% 95%;
 
-    --popover: 240 5% 26%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 73 20% 15%;
+    --popover-foreground: 27 72% 95%;
 
-    --primary: 255 91% 76%;
-    --primary-foreground: 261 72% 22%;
+    --primary: 83 69% 72%;             /* Sage */
+    --primary-foreground: 73 25% 8%;
 
-    --secondary: 240 3% 46%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 330 100% 84%;         /* Rose */
+    --secondary-foreground: 73 25% 8%;
 
-    --muted: 240 3% 46%;
-    --muted-foreground: 0 0% 98%;
+    --muted: 73 15% 20%;
+    --muted-foreground: 27 30% 75%;
 
-    --accent: 273 86% 20%;
-    --accent-foreground: 270 95% 75%;
+    --accent: 48 100% 50%;             /* Mustard */
+    --accent-foreground: 73 25% 8%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 85% 97%;
+    --destructive: 335 100% 35%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 240 5% 33%;
-    --input: 240 5% 33%;
-    --ring: 255 91% 76%;
+    --border: 73 15% 18%;
+    --input: 73 15% 18%;
+    --ring: 83 69% 72%;
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 255 91% 76%;
-    --sidebar-primary-foreground: 261 72% 22%;
-    --sidebar-accent: 270 95% 75%;
-    --sidebar-accent-foreground: 273 86% 20%;
-    --sidebar-border: 240 5% 33%;
-    --sidebar-ring: 255 91% 76%;
-    --chart-1: 252 94% 85%;
-    --chart-2: 269 97% 85%;
-    --chart-3: 229 93% 81%;
-    --chart-4: 255 91% 76%;
-    --chart-5: 240 3% 46%;
-    --sidebar: 240 3% 15%;
-    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+    --sidebar-background: 73 25% 8%;
+    --sidebar-foreground: 27 72% 95%;
+    --sidebar-primary: 83 69% 72%;
+    --sidebar-primary-foreground: 73 25% 8%;
+    --sidebar-accent: 48 100% 50%;
+    --sidebar-accent-foreground: 73 25% 8%;
+    --sidebar-border: 73 15% 18%;
+    --sidebar-ring: 83 69% 72%;
+    --chart-1: 83 69% 72%;
+    --chart-2: 330 100% 84%;
+    --chart-3: 48 100% 50%;
+    --chart-4: 335 100% 35%;
+    --chart-5: 12 100% 20%;
+    --sidebar: 73 20% 12%;
+    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.1);
+    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.1);
+    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.15), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.15), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.2), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.2), 0 4px 6px -1px hsl(0 0% 0% / 0.15);
+    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25), 0 8px 10px -1px hsl(0 0% 0% / 0.2);
+    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.35);
   }
 }
 
@@ -208,7 +211,7 @@ html.theme-transitioning *::after {
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     margin: 0;
     padding: 0;
     cursor: none;
