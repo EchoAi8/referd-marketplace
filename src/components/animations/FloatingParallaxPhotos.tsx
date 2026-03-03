@@ -1,145 +1,152 @@
+import { useRef, useEffect, useState, useCallback } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
-interface FloatingVisual {
-  type: "photo" | "shape";
-  src?: string;
-  /** CSS top position */
-  top: string;
-  /** CSS left position */
-  left: string;
-  /** Width in px */
-  width: number;
-  /** Height in px */
-  height: number;
-  /** Parallax speed multiplier */
-  speed: number;
-  /** Starting rotation */
-  rotate?: number;
-  /** Border radius in px or string */
-  radius?: number | string;
-  /** Opacity 0-1 */
-  opacity?: number;
-  /** Shape color class (for shapes) */
-  colorClass?: string;
-  /** Blur amount */
-  blur?: number;
-  /** Whether to show on mobile too */
-  showMobile?: boolean;
+/**
+ * Passive network nodes backdrop – decorative dots & connection lines
+ * that drift gently with parallax scroll. No interaction / pointer events.
+ */
+
+interface BgNode {
+  id: number;
+  x: number; // 0-1 normalised
+  y: number; // 0-1 normalised
+  size: number;
+  color: string;
+  connections: number[];
+  speed: number; // parallax multiplier
+  phase: number; // drift phase offset
 }
 
-const visuals: FloatingVisual[] = [
-  // ── Large atmospheric photos ──
-  {
-    type: "photo",
-    src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&h=300&fit=crop",
-    top: "8%", left: "-2%", width: 280, height: 200, speed: -0.08, rotate: -4, radius: 24, opacity: 0.35,
-  },
-  {
-    type: "photo",
-    src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&h=300&fit=crop",
-    top: "22%", left: "82%", width: 260, height: 180, speed: 0.12, rotate: 3, radius: 20, opacity: 0.3,
-  },
-  {
-    type: "photo",
-    src: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=400&fit=crop",
-    top: "38%", left: "-4%", width: 220, height: 220, speed: -0.15, rotate: 5, radius: "50%", opacity: 0.28,
-  },
-  {
-    type: "photo",
-    src: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=400&h=300&fit=crop",
-    top: "55%", left: "85%", width: 300, height: 200, speed: 0.1, rotate: -2, radius: 28, opacity: 0.32,
-  },
-  {
-    type: "photo",
-    src: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&h=300&fit=crop",
-    top: "72%", left: "0%", width: 240, height: 170, speed: -0.06, rotate: -3, radius: 20, opacity: 0.3,
-  },
-
-  // ── Bold geometric shapes for color ──
-  {
-    type: "shape", colorClass: "bg-sage",
-    top: "5%", left: "75%", width: 180, height: 180, speed: 0.18, rotate: 45, radius: 32, opacity: 0.12, blur: 40,
-  },
-  {
-    type: "shape", colorClass: "bg-referrer",
-    top: "28%", left: "90%", width: 240, height: 240, speed: -0.1, rotate: 15, radius: "50%", opacity: 0.1, blur: 60,
-  },
-  {
-    type: "shape", colorClass: "bg-talent",
-    top: "42%", left: "-5%", width: 200, height: 200, speed: 0.14, rotate: -20, radius: "50%", opacity: 0.1, blur: 50,
-  },
-  {
-    type: "shape", colorClass: "bg-rose",
-    top: "60%", left: "80%", width: 160, height: 160, speed: -0.2, rotate: 30, radius: 24, opacity: 0.08, blur: 45,
-  },
-  {
-    type: "shape", colorClass: "bg-brand",
-    top: "75%", left: "88%", width: 200, height: 200, speed: 0.06, rotate: -10, radius: "50%", opacity: 0.1, blur: 55,
-  },
-  {
-    type: "shape", colorClass: "bg-mustard",
-    top: "15%", left: "-3%", width: 140, height: 140, speed: -0.12, rotate: 60, radius: 20, opacity: 0.1, blur: 35,
-  },
+const COLORS = [
+  "hsl(var(--sage))",
+  "hsl(var(--mustard))",
+  "hsl(var(--rose))",
+  "hsl(var(--brand))",
+  "hsl(var(--foreground) / 0.25)",
 ];
+
+function generateNodes(): BgNode[] {
+  const nodes: BgNode[] = [];
+  const count = 28;
+
+  for (let i = 0; i < count; i++) {
+    const ring = i < 6 ? 0 : i < 16 ? 1 : 2;
+    nodes.push({
+      id: i,
+      x: 0.08 + Math.random() * 0.84,
+      y: 0.04 + Math.random() * 0.92,
+      size: ring === 0 ? 6 + Math.random() * 4 : ring === 1 ? 4 + Math.random() * 3 : 2 + Math.random() * 2,
+      color: COLORS[i % COLORS.length],
+      connections: [],
+      speed: (Math.random() - 0.5) * 0.15,
+      phase: Math.random() * Math.PI * 2,
+    });
+  }
+
+  // Build connections – each node connects to 1-3 nearby nodes
+  for (let i = 0; i < count; i++) {
+    const dists = nodes
+      .map((n, j) => ({ j, d: Math.hypot(n.x - nodes[i].x, n.y - nodes[i].y) }))
+      .filter((e) => e.j !== i)
+      .sort((a, b) => a.d - b.d);
+
+    const connCount = 1 + Math.floor(Math.random() * 2);
+    nodes[i].connections = dists.slice(0, connCount).map((e) => e.j);
+  }
+
+  return nodes;
+}
+
+const STATIC_NODES = generateNodes();
 
 const FloatingParallaxPhotos = () => {
   const { scrollY } = useScroll();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dims, setDims] = useState({ w: 1, h: 1 });
+
+  useEffect(() => {
+    const measure = () => {
+      if (containerRef.current) {
+        const { width, height } = containerRef.current.getBoundingClientRect();
+        setDims({ w: width || 1, h: height || 1 });
+      }
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 5 }}>
-      {visuals.map((v, i) => (
-        <FloatingVisualElement key={i} visual={v} scrollY={scrollY} />
+    <div
+      ref={containerRef}
+      className="absolute inset-0 pointer-events-none overflow-hidden hidden lg:block"
+      style={{ zIndex: 5 }}
+      aria-hidden="true"
+    >
+      <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="bg-line-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="hsl(var(--sage) / 0.3)" />
+            <stop offset="100%" stopColor="hsl(var(--mustard) / 0.3)" />
+          </linearGradient>
+        </defs>
+
+        {/* Connection lines */}
+        {STATIC_NODES.map((node) =>
+          node.connections.map((targetId) => {
+            const target = STATIC_NODES[targetId];
+            return (
+              <line
+                key={`l-${node.id}-${targetId}`}
+                x1={`${node.x * 100}%`}
+                y1={`${node.y * 100}%`}
+                x2={`${target.x * 100}%`}
+                y2={`${target.y * 100}%`}
+                stroke="url(#bg-line-grad)"
+                strokeWidth="1"
+                opacity="0.25"
+              />
+            );
+          })
+        )}
+      </svg>
+
+      {/* Nodes as absolutely-positioned divs so we can apply parallax */}
+      {STATIC_NODES.map((node) => (
+        <ParallaxNode key={node.id} node={node} scrollY={scrollY} />
       ))}
     </div>
   );
 };
 
-function FloatingVisualElement({ visual, scrollY }: { visual: FloatingVisual; scrollY: any }) {
-  const yRaw = useTransform(scrollY, (v: number) => v * visual.speed);
-  const y = useSpring(yRaw, { stiffness: 60, damping: 25, restDelta: 0.01 });
-
-  const rotateRaw = useTransform(scrollY, (v: number) => (visual.rotate || 0) + v * visual.speed * 0.015);
-  const rotate = useSpring(rotateRaw, { stiffness: 60, damping: 25, restDelta: 0.01 });
-
-  const borderRadius = typeof visual.radius === "string" ? visual.radius : `${visual.radius || 16}px`;
+function ParallaxNode({ node, scrollY }: { node: BgNode; scrollY: any }) {
+  const yRaw = useTransform(scrollY, (v: number) => v * node.speed);
+  const y = useSpring(yRaw, { stiffness: 50, damping: 30, restDelta: 0.01 });
 
   return (
     <motion.div
+      className="absolute rounded-full"
       style={{
-        position: "absolute",
-        top: visual.top,
-        left: visual.left,
-        width: visual.width,
-        height: visual.height,
+        left: `${node.x * 100}%`,
+        top: `${node.y * 100}%`,
+        width: node.size * 2,
+        height: node.size * 2,
         y,
-        rotate,
+        backgroundColor: node.color,
+        opacity: 0.35,
+        boxShadow: `0 0 ${node.size * 3}px ${node.color}`,
       }}
-      className={visual.showMobile ? "" : "hidden lg:block"}
-    >
-      {visual.type === "photo" ? (
-        <div
-          className="w-full h-full overflow-hidden shadow-2xl border border-foreground/5"
-          style={{ borderRadius, opacity: visual.opacity || 0.3 }}
-        >
-          <img
-            src={visual.src}
-            alt=""
-            loading="lazy"
-            className="w-full h-full object-cover"
-            style={{ filter: "saturate(0.3) contrast(1.1)" }}
-          />
-        </div>
-      ) : (
-        <div
-          className={`w-full h-full ${visual.colorClass}`}
-          style={{
-            borderRadius,
-            opacity: visual.opacity || 0.1,
-            filter: `blur(${visual.blur || 40}px)`,
-          }}
-        />
-      )}
-    </motion.div>
+      animate={{
+        scale: [1, 1.3, 1],
+        opacity: [0.25, 0.45, 0.25],
+      }}
+      transition={{
+        duration: 4 + node.phase,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: node.phase * 0.5,
+      }}
+    />
   );
 }
 
