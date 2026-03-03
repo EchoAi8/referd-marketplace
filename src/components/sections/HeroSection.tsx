@@ -88,14 +88,15 @@ const HeroSection = () => {
       {/* Content layout: hard-anchored left copy + top-right card */}
       <div className="relative z-10 h-full px-6 sm:px-8 md:px-12 lg:px-16 pb-12 sm:pb-16 md:pb-20 lg:pb-24 pointer-events-none">
         {/* Left: Title + copy + CTAs (locked lower-left) */}
-        <div className="absolute left-6 right-6 sm:left-8 sm:right-8 md:left-12 md:right-12 lg:left-16 lg:right-auto bottom-12 sm:bottom-16 md:bottom-20 lg:bottom-24 max-w-3xl">
+        <div className="absolute left-6 right-6 sm:left-8 sm:right-8 md:left-12 md:right-12 lg:left-16 lg:right-auto bottom-16 sm:bottom-20 md:bottom-24 lg:bottom-28 max-w-3xl">
           {/* REFERD - massive */}
-          <motion.div style={{ y: logoY, scale: logoScale }} className="origin-bottom-left mb-6">
+          <motion.div style={{ y: logoY, scale: logoScale }} className="origin-bottom-left mb-4">
             <motion.h1
               initial={{ y: 100 }}
               animate={{ y: 0 }}
               transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[18vw] sm:text-[15vw] md:text-[12vw] lg:text-[9vw] font-heading font-black text-background leading-[0.85] tracking-[-0.04em] uppercase drop-shadow-[0_0_60px_rgba(255,255,255,0.2)]"
+              className="text-[22vw] sm:text-[18vw] md:text-[14vw] lg:text-[11vw] font-heading font-black text-background leading-[0.82] tracking-[-0.05em] uppercase"
+              style={{ textShadow: "0 0 80px rgba(255,255,255,0.3), 0 0 160px rgba(255,255,255,0.1)" }}
             >
               {"REFERD".split("").map((char, i) => (
                 <motion.span
@@ -113,13 +114,13 @@ const HeroSection = () => {
 
           {/* Tagline + sub */}
           <motion.div style={{ y: contentY }} className="max-w-2xl">
-            <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-background/90 font-heading font-bold leading-[1.05]">
-              {"The Recruitment Marketplace.".split(" ").map((word, i) => (
+            <p className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-background font-heading font-bold leading-[1.05]">
+              {"The People Powered Recruitment Marketplace.".split(" ").map((word, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 0.7, delay: 0.45 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.7, delay: 0.45 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                   className="inline-block mr-[0.25em]"
                 >
                   {word}
@@ -130,7 +131,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-4 text-background/60 text-base sm:text-lg md:text-xl lg:text-2xl max-w-2xl leading-relaxed"
+              className="mt-5 text-background/80 text-lg sm:text-xl md:text-2xl lg:text-3xl max-w-2xl leading-relaxed font-medium"
             >
               We didn't come here to play nice. Refer talent, earn real money, and take recruitment back from the gatekeepers. <span className="font-bold text-primary">#GatherYourHerd</span>
             </motion.p>
@@ -140,11 +141,11 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.75, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col sm:flex-row gap-3 mt-10 pointer-events-auto"
+              className="flex flex-col sm:flex-row gap-4 mt-12 pointer-events-auto"
             >
               <DirectionalButton
                 theme="talent"
-                size="lg"
+                size="xl"
                 onClick={() => navigateWithTransition("/career-intelligence")}
               >
                 Know Your Worth
@@ -152,7 +153,7 @@ const HeroSection = () => {
 
               <DirectionalButton
                 theme="referrer"
-                size="lg"
+                size="xl"
                 onClick={() => navigateWithTransition("/opportunities")}
               >
                 Refer &amp; Earn
@@ -160,7 +161,7 @@ const HeroSection = () => {
 
               <DirectionalButton
                 theme="brand"
-                size="lg"
+                size="xl"
                 onClick={() => navigateWithTransition("/brands")}
               >
                 Hire Smarter
