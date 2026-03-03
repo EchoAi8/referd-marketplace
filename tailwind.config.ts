@@ -42,6 +42,9 @@ export default {
   				light: 'hsl(var(--color-mustard-light))',
   				dark: 'hsl(var(--color-mustard-dark))'
   			},
+  			claret: 'hsl(var(--color-claret))',
+  			earth: 'hsl(var(--color-earth))',
+  			milk: 'hsl(var(--color-milk))',
   			rose: {
   				DEFAULT: 'hsl(var(--color-rose))',
   				light: 'hsl(var(--color-rose-light))',
@@ -103,11 +106,15 @@ export default {
   		},
   		fontFamily: {
   			heading: [
-  				'Fraunces',
+  				'Plus Jakarta Sans',
+  				'sans-serif'
+  			],
+  			accent: [
+  				'Playfair Display',
   				'serif'
   			],
   			body: [
-  				'Outfit',
+  				'Plus Jakarta Sans',
   				'sans-serif'
   			],
   			mono: [
@@ -122,7 +129,7 @@ export default {
   				'monospace'
   			],
   			sans: [
-  				'Montserrat',
+  				'Plus Jakarta Sans',
   				'ui-sans-serif',
   				'system-ui',
   				'-apple-system',
@@ -135,7 +142,7 @@ export default {
   				'sans-serif'
   			],
   			serif: [
-  				'Cormorant Garamond',
+  				'Playfair Display',
   				'ui-serif',
   				'Georgia',
   				'Cambria',
