@@ -103,8 +103,8 @@ export default {
   		},
   		fontFamily: {
   			heading: [
-  				'Space Grotesk',
-  				'sans-serif'
+  				'Fraunces',
+  				'serif'
   			],
   			body: [
   				'Outfit',

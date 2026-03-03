@@ -27,7 +27,7 @@ const HeroSection = () => {
             className="mb-8"
           >
             <h1 className="font-heading font-extrabold text-6xl md:text-8xl text-forest tracking-tight">
-              REFERD
+              Refer'd
             </h1>
           </motion.div>
         </ParallaxLayer>
