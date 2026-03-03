@@ -7,6 +7,7 @@ import MagneticButton from "@/components/animations/MagneticButton";
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
 import AnimatedCounter from "@/components/animations/AnimatedCounter";
 import TwoStepNavigation from "@/components/navigation/TwoStepNavigation";
+import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import PageTransition from "@/components/layout/PageTransition";
 import CursorFollower from "@/components/animations/CursorFollower";
@@ -175,6 +176,7 @@ const SalaryIntelligence = () => {
     <>
       <GridOverlay key="salary-intelligence-grid" />
       <CursorFollower />
+      <SiteHeader />
       <PageTransition>
         <div className="min-h-screen bg-background">
           <TwoStepNavigation />
