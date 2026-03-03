@@ -95,10 +95,10 @@ const HeroSection = () => {
               initial={{ y: 100 }}
               animate={{ y: 0 }}
               transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[22vw] sm:text-[18vw] md:text-[14vw] lg:text-[11vw] font-heading font-black text-background leading-[0.82] tracking-[-0.05em] uppercase"
+              className="text-[20vw] sm:text-[16vw] md:text-[13vw] lg:text-[10vw] font-heading font-black text-background leading-[0.85] tracking-[-0.03em]"
               style={{ textShadow: "0 0 80px rgba(255,255,255,0.3), 0 0 160px rgba(255,255,255,0.1)" }}
             >
-              {"REFERD".split("").map((char, i) => (
+              {"Refer'd".split("").map((char, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 80 }}
