@@ -114,14 +114,20 @@ const HeroSection = () => {
 
           {/* Tagline + sub */}
           <motion.div style={{ y: contentY }} className="max-w-2xl">
-            <p className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-background font-heading font-bold leading-[1.05]">
-              {"The People Powered Recruitment Marketplace.".split(" ").map((word, i) => (
+            <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold leading-[1.05]">
+              {[
+                { word: "The", color: "text-background" },
+                { word: "People", color: "text-sage" },
+                { word: "Powered", color: "text-sage" },
+                { word: "Recruitment", color: "text-referrer" },
+                { word: "Marketplace.", color: "text-brand" },
+              ].map(({ word, color }, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   transition={{ duration: 0.7, delay: 0.45 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="inline-block mr-[0.25em]"
+                  className={`inline-block mr-[0.25em] ${color}`}
                 >
                   {word}
                 </motion.span>
