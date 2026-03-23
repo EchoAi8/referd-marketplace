@@ -46,13 +46,13 @@
     --color-brand-dark: 48 100% 40%;
 
     /* Semantic mappings — Milk background, Forest foreground, Sage primary */
-    --background: 27 72% 95%;          /* Milk */
+    --background: 0 0% 100%;            /* Pure White */
     --foreground: 73 25% 8%;           /* Forest */
 
-    --card: 27 72% 97%;
+    --card: 0 0% 99%;
     --card-foreground: 73 25% 8%;
 
-    --popover: 27 50% 93%;
+    --popover: 0 0% 98%;
     --popover-foreground: 73 25% 8%;
 
     --primary: 83 69% 72%;             /* Sage */
@@ -61,8 +61,8 @@
     --secondary: 330 100% 84%;         /* Rose */
     --secondary-foreground: 73 25% 8%;
 
-    --muted: 27 30% 88%;
-    --muted-foreground: 73 15% 35%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
     --accent: 48 100% 50%;             /* Mustard */
     --accent-foreground: 73 25% 8%;
@@ -70,8 +70,8 @@
     --destructive: 335 100% 27%;       /* Claret */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 27 20% 85%;
-    --input: 27 20% 85%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
     --ring: 83 69% 72%;                /* Sage */
 
     /* Border Radius */
@@ -111,20 +111,20 @@
     --gradient-hero: linear-gradient(180deg, hsl(var(--color-sage)) 0%, hsl(var(--color-milk)) 100%);
 
     /* Sidebar */
-    --sidebar-background: 27 72% 95%;
+    --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 73 25% 8%;
     --sidebar-primary: 83 69% 72%;
     --sidebar-primary-foreground: 73 25% 8%;
     --sidebar-accent: 48 100% 50%;
     --sidebar-accent-foreground: 73 25% 8%;
-    --sidebar-border: 27 20% 85%;
+    --sidebar-border: 0 0% 90%;
     --sidebar-ring: 83 69% 72%;
     --chart-1: 83 69% 72%;
     --chart-2: 330 100% 84%;
     --chart-3: 48 100% 50%;
     --chart-4: 335 100% 27%;
     --chart-5: 12 100% 17%;
-    --sidebar: 27 72% 97%;
+    --sidebar: 0 0% 99%;
     --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
     --font-serif: 'Playfair Display', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
     --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
