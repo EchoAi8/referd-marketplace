@@ -67,7 +67,6 @@ const TwoStepNavigation = () => {
     { label: "Salary Intelligence", href: "/salary-intelligence" },
     { label: "Opportunities", href: "/opportunities" },
     { label: "Brands", href: "/brands" },
-    { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
   ];
 
