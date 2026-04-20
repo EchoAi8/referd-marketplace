@@ -175,12 +175,10 @@ const SalaryIntelligence = () => {
   return (
     <>
       <GridOverlay key="salary-intelligence-grid" />
+      <TwoStepNavigation />
       <CursorFollower />
-      <SiteHeader />
       <PageTransition>
         <div className="min-h-screen bg-background">
-          <TwoStepNavigation />
-          <div className="menu-vignette" aria-hidden="true" />
           <div className="site-shell">
             <main>
               {/* ═══════════ HERO ═══════════ */}
