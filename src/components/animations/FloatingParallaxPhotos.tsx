@@ -1,8 +1,6 @@
-import FloatingOrbs from "./FloatingOrbs";
-
 /**
- * Background visual layer – soft gradient orbs that follow the cursor.
+ * Placeholder component – background visuals removed for a clean layout.
  */
-const FloatingParallaxPhotos = () => <FloatingOrbs />;
+const FloatingParallaxPhotos = () => null;
 
 export default FloatingParallaxPhotos;

@@ -5,7 +5,6 @@ import InteractiveNetworkCanvas from "@/components/animations/InteractiveNetwork
 import { useGridNavigation } from "@/hooks/use-grid-navigation";
 import HeroProfileGridBackdrop from "@/components/sections/hero/HeroProfileGridBackdrop";
 import DirectionalButton from "@/components/ui/DirectionalButton";
-import PlatinumCard from "@/components/sections/hero/PlatinumCard";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -18,12 +17,14 @@ const HeroSection = () => {
     damping: 28,
   });
 
+  // Multi-layer parallax transforms
   const heroOpacity = useTransform(smoothProgress, [0, 0.7], [1, 0]);
   const heroScale = useTransform(smoothProgress, [0, 0.7], [1, 0.95]);
   const canvasY = useTransform(smoothProgress, [0, 1], [0, 150]);
   const profileGridY = useTransform(smoothProgress, [0, 1], [0, 80]);
   const orbLayer1Y = useTransform(smoothProgress, [0, 1], [0, -60]);
   const orbLayer2Y = useTransform(smoothProgress, [0, 1], [0, 120]);
+  const orbLayer3Y = useTransform(smoothProgress, [0, 1], [0, -30]);
   const logoY = useTransform(smoothProgress, [0, 0.5], [0, -80]);
   const logoScale = useTransform(smoothProgress, [0, 0.5], [1, 0.9]);
   const contentY = useTransform(smoothProgress, [0, 0.5], [0, 80]);
@@ -32,7 +33,7 @@ const HeroSection = () => {
 
   return (
     <section ref={containerRef} className="relative h-screen bg-foreground overflow-hidden pt-24">
-      {/* Layer 0: Profile Grid backdrop */}
+      {/* Layer 0: Profile Grid backdrop (slowest parallax) */}
       <motion.div
         style={{ y: profileGridY, opacity: heroOpacity }}
         className="absolute inset-0 pointer-events-none"
@@ -40,30 +41,31 @@ const HeroSection = () => {
         <HeroProfileGridBackdrop className="opacity-40" />
       </motion.div>
 
-      {/* Layer 1: Stakeholder orbs — Talent (sage) */}
+      {/* Layer 1: Decorative parallax orbs */}
       <motion.div
         style={{ y: orbLayer1Y }}
         className="absolute inset-0 pointer-events-none"
       >
-        <div className="absolute top-[15%] left-[8%] w-64 h-64 rounded-full opacity-[0.08]"
-          style={{ background: "radial-gradient(circle, hsl(var(--color-talent)), transparent 70%)" }}
+        <div className="absolute top-[15%] left-[8%] w-64 h-64 rounded-full opacity-[0.06]"
+          style={{ background: "radial-gradient(circle, hsl(var(--color-sage)), transparent 70%)" }}
         />
-        <div className="absolute bottom-[25%] right-[5%] w-96 h-96 rounded-full opacity-[0.05]"
+        <div className="absolute bottom-[25%] right-[5%] w-96 h-96 rounded-full opacity-[0.04]"
           style={{ background: "radial-gradient(circle, hsl(var(--color-referrer)), transparent 70%)" }}
         />
       </motion.div>
 
-      {/* Layer 2: Brand orb */}
+
+      {/* Layer 3: Second orb set (faster parallax) */}
       <motion.div
         style={{ y: orbLayer2Y }}
         className="absolute inset-0 pointer-events-none"
       >
-        <div className="absolute top-[60%] left-[40%] w-48 h-48 rounded-full opacity-[0.06]"
-          style={{ background: "radial-gradient(circle, hsl(var(--color-brand)), transparent 70%)" }}
+        <div className="absolute top-[60%] left-[40%] w-48 h-48 rounded-full opacity-[0.05]"
+          style={{ background: "radial-gradient(circle, hsl(var(--color-talent)), transparent 70%)" }}
         />
       </motion.div>
 
-      {/* Layer 3: Interactive Network Canvas */}
+      {/* Layer 4: Interactive Network Canvas */}
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale, y: canvasY }}
         className="absolute inset-0 pointer-events-auto"
@@ -78,15 +80,16 @@ const HeroSection = () => {
         </motion.div>
       </motion.div>
 
+
       {/* Gradient overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-foreground/60 via-foreground/20 to-foreground/90 pointer-events-none z-[6]" />
       <div className="absolute inset-0 bg-gradient-to-r from-foreground/30 via-transparent to-foreground/30 pointer-events-none z-[6]" />
 
-      {/* Content */}
+      {/* Content layout: hard-anchored left copy + top-right card */}
       <div className="relative z-10 h-full px-6 sm:px-8 md:px-12 lg:px-16 pb-12 sm:pb-16 md:pb-20 lg:pb-24 pointer-events-none">
-        {/* Left: Title + copy + CTAs */}
+        {/* Left: Title + copy + CTAs (locked lower-left) */}
         <div className="absolute left-6 right-6 sm:left-8 sm:right-8 md:left-12 md:right-12 lg:left-16 lg:right-auto bottom-16 sm:bottom-20 md:bottom-24 lg:bottom-28 max-w-3xl">
-          {/* Wordmark */}
+          {/* REFERD - massive */}
           <motion.div style={{ y: logoY, scale: logoScale }} className="origin-bottom-left mb-4">
             <motion.h1
               initial={{ opacity: 0, y: 100 }}
@@ -99,16 +102,15 @@ const HeroSection = () => {
             </motion.h1>
           </motion.div>
 
-          {/* Stakeholder-colored tagline */}
+          {/* Tagline + sub */}
           <motion.div style={{ y: contentY }} className="max-w-2xl">
             <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold leading-[1.05]">
               {[
-                { word: "Not", color: "text-background" },
-                { word: "Candidates.", color: "text-talent" },
-                { word: "Not", color: "text-background" },
-                { word: "Recruiters.", color: "text-background/60" },
-                { word: "Just", color: "text-background" },
-                { word: "People.", color: "text-referrer" },
+                { word: "The", color: "text-background" },
+                { word: "People", color: "text-sage" },
+                { word: "Powered", color: "text-sage" },
+                { word: "Recruitment", color: "text-referrer" },
+                { word: "Marketplace.", color: "text-brand" },
               ].map(({ word, color }, i) => (
                 <motion.span
                   key={i}
@@ -121,56 +123,28 @@ const HeroSection = () => {
                 </motion.span>
               ))}
             </p>
-
-            {/* Sub-copy — warm, rebellious, people-first */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="mt-5 text-background/80 text-lg sm:text-xl md:text-2xl lg:text-3xl max-w-2xl leading-relaxed font-medium"
             >
-              Forget <span className="line-through text-background/40">applicants</span>, <span className="line-through text-background/40">hiring managers</span> and <span className="line-through text-background/40">agencies</span>. 
-              Here, you're <motion.span className="text-talent font-bold" animate={{ opacity: [0.7, 1, 0.7] }} transition={{ duration: 3, repeat: Infinity }}>Talent</motion.span>, a <motion.span className="text-referrer font-bold" animate={{ opacity: [0.7, 1, 0.7] }} transition={{ duration: 3, repeat: Infinity, delay: 1 }}>Referrer</motion.span>, or a <motion.span className="text-brand font-bold" animate={{ opacity: [0.7, 1, 0.7] }} transition={{ duration: 3, repeat: Infinity, delay: 2 }}>Brand</motion.span> — and everyone earns. <span className="font-bold text-primary">#GatherYourHerd</span>
+              We didn't come here to play nice. Refer talent, earn real money, and take recruitment back from the gatekeepers. <span className="font-bold text-primary">#GatherYourHerd</span>
             </motion.p>
-
-            {/* Stakeholder legend pills */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.85 }}
-              className="flex flex-wrap gap-3 mt-6"
-            >
-              {[
-                { label: "Talent", sublabel: "not candidates", color: "bg-talent", text: "text-foreground" },
-                { label: "Referrer", sublabel: "not recruiters", color: "bg-referrer", text: "text-foreground" },
-                { label: "Brand", sublabel: "not employers", color: "bg-brand", text: "text-foreground" },
-              ].map((pill, i) => (
-                <motion.div
-                  key={pill.label}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, delay: 0.9 + i * 0.1 }}
-                  className={`${pill.color} ${pill.text} px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2`}
-                >
-                  <span>{pill.label}</span>
-                  <span className="opacity-60 font-normal text-xs italic">{pill.sublabel}</span>
-                </motion.div>
-              ))}
-            </motion.div>
 
             {/* CTAs */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col sm:flex-row gap-4 mt-10 pointer-events-auto"
+              transition={{ duration: 0.7, delay: 0.75, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col sm:flex-row gap-4 mt-12 pointer-events-auto"
             >
               <DirectionalButton
                 theme="talent"
                 size="xl"
                 onClick={() => navigateWithTransition("/career-intelligence")}
               >
-                I'm Talent
+                Know Your Worth
               </DirectionalButton>
 
               <DirectionalButton
@@ -178,7 +152,7 @@ const HeroSection = () => {
                 size="xl"
                 onClick={() => navigateWithTransition("/opportunities")}
               >
-                I'm a Referrer
+                Refer &amp; Earn
               </DirectionalButton>
 
               <DirectionalButton
@@ -186,13 +160,13 @@ const HeroSection = () => {
                 size="xl"
                 onClick={() => navigateWithTransition("/brands")}
               >
-                I'm a Brand
+                Hire Smarter
               </DirectionalButton>
             </motion.div>
           </motion.div>
         </div>
 
-        {/* Right: Platinum Card */}
+        {/* Right: Platinum Card (locked top-right) */}
         <motion.div
           style={{ y: cardY, rotate: cardRotate }}
           className="absolute top-28 sm:top-32 md:top-36 lg:top-32 right-4 sm:right-6 md:right-10 lg:right-16 pointer-events-none"
@@ -207,9 +181,146 @@ const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Bottom gradient */}
+      {/* Bottom gradient for seamless flow */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-foreground to-transparent pointer-events-none z-20" />
     </section>
+  );
+};
+
+/* ─── Referd Platinum Card ─── */
+const PlatinumCard = () => {
+  return (
+    <div className="relative w-[240px] sm:w-[270px] md:w-[300px] aspect-[1.586/1]">
+      {/* Card body */}
+      <div
+        className="absolute inset-0 rounded-2xl overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, 
+            hsl(0 0% 15%) 0%, 
+            hsl(0 0% 22%) 30%, 
+            hsl(0 0% 18%) 60%, 
+            hsl(0 0% 12%) 100%)`,
+          boxShadow: `
+            0 25px 60px -15px rgba(0,0,0,0.5),
+            0 0 0 1px rgba(255,255,255,0.08),
+            inset 0 1px 0 rgba(255,255,255,0.1)
+          `,
+        }}
+      >
+        {/* Metallic shimmer overlay */}
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            background: `linear-gradient(
+              105deg,
+              transparent 20%,
+              rgba(255,255,255,0.05) 30%,
+              rgba(255,255,255,0.12) 40%,
+              rgba(255,255,255,0.05) 50%,
+              transparent 60%
+            )`,
+          }}
+        />
+
+        {/* Subtle pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              90deg,
+              transparent,
+              transparent 2px,
+              rgba(255,255,255,1) 2px,
+              rgba(255,255,255,1) 3px
+            )`,
+          }}
+        />
+
+        {/* Card content */}
+        <div className="relative h-full p-6 flex flex-col justify-between">
+          {/* Top row */}
+          <div className="flex justify-between items-start">
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.3em] text-background/40 font-medium">
+                Referd
+              </div>
+              <div
+                className="text-xs uppercase tracking-[0.2em] mt-1 font-semibold"
+                style={{
+                  background: `linear-gradient(135deg, hsl(var(--color-sage)) 0%, hsl(var(--color-referrer)) 50%, hsl(var(--color-brand)) 100%)`,
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Platinum
+              </div>
+            </div>
+            {/* Chip */}
+            <div
+              className="w-10 h-8 rounded-md"
+              style={{
+                background: `linear-gradient(135deg, 
+                  hsl(48 70% 65%) 0%, 
+                  hsl(48 50% 50%) 50%, 
+                  hsl(48 70% 60%) 100%)`,
+                boxShadow: `inset 0 0 2px rgba(0,0,0,0.2)`,
+              }}
+            />
+          </div>
+
+          {/* Amount */}
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-background/30 mb-1">
+              Earnings to date
+            </div>
+            <div className="font-heading font-black text-3xl sm:text-4xl text-background tracking-tight">
+              £47,250
+            </div>
+          </div>
+
+          {/* Bottom row */}
+          <div className="flex justify-between items-end">
+            <div>
+              <div className="text-[9px] uppercase tracking-[0.15em] text-background/30">
+                Member since
+              </div>
+              <div className="text-sm text-background/70 font-medium tracking-wide">
+                2024
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-[9px] uppercase tracking-[0.15em] text-background/30">
+                Status
+              </div>
+              <div
+                className="text-sm font-bold tracking-wide"
+                style={{
+                  background: `linear-gradient(90deg, hsl(var(--color-sage)), hsl(var(--color-talent-light)))`,
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Active
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Glow effect behind card */}
+      <div
+        className="absolute -inset-8 rounded-3xl opacity-40 blur-3xl -z-10 animate-pulse"
+        style={{
+          background: `radial-gradient(ellipse at center, hsl(var(--color-sage) / 0.6), hsl(var(--color-referrer) / 0.3) 50%, transparent 80%)`,
+        }}
+      />
+      <div
+        className="absolute -inset-4 rounded-3xl opacity-25 blur-xl -z-10"
+        style={{
+          background: `radial-gradient(ellipse at center, hsl(var(--color-sage) / 0.5), transparent 60%)`,
+        }}
+      />
+    </div>
   );
 };
 
